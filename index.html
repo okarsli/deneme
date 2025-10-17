@@ -1265,9 +1265,10 @@
             applyFiltersAndSearch();
         }
 
-        // 2025 yılı için özel localStorage anahtarı
+        // 2025 yılı için özel localStorage anahtarları
         const STORAGE_KEY = 'sofData_2025';
         const BACKUP_KEY = 'sofGlobalBackup';
+        const LOADED_FLAG = 'sofDataLoaded_2025';
 
         // LocalStorage kaydetme fonksiyonu
         function saveToLocalStorage() {
@@ -1329,6 +1330,7 @@
                     try {
                         localStorage.removeItem(STORAGE_KEY);
                         localStorage.removeItem(BACKUP_KEY);
+                        localStorage.removeItem(LOADED_FLAG);
                         showNotification('🧹 Yerel veriler temizlendi. Sayfa yenileniyor...', 'success');
                         setTimeout(() => {
                             window.location.reload();
@@ -2794,14 +2796,20 @@
             return false; // Yedek veri yok
         }
 
-        // GitHub'dan CSV yükleme fonksiyonu - tek seferlik
+        // GitHub'dan CSV yükleme fonksiyonu - sadece ilk seferde çalışır
         async function loadFromGitHubCSV(isManual = false) {
+            // Manuel yeniden yükleme değilse ve daha önce yüklendiyse çık
+            if (!isManual && localStorage.getItem(LOADED_FLAG)) {
+                console.log('📦 Veriler daha önce yüklendi, GitHub\'a gidilmiyor');
+                return false;
+            }
+            
             const csvUrl = 'https://raw.githubusercontent.com/okarsli/deneme/refs/heads/main/data.csv';
             
             try {
                 showLoading();
                 
-                console.log('GitHub CSV\'den veri çekiliyor (tek seferlik)...');
+                console.log('🌐 GitHub CSV\'den veri çekiliyor (tek seferlik)...');
                 
                 // GitHub'dan CSV dosyasını UTF-8 kodlamasıyla fetch et
                 const response = await fetch(csvUrl, {
@@ -2825,7 +2833,8 @@
                 if (parsedData && parsedData.length > 0) {
                     // LocalStorage'a JSON formatında kaydet
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedData));
-                    console.log(`${parsedData.length} kayıt localStorage'a kaydedildi (sofData_2025)`);
+                    localStorage.setItem(LOADED_FLAG, 'true'); // Yükleme bayrağını set et
+                    console.log(`✅ ${parsedData.length} kayıt localStorage'a kaydedildi (sofData_2025)`);
                     
                     // Data SDK'ya yükle
                     await loadDataToSDK(parsedData);
@@ -2872,9 +2881,10 @@
                         
                         showLoading();
                         
-                        // 1. LocalStorage'daki verileri sil (sofData_2025)
+                        // 1. LocalStorage'daki verileri ve yükleme bayrağını sil
                         localStorage.removeItem(STORAGE_KEY);
-                        console.log('✅ LocalStorage temizlendi (sofData_2025)');
+                        localStorage.removeItem(LOADED_FLAG);
+                        console.log('✅ LocalStorage temizlendi (sofData_2025 + yükleme bayrağı)');
                         
                         // 2. Mevcut Data SDK verilerini temizle
                         console.log('🗑️ Mevcut Data SDK verileri temizleniyor...');
@@ -3407,6 +3417,9 @@
             });
         });
 
+        // 🔹 SOMTECH Satın Alma Yönetim Sistemi — Tek Seferlik CSV Veri Gömme (Seed Data)
+        // Bu kod GitHub'dan CSV'yi sadece 1 kez alır, localStorage'a kaydeder ve bir daha asla fetch etmez.
+        
         // Initialize
         window.addEventListener('load', async () => {
             // Dark mode'u uygula
@@ -3422,34 +3435,54 @@
                     return;
                 }
                 
-                // 🔄 YENİ VERİ YÜKLEME MANTĞI (2025):
-                // 1️⃣ CSV verisi sadece 1 defa çekilecek
-                // 2️⃣ Çekilen veri UTF-8 kodlamasıyla okunacak, noktalı virgül (;) ayırıcıyla ayrıştırılacak
-                // 3️⃣ Elde edilen veri localStorage'a "sofData_2025" olarak kaydedilecek
-                // 4️⃣ Eğer localStorage doluysa, GitHub'dan veri çekmeyecek — doğrudan kaydedilmiş veriyi kullanacak
-                // 5️⃣ localStorage'a kaydedilen veri JSON.stringify ile saklanacak ve sayfa her açıldığında JSON.parse ile yüklenecek
-                // 6️⃣ Yükleme tamamlandığında tablo otomatik olarak güncellenecek ve sayfa yenilense bile kayıtlar kaybolmayacak
+                // 🔄 YENİ VERİ YÜKLEME MANTĞI (2025) - TEK SEFERLİK CSV ÇEKME:
+                // 1️⃣ İlk ziyarette: GitHub'dan CSV çek → localStorage'a kaydet → yükleme bayrağını set et
+                // 2️⃣ Sonraki ziyaretlerde: Sadece localStorage'dan oku, GitHub'a asla gitme
+                // 3️⃣ Manuel yeniden yükleme: Bayrakları sıfırla → GitHub'dan tekrar çek
                 
-                console.log('🔄 Veri yükleme sistemi başlatılıyor (2025)...');
+                console.log('🔄 Tek seferlik veri yükleme sistemi başlatılıyor (2025)...');
                 
-                // Sayfa yüklendiğinde önce localStorage kontrol edilir
+                // 🔸 Yükleme bayrağını kontrol et
+                const isDataLoaded = localStorage.getItem(LOADED_FLAG);
                 const localData = loadFromLocalStorage();
                 
-                if (localData && localData.length > 0) {
-                    // eğer "sofData_2025" varsa: JSON.parse(localStorage.getItem("sofData_2025")) → tabloyu doğrudan bu veriden oluştur
-                    console.log(`✅ LocalStorage'da ${localData.length} kayıt bulundu (sofData_2025)`);
-                    console.log('📦 CSV\'ye gitmeden doğrudan yerel veriden yükleniyor...');
+                if (isDataLoaded && localData && localData.length > 0) {
+                    // ✅ Daha önce yüklendi ve localStorage'da veri var
+                    console.log(`✅ Veriler daha önce yüklendi (${localData.length} kayıt)`);
+                    console.log('📦 GitHub\'a gitmeden doğrudan yerel veriden yükleniyor...');
                     await loadLocalStorageToDataSDK();
-                } else {
-                    // eğer "sofData_2025" yoksa: CSV'yi fetch et → parse et → localStorage.setItem("sofData_2025", JSON.stringify(veri)) → tabloyu oluştur
-                    console.log('❌ LocalStorage boş (sofData_2025)');
-                    console.log('🌐 GitHub CSV\'den tek seferlik çekiliyor...');
-                    const githubLoaded = await loadFromGitHubCSV(false);
+                    showNotification('📦 Veriler yerel depodan yüklendi', 'info');
+                } else if (!isDataLoaded) {
+                    // 🌐 İlk ziyaret - GitHub'dan çek
+                    console.log('🌐 İlk ziyaret tespit edildi, GitHub CSV\'den çekiliyor...');
                     
-                    // GitHub yüklenemezse yedek veriyi dene
-                    if (!githubLoaded) {
-                        console.log('⚠️ GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
-                        await loadBackupToDataSDK();
+                    try {
+                        const githubLoaded = await loadFromGitHubCSV(false);
+                        
+                        if (githubLoaded) {
+                            console.log('✅ İlk yükleme tamamlandı, artık GitHub\'a gidilmeyecek');
+                        } else {
+                            // GitHub yüklenemezse yedek veriyi dene
+                            console.log('⚠️ GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
+                            const backupLoaded = await loadBackupToDataSDK();
+                            
+                            if (backupLoaded) {
+                                showNotification('✅ Yedek veri bulundu ve yüklendi', 'success');
+                            } else {
+                                showNotification('⚠️ Veri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.', 'error');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Veri yükleme hatası:', error);
+                        showNotification('❌ Veri yükleme sırasında hata oluştu.', 'error');
+                    }
+                } else {
+                    // ⚠️ Bayrak var ama localStorage boş - veri bozulmuş
+                    console.log('⚠️ Yükleme bayrağı var ama localStorage boş, yedek veri kontrol ediliyor...');
+                    const backupLoaded = await loadBackupToDataSDK();
+                    
+                    if (!backupLoaded) {
+                        showNotification('⚠️ Veri bulunamadı. "Verileri Yeniden Yükle" butonunu kullanın.', 'error');
                     }
                 }
                 
@@ -3473,5 +3506,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ffa5a016489a18',t:'MTc2MDcwMjU0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99002da4d7761dc1',t:'MTc2MDcwODExNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
