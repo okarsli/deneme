@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/_sdk/data_sdk.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
         body {
             box-sizing: border-box;
@@ -16,6 +17,8 @@
         .table-container {
             overflow-x: auto;
             max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
         table {
@@ -30,6 +33,23 @@
             text-align: left;
             font-size: 12px;
             white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 6px;
+                font-size: 10px;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                margin: 2px;
+            }
+            
+            .container {
+                padding: 4px;
+            }
         }
         
         th {
@@ -88,7 +108,13 @@
         }
         
         .total-row {
-            background-color: #fef3c7 !important;
+            background-color: #f3f4f6 !important;
+            font-weight: bold;
+        }
+        
+        .grand-total-row {
+            background-color: #2459a0 !important;
+            color: white !important;
             font-weight: bold;
         }
         
@@ -156,7 +182,34 @@
     <h1 id="system-title" class="text-3xl font-bold text-gray-800 mb-2">SOF Ana Liste</h1>
     <p id="company-name" class="text-lg text-gray-600">Malzeme Talep Yönetim Sistemi</p>
    </header>
-   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="kaydet-btn" class="btn btn-success"> 💾 Kaydet </button>
+   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 💾 Kaydet </button>
+   </div><!-- Toplam Bilgi Paneli -->
+   <div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">📊 Toplam Bilgi Paneli</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"><!-- SARF TOPLAMI Kartı -->
+     <div class="bg-gray-100 rounded-xl shadow-md p-6 text-center border-l-4 border-gray-500">
+      <div class="flex items-center justify-center mb-3"><span class="text-2xl mr-2">📦</span>
+       <h3 class="text-lg font-bold text-gray-700">SARF TOPLAMI</h3>
+      </div>
+      <div class="text-3xl font-bold text-gray-800" id="sarf-toplam-panel">
+       0.00
+      </div>
+      <div class="text-sm text-gray-600 mt-1">
+       ₽ RUB
+      </div>
+     </div><!-- DEMİRBAŞ TOPLAMI Kartı -->
+     <div class="bg-red-50 rounded-xl shadow-md p-6 text-center border-l-4 border-red-400">
+      <div class="flex items-center justify-center mb-3"><span class="text-2xl mr-2">🏭</span>
+       <h3 class="text-lg font-bold text-red-700">DEMİRBAŞ TOPLAMI</h3>
+      </div>
+      <div class="text-3xl font-bold text-red-800" id="demirbas-toplam-panel">
+       0.00
+      </div>
+      <div class="text-sm text-red-600 mt-1">
+       ₽ RUB
+      </div>
+     </div>
+    </div>
    </div>
    <div id="loading-indicator" class="hidden text-center py-4">
     <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -195,6 +248,16 @@
      </tbody>
      <tfoot>
       <tr class="total-row">
+       <td colspan="14" class="text-right font-bold">SARF TOPLAMI (₽ RUB):</td>
+       <td id="sarf-toplam" class="font-bold">0.00</td>
+       <td colspan="8"></td>
+      </tr>
+      <tr class="total-row">
+       <td colspan="14" class="text-right font-bold">DEMİRBAŞ TOPLAMI (₽ RUB):</td>
+       <td id="demirbas-toplam" class="font-bold">0.00</td>
+       <td colspan="8"></td>
+      </tr>
+      <tr class="grand-total-row">
        <td colspan="14" class="text-right font-bold">GENEL TOPLAM (₽ RUB):</td>
        <td id="genel-toplam" class="font-bold">0.00</td>
        <td colspan="8"></td>
@@ -361,8 +424,23 @@
             const row = currentData[index];
             row[field] = value;
             
+            // Otomatik hesaplama: TOPLAM FİYAT = TALEP MİKTARI × BİRİM FİYAT
             if (field === 'talep_miktari' || field === 'birim_fiyat') {
                 row.toplam_fiyat = row.talep_miktari * row.birim_fiyat;
+                
+                // Toplam fiyat hücresini anında güncelle
+                const toplamCell = document.querySelector(`#table-body tr:nth-child(${index + 1}) td:nth-child(15)`);
+                if (toplamCell) {
+                    toplamCell.textContent = row.toplam_fiyat.toFixed(2);
+                }
+                
+                // Alt toplamları ve genel toplamı güncelle
+                calculateTotal();
+            }
+            
+            // Malzeme tipi değiştiğinde alt toplamları güncelle
+            if (field === 'malzeme_tipi') {
+                calculateTotal();
             }
             
             // Onay durumu değiştiğinde satır rengini güncelle
@@ -386,8 +464,24 @@
         }
 
         function calculateTotal() {
-            const total = currentData.reduce((sum, row) => sum + row.toplam_fiyat, 0);
-            document.getElementById('genel-toplam').textContent = total.toFixed(2);
+            const sarfTotal = currentData
+                .filter(row => row.malzeme_tipi === 'SARF')
+                .reduce((sum, row) => sum + row.toplam_fiyat, 0);
+            
+            const demirbasTotal = currentData
+                .filter(row => row.malzeme_tipi === 'DEMİRBAŞ')
+                .reduce((sum, row) => sum + row.toplam_fiyat, 0);
+            
+            const genelTotal = sarfTotal + demirbasTotal;
+            
+            // Tablo altındaki toplamları güncelle
+            document.getElementById('sarf-toplam').textContent = sarfTotal.toFixed(2);
+            document.getElementById('demirbas-toplam').textContent = demirbasTotal.toFixed(2);
+            document.getElementById('genel-toplam').textContent = genelTotal.toFixed(2);
+            
+            // Üstteki panel kartlarını güncelle
+            document.getElementById('sarf-toplam-panel').textContent = sarfTotal.toFixed(2);
+            document.getElementById('demirbas-toplam-panel').textContent = demirbasTotal.toFixed(2);
         }
 
         async function yeniTalepBaslat() {
@@ -451,6 +545,157 @@
             }
         }
 
+        function pdfIndir() {
+            if (!window.jsPDF) {
+                alert('PDF kütüphanesi yüklenemedi.');
+                return;
+            }
+
+            const { jsPDF } = window.jsPDF;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+            
+            // Logo ekleme
+            const logoUrl = 'https://resimlink.com/TUzslur';
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = function() {
+                try {
+                    doc.addImage(img, 'PNG', 10, 10, 40, 20);
+                } catch (e) {
+                    console.log('Logo eklenemedi:', e);
+                }
+                generatePDFContent(doc);
+            };
+            
+            img.onerror = function() {
+                console.log('Logo yüklenemedi, PDF logo olmadan oluşturuluyor');
+                generatePDFContent(doc);
+            };
+            
+            img.src = logoUrl;
+        }
+
+        function generatePDFContent(doc) {
+            // Tarih sağ üstte
+            const today = new Date().toLocaleDateString('tr-TR');
+            doc.setFontSize(10);
+            doc.text(`Tarih: ${today}`, 250, 15);
+            
+            // Ana başlık - ortada
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text('SOMTECH RU – SİPARİŞ ONAY FORMU (SOF)', 148, 40, { align: 'center' });
+            
+            // Tablo başlıkları - daha kompakt
+            const headers = [
+                'Sıra', 'Form No', 'Tip', 'Talep Eden', 'Malzeme', 
+                'Birim', 'Miktar', 'B.Fiyat', 'Toplam', 'Durum'
+            ];
+            
+            let yPos = 55;
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'bold');
+            
+            // Başlık satırı - mavi arka plan
+            doc.setFillColor(36, 89, 160); // #2459a0
+            doc.setTextColor(255, 255, 255); // Beyaz yazı
+            
+            let xPos = 10;
+            const colWidths = [15, 30, 20, 30, 50, 15, 20, 20, 25, 25];
+            
+            headers.forEach((header, i) => {
+                doc.rect(xPos, yPos, colWidths[i], 8, 'F');
+                doc.text(header, xPos + 2, yPos + 5);
+                xPos += colWidths[i];
+            });
+            
+            yPos += 8;
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0); // Siyah yazı
+            
+            // Veri satırları
+            currentData.forEach((row, index) => {
+                if (yPos > 170) { // Yeni sayfa
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                xPos = 10;
+                const rowData = [
+                    row.sira_no.toString(),
+                    row.sof_form_no,
+                    row.malzeme_tipi,
+                    row.talep_eden.substring(0, 15),
+                    row.talep_edilen_malzeme.substring(0, 30),
+                    row.birim,
+                    row.talep_miktari.toString(),
+                    row.birim_fiyat.toFixed(2),
+                    row.toplam_fiyat.toFixed(2),
+                    row.onay_durumu
+                ];
+                
+                // Zebra striping
+                if (index % 2 === 0) {
+                    doc.setFillColor(249, 250, 251); // Açık gri
+                    doc.rect(10, yPos, 250, 6, 'F');
+                }
+                
+                rowData.forEach((data, i) => {
+                    doc.rect(xPos, yPos, colWidths[i], 6);
+                    doc.text(data, xPos + 1, yPos + 4);
+                    xPos += colWidths[i];
+                });
+                
+                yPos += 6;
+            });
+            
+            // Alt toplamlar
+            yPos += 10;
+            const sarfTotal = currentData
+                .filter(row => row.malzeme_tipi === 'SARF')
+                .reduce((sum, row) => sum + row.toplam_fiyat, 0);
+            const demirbasTotal = currentData
+                .filter(row => row.malzeme_tipi === 'DEMİRBAŞ')
+                .reduce((sum, row) => sum + row.toplam_fiyat, 0);
+            const genelTotal = sarfTotal + demirbasTotal;
+            
+            // SARF TOPLAMI - gri arka plan
+            doc.setFillColor(243, 244, 246);
+            doc.rect(150, yPos, 110, 8, 'F');
+            doc.setFont(undefined, 'bold');
+            doc.text('SARF TOPLAMI:', 155, yPos + 5);
+            doc.text(`${sarfTotal.toFixed(2)} ₽`, 220, yPos + 5);
+            
+            yPos += 8;
+            
+            // DEMİRBAŞ TOPLAMI - gri arka plan
+            doc.setFillColor(243, 244, 246);
+            doc.rect(150, yPos, 110, 8, 'F');
+            doc.text('DEMİRBAŞ TOPLAMI:', 155, yPos + 5);
+            doc.text(`${demirbasTotal.toFixed(2)} ₽`, 220, yPos + 5);
+            
+            yPos += 8;
+            
+            // GENEL TOPLAM - mavi arka plan
+            doc.setFillColor(36, 89, 160);
+            doc.setTextColor(255, 255, 255);
+            doc.rect(150, yPos, 110, 10, 'F');
+            doc.setFontSize(10);
+            doc.text('GENEL TOPLAM:', 155, yPos + 6);
+            doc.text(`${genelTotal.toFixed(2)} ₽`, 220, yPos + 6);
+            
+            // Alt not
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'italic');
+            doc.setTextColor(128, 128, 128);
+            doc.text('Bu belge elektronik ortamda hazırlanmıştır.', 148, 200, { align: 'center' });
+            
+            // PDF kaydet
+            const fileName = `SOMTECH_SOF_${today.replace(/\./g, '_')}.pdf`;
+            doc.save(fileName);
+        }
+
         async function render(config) {
             document.getElementById('system-title').textContent = config.system_title || defaultConfig.system_title;
             document.getElementById('company-name').textContent = config.company_name || defaultConfig.company_name;
@@ -476,6 +721,7 @@
         document.getElementById('yeni-talep-btn').addEventListener('click', yeniTalepBaslat);
         document.getElementById('alt-satir-btn').addEventListener('click', altSatirEkle);
         document.getElementById('satir-sil-btn').addEventListener('click', satirSil);
+        document.getElementById('pdf-btn').addEventListener('click', pdfIndir);
         document.getElementById('kaydet-btn').addEventListener('click', () => {
             alert('Veriler otomatik olarak Canva Sheet\'te saklanmaktadır.');
         });
@@ -499,5 +745,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe6a342396d35d',t:'MTc2MDY4OTYyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe984416e53a72',t:'MTc2MDY5MTUxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
