@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="tr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SomTech RU - Sipariş Onay Formu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://html2canvas.js.org/dist/html2canvas.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Calibri', 'Arial', sans-serif;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body { 
+                background: white !important; 
+                margin: 0;
+                padding: 0;
+            }
+            .print-page { 
+                width: 210mm; 
+                min-height: 297mm; 
+                margin: 0; 
+                padding: 18mm 14mm;
+                box-shadow: none;
+                border: 1px solid #e5e7eb;
+                background: white;
+            }
+            .table-cell input {
+                border: none !important;
+                background: transparent !important;
+                color: black !important;
+            }
+            .signature-line {
+                border-bottom: 2px solid #000 !important;
+                background: transparent !important;
+            }
+        }
+        
+        .print-page {
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            margin: 20px auto;
+            max-width: 210mm;
+            min-height: 297mm;
+            padding: 18mm 14mm;
+        }
+        
+        /* Responsive tasarım */
+        @media (max-width: 1024px) {
+            .print-page {
+                margin: 10px;
+                padding: 15mm;
+                max-width: 100%;
+            }
+            
+            .table-cell {
+                padding: 4px 2px;
+                font-size: 10px;
+            }
+            
+            input[type="text"], input[type="number"], input[type="date"] {
+                font-size: 10px;
+                padding: 2px 4px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .print-page {
+                padding: 10mm;
+            }
+            
+            .grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .table-cell {
+                padding: 3px 1px;
+                font-size: 9px;
+            }
+            
+            .overflow-x-auto {
+                overflow-x: scroll;
+            }
+            
+            table {
+                min-width: 800px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .flex {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .flex-1 {
+                text-align: center;
+            }
+            
+            .text-xl {
+                font-size: 1rem;
+            }
+            
+            .text-lg {
+                font-size: 0.9rem;
+            }
+        }
+        
+        input[type="text"], input[type="number"], input[type="date"] {
+            border: 1px solid #d1d5db;
+            padding: 4px 8px;
+            font-size: 12px;
+            width: 100%;
+        }
+        
+        .table-cell {
+            border: 1px solid #374151;
+            padding: 8px 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="bg-gray-100 min-h-full">
+  <div class="print-page"><!-- Üst Bölüm -->
+   <div class="mb-8"><!-- Logo ve Tarih -->
+    <div class="flex justify-between items-start mb-6">
+     <div class="flex-shrink-0"><img src="https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png" alt="SomTech Logo" class="h-16" style="width: 120px; height: auto;" onerror="this.style.display='none';">
+     </div>
+     <div class="flex-shrink-0 text-right">
+      <div class="bg-gray-100 px-4 py-2 rounded-lg border"><span class="text-sm font-semibold text-gray-700">📅 Tarih: </span> <span id="current-date" class="text-sm font-bold"></span>
+      </div>
+     </div>
+    </div><!-- Başlık - Ortalanmış -->
+    <div class="text-center mb-6">
+     <h1 id="form-title" class="text-2xl font-bold text-gray-800 mb-3">SİPARİŞ ONAY FORMU (SOF)</h1>
+     <div class="w-full h-0.5 mb-4" style="background-color: #cf2e26;"></div>
+     <p id="company-info" class="text-base font-semibold text-gray-600">RF100, SOMTECH RU, FABRİKA MÜDÜRLÜĞÜ</p>
+    </div>
+   </div><!-- Tablo -->
+   <div class="overflow-x-auto mb-6">
+    <table class="w-full border-collapse border-2 border-gray-800 text-xs">
+     <thead>
+      <tr class="bg-blue-800 text-white">
+       <th class="table-cell w-12">SIRA NO</th>
+       <th class="table-cell w-24">İSTENEN TESLİM TARİHİ</th>
+       <th class="table-cell w-32">TALEP EDİLEN MALZEME</th>
+       <th class="table-cell w-28">DETAY 1 (MARKA, MODEL VB)</th>
+       <th class="table-cell w-28">DETAY 2 (PROJE, STANDART VB KODLAR)</th>
+       <th class="table-cell w-16">BİRİM</th>
+       <th class="table-cell w-20">TALEP MİKTARI</th>
+       <th class="table-cell w-20">SİPARİŞ MİKTARI</th>
+       <th class="table-cell w-24">BİRİM FİYAT (₽ RUB)</th>
+       <th class="table-cell w-24">TOPLAM FİYAT (₽ RUB)</th>
+      </tr>
+     </thead>
+     <tbody id="table-body"><!-- Satırlar buraya eklenecek -->
+     </tbody>
+     <tfoot>
+      <tr class="bg-gray-200">
+       <td colspan="9" class="table-cell text-right font-bold">GENEL TOPLAM (₽ RUB):</td>
+       <td class="table-cell font-bold text-lg" id="grand-total">0.00</td>
+      </tr>
+     </tfoot>
+    </table>
+   </div><!-- Butonlar -->
+   <div class="flex flex-wrap gap-3 mb-6 no-print justify-center md:justify-start"><button onclick="addRow()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">➕</span> <span>Satır Ekle</span> </button> <button onclick="removeRow()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🗑</span> <span>Satır Sil</span> </button> <button onclick="clearForm()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🧹</span> <span>Temizle</span> </button> <button onclick="printForm()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🖨</span> <span>Yazdır</span> </button>
+   </div><!-- İmza Alanları -->
+   <div class="mt-12">
+    <div class="grid grid-cols-3 gap-8 text-center">
+     <div>
+      <div class="signature-line mb-2" style="border-bottom: 2px solid #000; height: 50px; position: relative;">
+       <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); font-size: 18px; color: #000;">
+        ────────────
+       </div>
+      </div>
+      <p class="font-bold text-sm mt-3" id="signature-1-name">Oğuzhan Karslı</p>
+      <p class="text-xs text-gray-500" id="signature-1-title">SATINALMA VE LOJİSTİK MÜDÜRÜ</p>
+     </div>
+     <div>
+      <div class="signature-line mb-2" style="border-bottom: 2px solid #000; height: 50px; position: relative;">
+       <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); font-size: 18px; color: #000;">
+        ────────────
+       </div>
+      </div>
+      <p class="font-bold text-sm mt-3" id="signature-2-name">Osman Talaş</p>
+      <p class="text-xs text-gray-500" id="signature-2-title">GENEL MÜDÜR</p>
+     </div>
+     <div>
+      <div class="signature-line mb-2" style="border-bottom: 2px solid #000; height: 50px; position: relative;">
+       <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); font-size: 18px; color: #000;">
+        ────────────
+       </div>
+      </div>
+      <p class="font-bold text-sm mt-3" id="signature-3-name">Mutlu Doğan</p>
+      <p class="text-xs text-gray-500" id="signature-3-title">ONAY</p>
+     </div>
+    </div>
+   </div><!-- PDF İndir Butonu -->
+   <div class="text-center mt-8 no-print"><button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"> 📄 PDF olarak İndir </button>
+    <p class="text-xs text-gray-500 mt-3 italic">*Bu belge elektronik ortamda hazırlanmıştır.</p>
+   </div>
+  </div>
+  <script>
+        let rowCount = 0;
+
+        // Varsayılan konfigürasyon
+        const defaultConfig = {
+            form_title: "SİPARİŞ ONAY FORMU (SOF)",
+            company_info: "RF100, SOMTECH RU, FABRİKA MÜDÜRLÜĞÜ",
+            signature_1_name: "Oğuzhan Karslı",
+            signature_1_title: "SATINALMA VE LOJİSTİK MÜDÜRÜ",
+            signature_2_name: "Osman Talaş",
+            signature_2_title: "GENEL MÜDÜR",
+            signature_3_name: "Mutlu Doğan",
+            signature_3_title: "ONAY"
+        };
+
+        // Render fonksiyonu
+        async function render(config) {
+            document.getElementById('form-title').textContent = config.form_title || defaultConfig.form_title;
+            document.getElementById('company-info').textContent = config.company_info || defaultConfig.company_info;
+            document.getElementById('signature-1-name').textContent = config.signature_1_name || defaultConfig.signature_1_name;
+            document.getElementById('signature-1-title').textContent = config.signature_1_title || defaultConfig.signature_1_title;
+            document.getElementById('signature-2-name').textContent = config.signature_2_name || defaultConfig.signature_2_name;
+            document.getElementById('signature-2-title').textContent = config.signature_2_title || defaultConfig.signature_2_title;
+            document.getElementById('signature-3-name').textContent = config.signature_3_name || defaultConfig.signature_3_name;
+            document.getElementById('signature-3-title').textContent = config.signature_3_title || defaultConfig.signature_3_title;
+        }
+
+        // Capabilities
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        // Edit panel values
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["form_title", config.form_title || defaultConfig.form_title],
+                ["company_info", config.company_info || defaultConfig.company_info],
+                ["signature_1_name", config.signature_1_name || defaultConfig.signature_1_name],
+                ["signature_1_title", config.signature_1_title || defaultConfig.signature_1_title],
+                ["signature_2_name", config.signature_2_name || defaultConfig.signature_2_name],
+                ["signature_2_title", config.signature_2_title || defaultConfig.signature_2_title],
+                ["signature_3_name", config.signature_3_name || defaultConfig.signature_3_name],
+                ["signature_3_title", config.signature_3_title || defaultConfig.signature_3_title]
+            ]);
+        }
+
+        // SDK başlatma
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                render,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Bugünün tarihini göster
+        function setCurrentDate() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            document.getElementById('current-date').textContent = `${day}.${month}.${year}`;
+        }
+
+        // Satır ekleme fonksiyonu - Yeni satır ekler ve otomatik hesaplama bağlar
+        function addRow() {
+            rowCount++;
+            const tbody = document.getElementById('table-body');
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 border-b border-gray-300';
+            row.innerHTML = `
+                <td class="table-cell font-semibold">${rowCount}</td>
+                <td class="table-cell">
+                    <input type="date" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1">
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1" placeholder="Malzeme adı">
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1" placeholder="Marka/Model">
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1" placeholder="Proje kodu">
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1" placeholder="Adet/Kg/M²">
+                </td>
+                <td class="table-cell">
+                    <input type="number" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1 talep-miktari" placeholder="0" min="0" step="0.01" oninput="calculateRowTotal(this)">
+                </td>
+                <td class="table-cell">
+                    <input type="number" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1 siparis-miktari" placeholder="0" min="0" step="0.01" oninput="calculateRowTotal(this)">
+                </td>
+                <td class="table-cell">
+                    <input type="number" class="w-full text-xs border-0 bg-transparent focus:bg-white focus:border focus:border-blue-300 rounded px-1 py-1 birim-fiyat" placeholder="0.00" min="0" step="0.01" oninput="calculateRowTotal(this)">
+                </td>
+                <td class="table-cell toplam-fiyat font-bold text-blue-800 bg-blue-50">₽ 0.00</td>
+            `;
+            tbody.appendChild(row);
+            
+            // Yeni eklenen satırın inputlarına focus event ekle
+            const inputs = row.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.classList.add('bg-yellow-100');
+                });
+                input.addEventListener('blur', function() {
+                    this.classList.remove('bg-yellow-100');
+                });
+            });
+        }
+
+        // Satır silme fonksiyonu - Son satırı siler ve toplamları günceller
+        function removeRow() {
+            const tbody = document.getElementById('table-body');
+            if (tbody.children.length > 0) {
+                // Silme onayı
+                const confirmDelete = confirm('Son satırı silmek istediğinizden emin misiniz?');
+                if (confirmDelete) {
+                    tbody.removeChild(tbody.lastElementChild);
+                    rowCount = Math.max(0, rowCount - 1);
+                    updateRowNumbers();
+                    calculateGrandTotal();
+                    
+                    // Başarı mesajı göster
+                    showMessage('Satır başarıyla silindi!', 'success');
+                }
+            } else {
+                showMessage('Silinecek satır bulunamadı!', 'warning');
+            }
+        }
+
+        // Satır numaralarını güncelleme fonksiyonu
+        function updateRowNumbers() {
+            const tbody = document.getElementById('table-body');
+            Array.from(tbody.children).forEach((row, index) => {
+                row.children[0].textContent = index + 1;
+            });
+            rowCount = tbody.children.length;
+        }
+
+        // Satır toplamını hesaplama fonksiyonu - TALEP MİKTARI × BİRİM FİYAT
+        function calculateRowTotal(input) {
+            const row = input.closest('tr');
+            const talepMiktari = parseFloat(row.querySelector('.talep-miktari').value) || 0;
+            const birimFiyat = parseFloat(row.querySelector('.birim-fiyat').value) || 0;
+            
+            // TOPLAM FİYAT = TALEP MİKTARI × BİRİM FİYAT
+            const toplam = talepMiktari * birimFiyat;
+            
+            // Toplamı güncelle ve para birimi ekle
+            const toplamCell = row.querySelector('.toplam-fiyat');
+            toplamCell.textContent = `₽ ${toplam.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            // Toplam sıfırdan büyükse yeşil, değilse mavi yap
+            if (toplam > 0) {
+                toplamCell.className = 'table-cell toplam-fiyat font-bold text-green-800 bg-green-50';
+            } else {
+                toplamCell.className = 'table-cell toplam-fiyat font-bold text-blue-800 bg-blue-50';
+            }
+            
+            // Genel toplamı güncelle
+            calculateGrandTotal();
+        }
+
+        // Genel toplam hesaplama fonksiyonu
+        function calculateGrandTotal() {
+            const toplamCells = document.querySelectorAll('.toplam-fiyat');
+            let genelToplam = 0;
+            
+            toplamCells.forEach(cell => {
+                // ₽ işaretini ve formatlamayı temizle
+                const value = cell.textContent.replace('₽', '').replace(/\./g, '').replace(',', '.').trim();
+                genelToplam += parseFloat(value) || 0;
+            });
+            
+            // Genel toplamı güncelle
+            const genelToplamCell = document.getElementById('grand-total');
+            genelToplamCell.textContent = `₽ ${genelToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            // Genel toplam animasyonu
+            genelToplamCell.classList.add('animate-pulse');
+            setTimeout(() => {
+                genelToplamCell.classList.remove('animate-pulse');
+            }, 500);
+        }
+
+        // Formu temizleme fonksiyonu
+        function clearForm() {
+            const confirmClear = confirm('Tüm form verilerini temizlemek istediğinizden emin misiniz?\nBu işlem geri alınamaz!');
+            if (confirmClear) {
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = '';
+                rowCount = 0;
+                calculateGrandTotal();
+                
+                // Temizleme sonrası 3 boş satır ekle
+                for (let i = 0; i < 3; i++) {
+                    addRow();
+                }
+                
+                showMessage('Form başarıyla temizlendi!', 'success');
+            }
+        }
+
+        // Mesaj gösterme fonksiyonu
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed top-4 right-4 z-50 px-4 py-2 rounded-lg text-white font-semibold shadow-lg transform transition-all duration-300 ${
+                type === 'success' ? 'bg-green-600' : 
+                type === 'warning' ? 'bg-yellow-600' : 
+                type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+            }`;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Animasyon
+            setTimeout(() => messageDiv.classList.add('translate-x-0'), 100);
+            setTimeout(() => {
+                messageDiv.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => document.body.removeChild(messageDiv), 300);
+            }, 3000);
+        }
+
+        // PDF indirme fonksiyonu - Geliştirilmiş A4 uyumlu, profesyonel düzen
+        function downloadPDF() {
+            showMessage('PDF hazırlanıyor, lütfen bekleyin...', 'info');
+            
+            // PDF için özel HTML oluştur
+            const pdfContent = createPDFContent();
+            
+            // Geçici PDF container oluştur
+            const pdfContainer = document.createElement('div');
+            pdfContainer.innerHTML = pdfContent;
+            pdfContainer.style.cssText = `
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+                width: 210mm;
+                min-height: 297mm;
+                background: white;
+                padding: 18mm 14mm;
+                font-family: 'Calibri', 'Arial', sans-serif;
+                font-size: 12px;
+                line-height: 1.4;
+                color: #000;
+            `;
+            
+            document.body.appendChild(pdfContainer);
+            
+            // HTML2Canvas ile yüksek kaliteli görüntü al
+            html2canvas(pdfContainer, {
+                scale: 3, // Yüksek çözünürlük için
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                width: pdfContainer.scrollWidth,
+                height: pdfContainer.scrollHeight,
+                scrollX: 0,
+                scrollY: 0,
+                logging: false,
+                imageTimeout: 15000,
+                removeContainer: true
+            }).then(canvas => {
+                // Geçici container'ı temizle
+                document.body.removeChild(pdfContainer);
+                
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                const { jsPDF } = window.jsPdf;
+                
+                // A4 boyutları (mm)
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = 210;
+                const pdfHeight = 297;
+                
+                // Görüntüyü A4'e tam sığacak şekilde boyutlandır
+                const imgWidth = pdfWidth;
+                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                // Tek sayfaya sığdır
+                if (imgHeight <= pdfHeight) {
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                } else {
+                    // Çok uzunsa ölçekle
+                    const scaledHeight = pdfHeight;
+                    const scaledWidth = (canvas.width * pdfHeight) / canvas.height;
+                    const xOffset = Math.max(0, (pdfWidth - scaledWidth) / 2);
+                    pdf.addImage(imgData, 'PNG', xOffset, 0, scaledWidth, scaledHeight);
+                }
+                
+                // PDF metadata
+                pdf.setProperties({
+                    title: 'SomTech Sipariş Onay Formu',
+                    subject: 'Sipariş Onay Belgesi',
+                    author: 'SomTech RU',
+                    creator: 'SomTech Form Sistemi'
+                });
+                
+                // PDF'i indir
+                const today = new Date();
+                const dateStr = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
+                pdf.save(`SomTech_Siparis_Onay_Formu_${dateStr}.pdf`);
+                
+                showMessage('PDF başarıyla indirildi!', 'success');
+            }).catch(error => {
+                console.error('PDF oluşturma hatası:', error);
+                showMessage('PDF oluşturulurken hata oluştu!', 'error');
+                
+                // Hata durumunda geçici container'ı temizle
+                if (document.body.contains(pdfContainer)) {
+                    document.body.removeChild(pdfContainer);
+                }
+            });
+        }
+
+        // PDF için özel HTML içeriği oluştur
+        function createPDFContent() {
+            // Mevcut form verilerini topla
+            const formTitle = document.getElementById('form-title').textContent;
+            const companyInfo = document.getElementById('company-info').textContent;
+            const currentDate = document.getElementById('current-date').textContent;
+            
+            // İmza bilgilerini al
+            const signature1Name = document.getElementById('signature-1-name').textContent;
+            const signature1Title = document.getElementById('signature-1-title').textContent;
+            const signature2Name = document.getElementById('signature-2-name').textContent;
+            const signature2Title = document.getElementById('signature-2-title').textContent;
+            const signature3Name = document.getElementById('signature-3-name').textContent;
+            const signature3Title = document.getElementById('signature-3-title').textContent;
+            
+            // Tablo verilerini topla
+            const tbody = document.getElementById('table-body');
+            let tableRows = '';
+            let grandTotal = 0;
+            
+            Array.from(tbody.children).forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const siraNo = index + 1;
+                const teslimTarihi = inputs[0].value || '-';
+                const malzeme = inputs[1].value || '-';
+                const detay1 = inputs[2].value || '-';
+                const detay2 = inputs[3].value || '-';
+                const birim = inputs[4].value || '-';
+                const talepMiktari = inputs[5].value || '0';
+                const siparisMiktari = inputs[6].value || '0';
+                const birimFiyat = inputs[7].value || '0';
+                
+                // Toplam hesapla
+                const toplam = parseFloat(talepMiktari) * parseFloat(birimFiyat);
+                grandTotal += toplam;
+                
+                tableRows += `
+                    <tr style="border-bottom: 1px solid #374151;">
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${siraNo}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-size: 10px;">${teslimTarihi}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${malzeme}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${detay1}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${detay2}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-size: 10px;">${birim}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${talepMiktari}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${siparisMiktari}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: 600;">₽ ${parseFloat(birimFiyat).toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
+                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: bold; background-color: #f3f4f6;">₽ ${toplam.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
+                    </tr>
+                `;
+            });
+            
+            return `
+                <div style="width: 100%; min-height: 297mm; background: white; border: 2px solid #d1d5db; padding: 0; margin: 0; font-family: 'Calibri', 'Arial', sans-serif;">
+                    <!-- Üst Bölüm -->
+                    <div style="margin-bottom: 30px;">
+                        <!-- Logo ve Tarih -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                            <div style="flex-shrink: 0;">
+                                <img src="https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png" 
+                                     alt="SomTech Logo" 
+                                     style="width: 120px; height: auto;"
+                                     onerror="this.style.display='none';">
+                            </div>
+                            <div style="flex-shrink: 0; text-align: right;">
+                                <div style="background-color: #f3f4f6; padding: 12px 16px; border-radius: 8px; border: 1px solid #d1d5db;">
+                                    <span style="font-size: 12px; font-weight: 600; color: #374151;">📅 Tarih: </span>
+                                    <span style="font-size: 12px; font-weight: bold; color: #000;">${currentDate}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Başlık - Ortalanmış -->
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <h1 style="font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 12px; margin-top: 0;">${formTitle}</h1>
+                            <div style="width: 100%; height: 2px; background-color: #cf2e26; margin-bottom: 16px;"></div>
+                            <p style="font-size: 16px; font-weight: 600; color: #4b5563; margin: 0;">${companyInfo}</p>
+                        </div>
+                    </div>
+
+                    <!-- Tablo -->
+                    <div style="margin-bottom: 25px; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; border: 2px solid #374151; font-size: 10px;">
+                            <thead>
+                                <tr style="background-color: #1e40af; color: white;">
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">SIRA NO</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">İSTENEN TESLİM TARİHİ</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 20%;">TALEP EDİLEN MALZEME</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 15%;">DETAY 1 (MARKA, MODEL VB)</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 15%;">DETAY 2 (PROJE, STANDART VB KODLAR)</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">BİRİM</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">TALEP MİKTARI</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">SİPARİŞ MİKTARI</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">BİRİM FİYAT (₽ RUB)</th>
+                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">TOPLAM FİYAT (₽ RUB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                            <tfoot>
+                                <tr style="background-color: #e5e7eb;">
+                                    <td colspan="9" style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: bold; font-size: 12px;">GENEL TOPLAM (₽ RUB):</td>
+                                    <td style="border: 1px solid #374151; padding: 8px 4px; font-weight: bold; font-size: 14px; text-align: right; background-color: #fef3c7;">₽ ${grandTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- İmza Alanları -->
+                    <div style="margin-top: 40px; margin-bottom: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; text-align: center;">
+                            <div>
+                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
+                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
+                                </div>
+                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature1Name}</p>
+                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature1Title}</p>
+                            </div>
+                            <div>
+                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
+                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
+                                </div>
+                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature2Name}</p>
+                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature2Title}</p>
+                            </div>
+                            <div>
+                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
+                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
+                                </div>
+                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature3Name}</p>
+                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature3Title}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Elektronik Belge Notu -->
+                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                        <p style="font-size: 10px; color: #6b7280; font-style: italic; margin: 0;">*Bu belge elektronik ortamda hazırlanmıştır.*</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Yazdırma fonksiyonu
+        function printForm() {
+            showMessage('Yazdırma hazırlanıyor...', 'info');
+            
+            // Yazdırma öncesi stil ayarları
+            const originalTitle = document.title;
+            document.title = 'SomTech Sipariş Onay Formu';
+            
+            // Yazdır
+            window.print();
+            
+            // Başlığı geri yükle
+            document.title = originalTitle;
+            
+            showMessage('Yazdırma penceresi açıldı!', 'success');
+        }
+
+        // Klavye kısayolları
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+P - Yazdır
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                printForm();
+            }
+            
+            // Ctrl+S - PDF İndir
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                downloadPDF();
+            }
+            
+            // Ctrl+N - Yeni Satır
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                addRow();
+            }
+            
+            // Delete - Satır Sil (sadece tablo içindeyken)
+            if (e.key === 'Delete' && e.target.closest('table')) {
+                removeRow();
+            }
+        });
+
+        // Otomatik kaydetme (localStorage)
+        function autoSave() {
+            const formData = {
+                rows: [],
+                timestamp: new Date().toISOString()
+            };
+            
+            const tbody = document.getElementById('table-body');
+            Array.from(tbody.children).forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = {
+                    date: inputs[0].value,
+                    material: inputs[1].value,
+                    detail1: inputs[2].value,
+                    detail2: inputs[3].value,
+                    unit: inputs[4].value,
+                    requestQty: inputs[5].value,
+                    orderQty: inputs[6].value,
+                    unitPrice: inputs[7].value
+                };
+                formData.rows.push(rowData);
+            });
+            
+            localStorage.setItem('somtech_form_data', JSON.stringify(formData));
+        }
+
+        // Otomatik yükleme
+        function autoLoad() {
+            const savedData = localStorage.getItem('somtech_form_data');
+            if (savedData) {
+                try {
+                    const formData = JSON.parse(savedData);
+                    const tbody = document.getElementById('table-body');
+                    tbody.innerHTML = '';
+                    rowCount = 0;
+                    
+                    formData.rows.forEach(rowData => {
+                        addRow();
+                        const row = tbody.lastElementChild;
+                        const inputs = row.querySelectorAll('input');
+                        
+                        inputs[0].value = rowData.date || '';
+                        inputs[1].value = rowData.material || '';
+                        inputs[2].value = rowData.detail1 || '';
+                        inputs[3].value = rowData.detail2 || '';
+                        inputs[4].value = rowData.unit || '';
+                        inputs[5].value = rowData.requestQty || '';
+                        inputs[6].value = rowData.orderQty || '';
+                        inputs[7].value = rowData.unitPrice || '';
+                        
+                        // Toplamları hesapla
+                        if (inputs[5].value && inputs[7].value) {
+                            calculateRowTotal(inputs[5]);
+                        }
+                    });
+                    
+                    showMessage('Önceki veriler yüklendi!', 'info');
+                } catch (error) {
+                    console.error('Veri yükleme hatası:', error);
+                }
+            }
+        }
+
+        // Form değişikliklerini dinle ve otomatik kaydet
+        document.addEventListener('input', function(e) {
+            if (e.target.closest('.print-page')) {
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(autoSave, 2000); // 2 saniye sonra kaydet
+            }
+        });
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            
+            // Önceki verileri yükle
+            autoLoad();
+            
+            // Eğer veri yoksa 3 boş satır ekle
+            if (document.getElementById('table-body').children.length === 0) {
+                for (let i = 0; i < 3; i++) {
+                    addRow();
+                }
+            }
+            
+            // Hoş geldin mesajı
+            setTimeout(() => {
+                showMessage('SomTech Sipariş Onay Formu hazır! Klavye kısayolları: Ctrl+P (Yazdır), Ctrl+S (PDF), Ctrl+N (Yeni Satır)', 'info');
+            }, 1000);
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe131d6127d25d',t:'MTc2MDY4NjA1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
