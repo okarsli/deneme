@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOF Ana Liste - SomTech RU</title>
+  <title>SOF Ana Tablo - SomTech RU</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <style>
@@ -14,79 +14,92 @@
         
         .table-cell {
             border: 1px solid #d1d5db;
-            padding: 8px 6px;
+            padding: 6px 4px;
             text-align: center;
             vertical-align: middle;
-            font-size: 11px;
+            font-size: 10px;
         }
         
         .table-header {
             background-color: #2459a0;
             color: white;
             font-weight: bold;
-            font-size: 10px;
-            padding: 10px 6px;
+            font-size: 9px;
+            padding: 8px 4px;
+        }
+        
+        .row-data {
+            background-color: #f0f9ff;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .row-data:hover {
+            background-color: #e0f2fe;
         }
         
         input[type="text"], input[type="number"], input[type="date"], select {
             border: 1px solid #d1d5db;
-            padding: 4px 6px;
-            font-size: 11px;
+            padding: 3px 4px;
+            font-size: 9px;
             width: 100%;
-            border-radius: 3px;
+            border-radius: 2px;
+            background-color: white;
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: #2459a0;
-            box-shadow: 0 0 0 2px rgba(36, 89, 160, 0.1);
+            box-shadow: 0 0 0 1px rgba(36, 89, 160, 0.2);
         }
         
-        .hover-row:hover {
-            background-color: #f8fafc;
+        .sof-form-number {
+            background-color: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+            border: 2px solid #3b82f6;
         }
         
         .status-pending {
             background-color: #fef3c7;
             color: #92400e;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
         
         .status-approved {
             background-color: #d1fae5;
             color: #065f46;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
         
         .status-rejected {
             background-color: #fee2e2;
             color: #991b1b;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .table-cell {
-                padding: 4px 2px;
-                font-size: 9px;
+                padding: 3px 2px;
+                font-size: 8px;
             }
             
             .table-header {
-                font-size: 8px;
+                font-size: 7px;
                 padding: 6px 2px;
             }
             
             input, select {
-                font-size: 9px;
-                padding: 2px 4px;
+                font-size: 8px;
+                padding: 2px 3px;
             }
         }
         
@@ -94,10 +107,16 @@
             overflow-x: auto;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
+            background-color: white;
         }
         
         table {
-            min-width: 1800px;
+            min-width: 2400px;
+        }
+        
+        .form-group-border {
+            border-left: 4px solid #cf2e26;
+            background-color: #fef7f7;
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -109,7 +128,7 @@
     <div class="flex justify-between items-center mb-6">
      <div class="flex items-center gap-4"><img src="https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png" alt="SomTech Logo" class="h-12" onerror="this.style.display='none';">
       <div>
-       <h1 id="page-title" class="text-2xl font-bold text-gray-800">SOF ANA LİSTESİ</h1>
+       <h1 id="page-title" class="text-2xl font-bold text-gray-800">SOF ANA TABLO</h1>
        <p id="company-info" class="text-sm text-gray-600">SOMTECH RU - FABRİKA MÜDÜRLÜĞÜ</p>
       </div>
      </div>
@@ -117,11 +136,11 @@
       <div class="bg-blue-100 px-4 py-2 rounded-lg border border-blue-200"><span class="text-sm font-semibold text-blue-700">📅 Tarih: </span> <span id="current-date" class="text-sm font-bold text-blue-800"></span>
       </div>
      </div>
-    </div><!-- Arama ve Butonlar -->
+    </div><!-- Butonlar -->
     <div class="flex flex-wrap gap-4 items-center justify-between mb-6">
-     <div class="flex gap-3"><button onclick="addRow()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow-md transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">➕</span> <span>Satır Ekle</span> </button> <button onclick="removeRow()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold shadow-md transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🗑</span> <span>Satır Sil</span> </button> <button onclick="clearAll()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold shadow-md transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🧹</span> <span>Temizle</span> </button>
+     <div class="flex gap-3"><button onclick="startNewRequest()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🆕</span> <span>Yeni Talep Başlat</span> </button> <button onclick="addSubRow()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">➕</span> <span>Alt Satır Ekle</span> </button> <button onclick="removeRow()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🗑</span> <span>Satır Sil</span> </button> <button onclick="clearAll()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"> <span class="text-lg">🧹</span> <span>Tümünü Temizle</span> </button>
      </div>
-     <div class="flex items-center gap-3"><label class="text-sm font-semibold text-gray-700">🔍 SOF Arama:</label> <input type="text" id="search-input" placeholder="SOF-2025-001" class="border border-gray-300 rounded-lg px-3 py-2 w-48 focus:border-blue-500 focus:ring-2 focus:ring-blue-200" oninput="filterTable()"> <button onclick="clearSearch()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm"> Temizle </button>
+     <div class="bg-blue-50 px-4 py-2 rounded-lg border border-blue-200"><span class="text-sm font-semibold text-blue-700">Aktif SOF Form No: </span> <span id="current-sof-number" class="text-sm font-bold text-blue-800">-</span>
      </div>
     </div>
    </div><!-- Ana Tablo -->
@@ -130,41 +149,57 @@
      <table class="w-full border-collapse">
       <thead>
        <tr>
-        <th class="table-cell table-header" style="width: 60px;">SIRA NO</th>
-        <th class="table-cell table-header" style="width: 120px;">SOF TALEP NO</th>
-        <th class="table-cell table-header" style="width: 120px;">İSTENEN TESLİM TARİHİ</th>
-        <th class="table-cell table-header" style="width: 200px;">TALEP EDİLEN MALZEME</th>
-        <th class="table-cell table-header" style="width: 150px;">DETAY 1 (MARKA, MODEL VB)</th>
-        <th class="table-cell table-header" style="width: 150px;">DETAY 2 (PROJE, STANDART VB KODLAR)</th>
-        <th class="table-cell table-header" style="width: 80px;">BİRİM</th>
-        <th class="table-cell table-header" style="width: 100px;">ANA DEPO STOK MİKTARI</th>
-        <th class="table-cell table-header" style="width: 100px;">ŞANTİYE DEPO STOK MİKTARI</th>
-        <th class="table-cell table-header" style="width: 100px;">TALEP MİKTARI</th>
-        <th class="table-cell table-header" style="width: 100px;">SİPARİŞ MİKTARI</th>
-        <th class="table-cell table-header" style="width: 120px;">BİRİM FİYAT (₽ RUB)</th>
-        <th class="table-cell table-header" style="width: 120px;">TOPLAM FİYAT (₽ RUB)</th>
+        <th class="table-cell table-header" style="width: 50px;">SIRA NO</th>
+        <th class="table-cell table-header" style="width: 120px;">SOF FORM NO</th>
+        <th class="table-cell table-header" style="width: 100px;">PROJE KODU</th>
+        <th class="table-cell table-header" style="width: 100px;">TALEP NO</th>
+        <th class="table-cell table-header" style="width: 100px;">MALZEME TİPİ</th>
         <th class="table-cell table-header" style="width: 120px;">TALEP EDEN</th>
+        <th class="table-cell table-header" style="width: 100px;">TALEP TARİHİ</th>
+        <th class="table-cell table-header" style="width: 100px;">İSTENEN TESLİM TARİHİ</th>
+        <th class="table-cell table-header" style="width: 180px;">TALEP EDİLEN MALZEME</th>
+        <th class="table-cell table-header" style="width: 140px;">DETAY 1 (MARKA, MODEL VB)</th>
+        <th class="table-cell table-header" style="width: 140px;">DETAY 2 (PROJE, STANDART VB KODLAR)</th>
+        <th class="table-cell table-header" style="width: 70px;">BİRİM</th>
+        <th class="table-cell table-header" style="width: 90px;">TALEP MİKTARI</th>
+        <th class="table-cell table-header" style="width: 90px;">SİPARİŞ MİKTARI</th>
+        <th class="table-cell table-header" style="width: 100px;">BİRİM FİYAT (₽ RUB)</th>
+        <th class="table-cell table-header" style="width: 110px;">TOPLAM FİYAT (₽ RUB)</th>
+        <th class="table-cell table-header" style="width: 120px;">TEDARİKÇİ</th>
+        <th class="table-cell table-header" style="width: 120px;">SATINALMA SORUMLUSU</th>
+        <th class="table-cell table-header" style="width: 100px;">PLANLANAN TESLİM TARİHİ</th>
+        <th class="table-cell table-header" style="width: 90px;">TESLİMAT MİKTARI</th>
+        <th class="table-cell table-header" style="width: 100px;">TESLİMAT TARİHİ</th>
+        <th class="table-cell table-header" style="width: 90px;">KALAN MİKTAR</th>
+        <th class="table-cell table-header" style="width: 100px;">ONAY DURUMU</th>
         <th class="table-cell table-header" style="width: 150px;">AÇIKLAMA</th>
-        <th class="table-cell table-header" style="width: 120px;">ONAY DURUMU</th>
        </tr>
       </thead>
       <tbody id="table-body"><!-- Satırlar buraya eklenecek -->
       </tbody>
       <tfoot>
        <tr class="bg-gray-100">
-        <td colspan="12" class="table-cell text-right font-bold text-gray-800">GENEL TOPLAM (₽ RUB):</td>
+        <td colspan="15" class="table-cell text-right font-bold text-gray-800">GENEL TOPLAM (₽ RUB):</td>
         <td class="table-cell font-bold text-lg text-green-800 bg-green-50" id="grand-total">₽ 0.00</td>
-        <td colspan="3" class="table-cell"></td>
+        <td colspan="8" class="table-cell"></td>
        </tr>
       </tfoot>
      </table>
     </div><!-- İstatistikler -->
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
      <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
       <div class="text-blue-600 text-sm font-semibold">
        Toplam SOF Sayısı
       </div>
-      <div class="text-2xl font-bold text-blue-800" id="total-count">
+      <div class="text-2xl font-bold text-blue-800" id="total-sof-count">
+       0
+      </div>
+     </div>
+     <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+      <div class="text-green-600 text-sm font-semibold">
+       Toplam Kalem Sayısı
+      </div>
+      <div class="text-2xl font-bold text-green-800" id="total-item-count">
        0
       </div>
      </div>
@@ -176,17 +211,17 @@
        0
       </div>
      </div>
-     <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-      <div class="text-green-600 text-sm font-semibold">
-       Onaylanan SOF'lar
+     <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+      <div class="text-emerald-600 text-sm font-semibold">
+       Onaylanan Kalemler
       </div>
-      <div class="text-2xl font-bold text-green-800" id="approved-count">
+      <div class="text-2xl font-bold text-emerald-800" id="approved-count">
        0
       </div>
      </div>
      <div class="bg-red-50 p-4 rounded-lg border border-red-200">
       <div class="text-red-600 text-sm font-semibold">
-       Reddedilen SOF'lar
+       Reddedilen Kalemler
       </div>
       <div class="text-2xl font-bold text-red-800" id="rejected-count">
        0
@@ -197,11 +232,12 @@
   </div>
   <script>
         let rowCount = 0;
-        let sofCounter = 1;
+        let sofFormCounter = 38; // RF100.SOF-0038'den başlayacak
+        let currentSOFNumber = '';
 
         // Varsayılan konfigürasyon
         const defaultConfig = {
-            page_title: "SOF ANA LİSTESİ",
+            page_title: "SOF ANA TABLO",
             company_info: "SOMTECH RU - FABRİKA MÜDÜRLÜĞÜ"
         };
 
@@ -248,27 +284,70 @@
             document.getElementById('current-date').textContent = `${day}.${month}.${year}`;
         }
 
-        // SOF numarası üretme
-        function generateSOFNumber() {
-            const year = new Date().getFullYear();
-            const number = String(sofCounter).padStart(3, '0');
-            sofCounter++;
-            return `SOF-${year}-${number}`;
+        // SOF Form numarası üretme
+        function generateSOFFormNumber() {
+            const number = String(sofFormCounter).padStart(4, '0');
+            sofFormCounter++;
+            return `RF100.SOF-${number}`;
         }
 
-        // Satır ekleme fonksiyonu
-        function addRow() {
+        // Yeni talep başlatma
+        function startNewRequest() {
+            currentSOFNumber = generateSOFFormNumber();
+            document.getElementById('current-sof-number').textContent = currentSOFNumber;
+            
+            // İlk satırı ekle
+            addRowWithSOFNumber(currentSOFNumber);
+            
+            showMessage(`Yeni talep başlatıldı: ${currentSOFNumber}`, 'success');
+        }
+
+        // Alt satır ekleme (aynı SOF numarası ile)
+        function addSubRow() {
+            if (!currentSOFNumber) {
+                showMessage('Önce "Yeni Talep Başlat" butonuna basın!', 'warning');
+                return;
+            }
+            
+            addRowWithSOFNumber(currentSOFNumber);
+            showMessage('Alt satır eklendi!', 'success');
+        }
+
+        // SOF numarası ile satır ekleme
+        function addRowWithSOFNumber(sofNumber) {
             rowCount++;
             const tbody = document.getElementById('table-body');
             const row = document.createElement('tr');
-            row.className = 'hover-row border-b border-gray-200';
+            row.className = 'row-data hover:bg-blue-50 border-b border-gray-200';
             
-            const sofNumber = generateSOFNumber();
+            const today = new Date().toISOString().split('T')[0];
             
             row.innerHTML = `
                 <td class="table-cell font-semibold text-gray-700">${rowCount}</td>
                 <td class="table-cell">
-                    <input type="text" class="sof-number bg-blue-50 font-bold text-blue-800" value="${sofNumber}" readonly>
+                    <input type="text" class="sof-form-number" value="${sofNumber}" readonly>
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="project-code" placeholder="PRJ-001">
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="request-number" placeholder="REQ-001">
+                </td>
+                <td class="table-cell">
+                    <select class="material-type">
+                        <option value="">Seçiniz</option>
+                        <option value="Elektrik">Elektrik</option>
+                        <option value="Mekanik">Mekanik</option>
+                        <option value="İnşaat">İnşaat</option>
+                        <option value="Kimyasal">Kimyasal</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="requester" placeholder="Talep eden kişi">
+                </td>
+                <td class="table-cell">
+                    <input type="date" class="request-date" value="${today}">
                 </td>
                 <td class="table-cell">
                     <input type="date" class="delivery-date">
@@ -283,36 +362,52 @@
                     <input type="text" class="detail2" placeholder="Proje kodu">
                 </td>
                 <td class="table-cell">
-                    <input type="text" class="unit" placeholder="Adet/Kg/M²">
-                </td>
-                <td class="table-cell">
-                    <input type="number" class="main-stock" placeholder="0" min="0" step="0.01">
-                </td>
-                <td class="table-cell">
-                    <input type="number" class="site-stock" placeholder="0" min="0" step="0.01">
+                    <select class="unit">
+                        <option value="">Seçiniz</option>
+                        <option value="Adet">Adet</option>
+                        <option value="Kg">Kg</option>
+                        <option value="M">M</option>
+                        <option value="M²">M²</option>
+                        <option value="M³">M³</option>
+                        <option value="Lt">Lt</option>
+                        <option value="Ton">Ton</option>
+                    </select>
                 </td>
                 <td class="table-cell">
                     <input type="number" class="request-qty" placeholder="0" min="0" step="0.01" oninput="calculateRowTotal(this)">
                 </td>
                 <td class="table-cell">
-                    <input type="number" class="order-qty" placeholder="0" min="0" step="0.01">
+                    <input type="number" class="order-qty" placeholder="0" min="0" step="0.01" oninput="calculateRemainingQty(this)">
                 </td>
                 <td class="table-cell">
                     <input type="number" class="unit-price" placeholder="0.00" min="0" step="0.01" oninput="calculateRowTotal(this)">
                 </td>
                 <td class="table-cell total-price font-bold text-green-800 bg-green-50">₽ 0.00</td>
                 <td class="table-cell">
-                    <input type="text" class="requester" placeholder="Talep eden kişi">
+                    <input type="text" class="supplier" placeholder="Tedarikçi">
                 </td>
                 <td class="table-cell">
-                    <input type="text" class="description" placeholder="Açıklama">
+                    <input type="text" class="procurement-responsible" placeholder="Sorumlu kişi">
                 </td>
+                <td class="table-cell">
+                    <input type="date" class="planned-delivery">
+                </td>
+                <td class="table-cell">
+                    <input type="number" class="delivery-qty" placeholder="0" min="0" step="0.01" oninput="calculateRemainingQty(this)">
+                </td>
+                <td class="table-cell">
+                    <input type="date" class="delivery-actual-date">
+                </td>
+                <td class="table-cell remaining-qty font-bold text-orange-800 bg-orange-50">0</td>
                 <td class="table-cell">
                     <select class="approval-status" onchange="updateStatusStyle(this)">
                         <option value="Bekliyor">Bekliyor</option>
                         <option value="Onaylandı">Onaylandı</option>
                         <option value="Reddedildi">Reddedildi</option>
                     </select>
+                </td>
+                <td class="table-cell">
+                    <input type="text" class="description" placeholder="Açıklama">
                 </td>
             `;
             
@@ -324,8 +419,6 @@
             
             // İstatistikleri güncelle
             updateStatistics();
-            
-            showMessage('Yeni SOF satırı eklendi!', 'success');
         }
 
         // Durum stilini güncelleme
@@ -344,7 +437,55 @@
             updateStatistics();
         }
 
-        // Satır silme fonksiyonu
+        // Satır toplamını hesaplama
+        function calculateRowTotal(input) {
+            const row = input.closest('tr');
+            const requestQty = parseFloat(row.querySelector('.request-qty').value) || 0;
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            
+            const total = requestQty * unitPrice;
+            
+            const totalCell = row.querySelector('.total-price');
+            totalCell.textContent = `₽ ${total.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            calculateGrandTotal();
+        }
+
+        // Kalan miktarı hesaplama
+        function calculateRemainingQty(input) {
+            const row = input.closest('tr');
+            const orderQty = parseFloat(row.querySelector('.order-qty').value) || 0;
+            const deliveryQty = parseFloat(row.querySelector('.delivery-qty').value) || 0;
+            
+            const remaining = orderQty - deliveryQty;
+            
+            const remainingCell = row.querySelector('.remaining-qty');
+            remainingCell.textContent = remaining.toFixed(2);
+            
+            // Kalan miktar renklendir
+            if (remaining > 0) {
+                remainingCell.className = 'table-cell remaining-qty font-bold text-orange-800 bg-orange-50';
+            } else if (remaining === 0) {
+                remainingCell.className = 'table-cell remaining-qty font-bold text-green-800 bg-green-50';
+            } else {
+                remainingCell.className = 'table-cell remaining-qty font-bold text-red-800 bg-red-50';
+            }
+        }
+
+        // Genel toplam hesaplama
+        function calculateGrandTotal() {
+            const totalCells = document.querySelectorAll('.total-price');
+            let grandTotal = 0;
+            
+            totalCells.forEach(cell => {
+                const value = cell.textContent.replace('₽', '').replace(/\./g, '').replace(',', '.').trim();
+                grandTotal += parseFloat(value) || 0;
+            });
+            
+            document.getElementById('grand-total').textContent = `₽ ${grandTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Satır silme
         function removeRow() {
             const tbody = document.getElementById('table-body');
             if (tbody.children.length > 0) {
@@ -370,76 +511,33 @@
             rowCount = tbody.children.length;
         }
 
-        // Satır toplamını hesaplama
-        function calculateRowTotal(input) {
-            const row = input.closest('tr');
-            const requestQty = parseFloat(row.querySelector('.request-qty').value) || 0;
-            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
-            
-            const total = requestQty * unitPrice;
-            
-            const totalCell = row.querySelector('.total-price');
-            totalCell.textContent = `₽ ${total.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            
-            calculateGrandTotal();
-        }
-
-        // Genel toplam hesaplama
-        function calculateGrandTotal() {
-            const totalCells = document.querySelectorAll('.total-price');
-            let grandTotal = 0;
-            
-            totalCells.forEach(cell => {
-                const value = cell.textContent.replace('₽', '').replace(/\./g, '').replace(',', '.').trim();
-                grandTotal += parseFloat(value) || 0;
-            });
-            
-            document.getElementById('grand-total').textContent = `₽ ${grandTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        }
-
         // İstatistikleri güncelleme
         function updateStatistics() {
             const tbody = document.getElementById('table-body');
             const rows = tbody.children;
             
-            let totalCount = rows.length;
+            // SOF sayısını hesapla (benzersiz SOF numaraları)
+            const uniqueSOFs = new Set();
+            let totalItems = rows.length;
             let pendingCount = 0;
             let approvedCount = 0;
             let rejectedCount = 0;
             
             Array.from(rows).forEach(row => {
+                const sofNumber = row.querySelector('.sof-form-number').value;
+                uniqueSOFs.add(sofNumber);
+                
                 const status = row.querySelector('.approval-status').value;
                 if (status === 'Bekliyor') pendingCount++;
                 else if (status === 'Onaylandı') approvedCount++;
                 else if (status === 'Reddedildi') rejectedCount++;
             });
             
-            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('total-sof-count').textContent = uniqueSOFs.size;
+            document.getElementById('total-item-count').textContent = totalItems;
             document.getElementById('pending-count').textContent = pendingCount;
             document.getElementById('approved-count').textContent = approvedCount;
             document.getElementById('rejected-count').textContent = rejectedCount;
-        }
-
-        // Tablo filtreleme
-        function filterTable() {
-            const searchValue = document.getElementById('search-input').value.toLowerCase();
-            const tbody = document.getElementById('table-body');
-            const rows = tbody.children;
-            
-            Array.from(rows).forEach(row => {
-                const sofNumber = row.querySelector('.sof-number').value.toLowerCase();
-                if (sofNumber.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // Aramayı temizleme
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            filterTable();
         }
 
         // Tümünü temizleme
@@ -447,7 +545,8 @@
             if (confirm('Tüm SOF verilerini silmek istediğinizden emin misiniz?\nBu işlem geri alınamaz!')) {
                 document.getElementById('table-body').innerHTML = '';
                 rowCount = 0;
-                sofCounter = 1;
+                currentSOFNumber = '';
+                document.getElementById('current-sof-number').textContent = '-';
                 calculateGrandTotal();
                 updateStatistics();
                 showMessage('Tüm veriler temizlendi!', 'success');
@@ -477,16 +576,16 @@
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
-                addRow();
+                startNewRequest();
+            }
+            
+            if (e.ctrlKey && e.key === 'm') {
+                e.preventDefault();
+                addSubRow();
             }
             
             if (e.key === 'Delete' && e.target.closest('table')) {
                 removeRow();
-            }
-            
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                document.getElementById('search-input').focus();
             }
         });
 
@@ -494,15 +593,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             setCurrentDate();
             
-            // 3 örnek satır ekle
-            for (let i = 0; i < 3; i++) {
-                addRow();
-            }
-            
             setTimeout(() => {
-                showMessage('SOF Ana Liste hazır! Klavye kısayolları: Ctrl+N (Yeni Satır), Ctrl+F (Arama), Delete (Satır Sil)', 'info');
+                showMessage('SOF Ana Tablo hazır! Klavye kısayolları: Ctrl+N (Yeni Talep), Ctrl+M (Alt Satır), Delete (Satır Sil)', 'info');
             }, 1000);
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe3c84f593d35d',t:'MTc2MDY4Nzc1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe43c551e4d35d',t:'MTc2MDY4ODA1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
