@@ -212,7 +212,7 @@
      </div>
     </div>
    </div><!-- PDF İndir Butonu -->
-   <div class="text-center mt-8 no-print"><button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"> 📄 PDF olarak İndir </button>
+   <div class="text-center mt-8 no-print"><button onclick="generatePDF()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"> 📄 PDF olarak İndir </button>
     <p class="text-xs text-gray-500 mt-3 italic">*Bu belge elektronik ortamda hazırlanmıştır.</p>
    </div>
   </div>
@@ -447,240 +447,82 @@
             }, 3000);
         }
 
-        // PDF indirme fonksiyonu - Geliştirilmiş A4 uyumlu, profesyonel düzen
-        function downloadPDF() {
+        // PDF indirme fonksiyonu
+        const { jsPDF } = window.jspdf;
+        async function generatePDF() {
             showMessage('PDF hazırlanıyor, lütfen bekleyin...', 'info');
             
-            // PDF için özel HTML oluştur
-            const pdfContent = createPDFContent();
-            
-            // Geçici PDF container oluştur
-            const pdfContainer = document.createElement('div');
-            pdfContainer.innerHTML = pdfContent;
-            pdfContainer.style.cssText = `
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-                width: 210mm;
-                min-height: 297mm;
-                background: white;
-                padding: 18mm 14mm;
-                font-family: 'Calibri', 'Arial', sans-serif;
-                font-size: 12px;
-                line-height: 1.4;
-                color: #000;
-            `;
-            
-            document.body.appendChild(pdfContainer);
-            
-            // HTML2Canvas ile yüksek kaliteli görüntü al
-            html2canvas(pdfContainer, {
-                scale: 3, // Yüksek çözünürlük için
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff',
-                width: pdfContainer.scrollWidth,
-                height: pdfContainer.scrollHeight,
-                scrollX: 0,
-                scrollY: 0,
-                logging: false,
-                imageTimeout: 15000,
-                removeContainer: true
-            }).then(canvas => {
-                // Geçici container'ı temizle
-                document.body.removeChild(pdfContainer);
-                
-                const imgData = canvas.toDataURL('image/png', 1.0);
-                const { jsPDF } = window.jsPdf;
-                
-                // A4 boyutları (mm)
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = 210;
-                const pdfHeight = 297;
-                
-                // Görüntüyü A4'e tam sığacak şekilde boyutlandır
-                const imgWidth = pdfWidth;
-                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                // Tek sayfaya sığdır
-                if (imgHeight <= pdfHeight) {
-                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                } else {
-                    // Çok uzunsa ölçekle
-                    const scaledHeight = pdfHeight;
-                    const scaledWidth = (canvas.width * pdfHeight) / canvas.height;
-                    const xOffset = Math.max(0, (pdfWidth - scaledWidth) / 2);
-                    pdf.addImage(imgData, 'PNG', xOffset, 0, scaledWidth, scaledHeight);
-                }
-                
-                // PDF metadata
-                pdf.setProperties({
-                    title: 'SomTech Sipariş Onay Formu',
-                    subject: 'Sipariş Onay Belgesi',
-                    author: 'SomTech RU',
-                    creator: 'SomTech Form Sistemi'
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            // Varsayılan logo
+            const logoURL = "https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png";
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = logoURL;
+
+            img.onload = function () {
+                // Üst başlık
+                pdf.addImage(img, "PNG", 15, 10, 35, 15);
+                pdf.setFontSize(14);
+                pdf.setTextColor(36, 89, 160);
+                pdf.text("SOMTECH RU", 60, 20);
+                pdf.setTextColor(207, 46, 38);
+                pdf.setFontSize(11);
+                pdf.text("SİPARİŞ ONAY FORMU (SOF)", 60, 27);
+
+                // Tarih
+                const date = new Date().toLocaleDateString("tr-TR");
+                pdf.setFontSize(10);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(`Tarih: ${date}`, 190, 20, { align: "right" });
+
+                // Tabloyu PDF'e dönüştür
+                const table = document.querySelector("table");
+                pdf.html(table, {
+                    callback: function (pdf) {
+                        pdf.setFontSize(9);
+                        pdf.text("Bu belge elektronik ortamda hazırlanmıştır.", 105, 290, { align: "center" });
+                        pdf.save(`SOMTECH_SOF_${date.replace(/\./g, '_')}.pdf`);
+                        showMessage('PDF başarıyla indirildi!', 'success');
+                    },
+                    x: 10,
+                    y: 40,
+                    html2canvas: { scale: 0.6 },
                 });
-                
-                // PDF'i indir
-                const today = new Date();
-                const dateStr = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
-                pdf.save(`SomTech_Siparis_Onay_Formu_${dateStr}.pdf`);
-                
-                showMessage('PDF başarıyla indirildi!', 'success');
-            }).catch(error => {
-                console.error('PDF oluşturma hatası:', error);
-                showMessage('PDF oluşturulurken hata oluştu!', 'error');
-                
-                // Hata durumunda geçici container'ı temizle
-                if (document.body.contains(pdfContainer)) {
-                    document.body.removeChild(pdfContainer);
-                }
-            });
+            };
+
+            img.onerror = function () {
+                // Logo yüklenemezse logosuz devam et
+                pdf.setFontSize(14);
+                pdf.setTextColor(36, 89, 160);
+                pdf.text("SOMTECH RU", 15, 20);
+                pdf.setTextColor(207, 46, 38);
+                pdf.setFontSize(11);
+                pdf.text("SİPARİŞ ONAY FORMU (SOF)", 15, 27);
+
+                // Tarih
+                const date = new Date().toLocaleDateString("tr-TR");
+                pdf.setFontSize(10);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(`Tarih: ${date}`, 190, 20, { align: "right" });
+
+                // Tabloyu PDF'e dönüştür
+                const table = document.querySelector("table");
+                pdf.html(table, {
+                    callback: function (pdf) {
+                        pdf.setFontSize(9);
+                        pdf.text("Bu belge elektronik ortamda hazırlanmıştır.", 105, 290, { align: "center" });
+                        pdf.save(`SOMTECH_SOF_${date.replace(/\./g, '_')}.pdf`);
+                        showMessage('PDF başarıyla indirildi!', 'success');
+                    },
+                    x: 10,
+                    y: 40,
+                    html2canvas: { scale: 0.6 },
+                });
+            };
         }
 
-        // PDF için özel HTML içeriği oluştur
-        function createPDFContent() {
-            // Mevcut form verilerini topla
-            const formTitle = document.getElementById('form-title').textContent;
-            const companyInfo = document.getElementById('company-info').textContent;
-            const currentDate = document.getElementById('current-date').textContent;
-            
-            // İmza bilgilerini al
-            const signature1Name = document.getElementById('signature-1-name').textContent;
-            const signature1Title = document.getElementById('signature-1-title').textContent;
-            const signature2Name = document.getElementById('signature-2-name').textContent;
-            const signature2Title = document.getElementById('signature-2-title').textContent;
-            const signature3Name = document.getElementById('signature-3-name').textContent;
-            const signature3Title = document.getElementById('signature-3-title').textContent;
-            
-            // Tablo verilerini topla
-            const tbody = document.getElementById('table-body');
-            let tableRows = '';
-            let grandTotal = 0;
-            
-            Array.from(tbody.children).forEach((row, index) => {
-                const inputs = row.querySelectorAll('input');
-                const siraNo = index + 1;
-                const teslimTarihi = inputs[0].value || '-';
-                const malzeme = inputs[1].value || '-';
-                const detay1 = inputs[2].value || '-';
-                const detay2 = inputs[3].value || '-';
-                const birim = inputs[4].value || '-';
-                const talepMiktari = inputs[5].value || '0';
-                const siparisMiktari = inputs[6].value || '0';
-                const birimFiyat = inputs[7].value || '0';
-                
-                // Toplam hesapla
-                const toplam = parseFloat(talepMiktari) * parseFloat(birimFiyat);
-                grandTotal += toplam;
-                
-                tableRows += `
-                    <tr style="border-bottom: 1px solid #374151;">
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${siraNo}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-size: 10px;">${teslimTarihi}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${malzeme}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${detay1}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: left; font-size: 10px;">${detay2}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-size: 10px;">${birim}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${talepMiktari}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: 600;">${siparisMiktari}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: 600;">₽ ${parseFloat(birimFiyat).toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
-                        <td style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: bold; background-color: #f3f4f6;">₽ ${toplam.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
-                    </tr>
-                `;
-            });
-            
-            return `
-                <div style="width: 100%; min-height: 297mm; background: white; border: 2px solid #d1d5db; padding: 0; margin: 0; font-family: 'Calibri', 'Arial', sans-serif;">
-                    <!-- Üst Bölüm -->
-                    <div style="margin-bottom: 30px;">
-                        <!-- Logo ve Tarih -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
-                            <div style="flex-shrink: 0;">
-                                <img src="https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png" 
-                                     alt="SomTech Logo" 
-                                     style="width: 120px; height: auto;"
-                                     onerror="this.style.display='none';">
-                            </div>
-                            <div style="flex-shrink: 0; text-align: right;">
-                                <div style="background-color: #f3f4f6; padding: 12px 16px; border-radius: 8px; border: 1px solid #d1d5db;">
-                                    <span style="font-size: 12px; font-weight: 600; color: #374151;">📅 Tarih: </span>
-                                    <span style="font-size: 12px; font-weight: bold; color: #000;">${currentDate}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Başlık - Ortalanmış -->
-                        <div style="text-align: center; margin-bottom: 25px;">
-                            <h1 style="font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 12px; margin-top: 0;">${formTitle}</h1>
-                            <div style="width: 100%; height: 2px; background-color: #cf2e26; margin-bottom: 16px;"></div>
-                            <p style="font-size: 16px; font-weight: 600; color: #4b5563; margin: 0;">${companyInfo}</p>
-                        </div>
-                    </div>
 
-                    <!-- Tablo -->
-                    <div style="margin-bottom: 25px; overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; border: 2px solid #374151; font-size: 10px;">
-                            <thead>
-                                <tr style="background-color: #1e40af; color: white;">
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">SIRA NO</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">İSTENEN TESLİM TARİHİ</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 20%;">TALEP EDİLEN MALZEME</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 15%;">DETAY 1 (MARKA, MODEL VB)</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 15%;">DETAY 2 (PROJE, STANDART VB KODLAR)</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">BİRİM</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">TALEP MİKTARI</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 8%;">SİPARİŞ MİKTARI</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">BİRİM FİYAT (₽ RUB)</th>
-                                    <th style="border: 1px solid #374151; padding: 8px 4px; text-align: center; font-weight: bold; width: 12%;">TOPLAM FİYAT (₽ RUB)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tableRows}
-                            </tbody>
-                            <tfoot>
-                                <tr style="background-color: #e5e7eb;">
-                                    <td colspan="9" style="border: 1px solid #374151; padding: 8px 4px; text-align: right; font-weight: bold; font-size: 12px;">GENEL TOPLAM (₽ RUB):</td>
-                                    <td style="border: 1px solid #374151; padding: 8px 4px; font-weight: bold; font-size: 14px; text-align: right; background-color: #fef3c7;">₽ ${grandTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                    <!-- İmza Alanları -->
-                    <div style="margin-top: 40px; margin-bottom: 30px;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; text-align: center;">
-                            <div>
-                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
-                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
-                                </div>
-                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature1Name}</p>
-                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature1Title}</p>
-                            </div>
-                            <div>
-                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
-                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
-                                </div>
-                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature2Name}</p>
-                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature2Title}</p>
-                            </div>
-                            <div>
-                                <div style="border-bottom: 2px solid #000; height: 50px; margin-bottom: 8px; position: relative;">
-                                    <div style="position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #000;">────────────</div>
-                                </div>
-                                <p style="font-weight: bold; font-size: 12px; margin: 12px 0 4px 0;">${signature3Name}</p>
-                                <p style="font-size: 10px; color: #6b7280; margin: 0;">${signature3Title}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Elektronik Belge Notu -->
-                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                        <p style="font-size: 10px; color: #6b7280; font-style: italic; margin: 0;">*Bu belge elektronik ortamda hazırlanmıştır.*</p>
-                    </div>
-                </div>
-            `;
-        }
 
         // Yazdırma fonksiyonu
         function printForm() {
@@ -710,7 +552,7 @@
             // Ctrl+S - PDF İndir
             if (e.ctrlKey && e.key === 's') {
                 e.preventDefault();
-                downloadPDF();
+                generatePDF();
             }
             
             // Ctrl+N - Yeni Satır
@@ -816,5 +658,5 @@
             }, 1000);
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe131d6127d25d',t:'MTc2MDY4NjA1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe25d8232235e7',t:'MTc2MDY4NjgyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
