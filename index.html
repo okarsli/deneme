@@ -262,8 +262,8 @@
         
         /* Teslimat Durumu Renkleri */
         .delivery-status-beklemede {
-            background-color: #B0BEC5 !important;
-            color: white !important;
+            background-color: #FACC15 !important; /* Turuncu */
+            color: #92400E !important; /* Koyu turuncu yazı */
             font-weight: bold !important;
             text-align: center !important;
             padding: 4px 8px !important;
@@ -271,7 +271,16 @@
         }
         
         .delivery-status-tamamlandi {
-            background-color: #4CAF50 !important;
+            background-color: #22C55E !important; /* Yeşil */
+            color: white !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+        }
+        
+        .delivery-status-belirlenmedi {
+            background-color: #9CA3AF !important; /* Gri */
             color: white !important;
             font-weight: bold !important;
             text-align: center !important;
@@ -339,6 +348,15 @@
             border-radius: 8px;
             margin: 20px 0;
         }
+        
+        /* Talep eden dolu satırlar için hafif gri arka plan */
+        .talep-eden-filled {
+            background-color: #F9FAFB !important;
+        }
+        
+        .talep-eden-filled:nth-child(even) {
+            background-color: #F3F4F6 !important;
+        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
@@ -376,7 +394,7 @@
     <div class="flex flex-wrap gap-2 justify-center"><button id="bulkEditBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> ✏️ Toplu Düzenle </button> <button id="bulkDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🗑️ Toplu Sil </button> <button id="bulkApproveBtn" class="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> ✅ Toplu Onayla </button> <button id="selectAllBtn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors"> 📋 Tümünü Seç </button> <button id="deselectAllBtn" class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors"> ❌ Seçimi Temizle </button>
     </div>
    </div>
-   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button> <button id="export-csv-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm w-full md:w-auto transition-colors"> 📦 Verileri Dışa Aktar </button> <button id="excel-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 shadow-md w-full md:w-auto transition-colors"> 📊 Excel Olarak Dışa Aktar </button> <button id="clear-local-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🧹 Yerel Veriyi Temizle </button>
+   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button> <button id="export-csv-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm w-full md:w-auto transition-colors"> 📦 Verileri Dışa Aktar </button> <button id="excel-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 shadow-md w-full md:w-auto transition-colors"> 📊 Excel Olarak Dışa Aktar </button> <button id="reload-github-btn" class="bg-orange-600 hover:bg-orange-700 text-white rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🔄 Verileri Yeniden Yükle </button> <button id="clear-local-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🧹 Yerel Veriyi Temizle </button>
    </div><!-- Toplam Bilgi Paneli -->
    <div class="mb-8">
     <div class="text-center mb-6">
@@ -456,6 +474,22 @@
      <tbody id="table-body">
      </tbody>
     </table>
+   </div><!-- Teslimat Durumu Bilgi Paneli -->
+   <div class="mt-6 bg-blue-50 rounded-lg shadow-sm p-4">
+    <div class="text-center">
+     <h3 class="text-lg font-bold text-blue-700 mb-3">📋 Teslimat Durumu Göstergesi</h3>
+     <div class="flex justify-center items-center gap-6 text-sm">
+      <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded-full inline-block"></span> <span class="font-medium text-gray-700">🟢 Tamamlandı</span>
+      </div>
+      <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-400 rounded-full inline-block"></span> <span class="font-medium text-gray-700">🟡 Beklemede</span>
+      </div>
+      <div class="flex items-center gap-2"><span class="w-4 h-4 bg-gray-400 rounded-full inline-block"></span> <span class="font-medium text-gray-700">⚪ Belirlenmedi</span>
+      </div>
+     </div>
+     <div class="mt-3 text-xs text-gray-600">
+      Teslimat durumları teslimat tarihine göre otomatik hesaplanır
+     </div>
+    </div>
    </div><!-- Raporlar ve İstatistikler Paneli -->
    <div class="mt-8 bg-gray-50 rounded-xl shadow-md p-4">
     <div class="text-center mb-6">
@@ -763,6 +797,7 @@
                 'kaydet-btn': permissions.canExport,
                 'export-csv-btn': permissions.canExport,
                 'excel-btn': permissions.canExport,
+                'reload-github-btn': permissions.canManageSystem,
                 'clear-local-btn': permissions.canManageSystem,
                 'bulkEditBtn': permissions.canBulkEdit,
                 'bulkDeleteBtn': permissions.canBulkEdit && permissions.canDelete,
@@ -1230,11 +1265,15 @@
             applyFiltersAndSearch();
         }
 
+        // 2025 yılı için özel localStorage anahtarı
+        const STORAGE_KEY = 'sofData_2025';
+        const BACKUP_KEY = 'sofGlobalBackup';
+
         // LocalStorage kaydetme fonksiyonu
         function saveToLocalStorage() {
             try {
-                localStorage.setItem("sofTableData", JSON.stringify(currentData));
-                console.log('Veriler localStorage\'a kaydedildi');
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+                console.log('Veriler localStorage\'a kaydedildi (sofData_2025)');
             } catch (error) {
                 console.error('LocalStorage kaydetme hatası:', error);
             }
@@ -1243,7 +1282,7 @@
         // LocalStorage'dan veri yükleme fonksiyonu
         function loadFromLocalStorage() {
             try {
-                const savedData = localStorage.getItem("sofTableData");
+                const savedData = localStorage.getItem(STORAGE_KEY);
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
                     if (Array.isArray(parsedData) && parsedData.length > 0) {
@@ -1260,7 +1299,7 @@
         // Yedek veri yükleme fonksiyonu
         function loadBackupData() {
             try {
-                const backupData = localStorage.getItem("sofBackup");
+                const backupData = localStorage.getItem(BACKUP_KEY);
                 if (backupData) {
                     const parsedData = JSON.parse(backupData);
                     if (Array.isArray(parsedData) && parsedData.length > 0) {
@@ -1281,18 +1320,23 @@
                 return;
             }
             
-            try {
-                localStorage.removeItem("sofTableData");
-                localStorage.removeItem("sofDataLoaded"); // GitHub CSV yükleme işaretini de temizle
-                localStorage.removeItem("sofBackup"); // Yedek veriyi de temizle
-                showNotification('🧹 Yerel veriler temizlendi. Sayfa yenileniyor...', 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } catch (error) {
-                console.error('LocalStorage temizleme hatası:', error);
-                showNotification('Yerel veriler temizlenirken hata oluştu.', 'error');
-            }
+            showConfirmModal(
+                'Yerel Veri Temizleme',
+                'Yerel veriler (sofData_2025) tamamen silinecek. Bu işlem geri alınamaz. Emin misiniz?',
+                () => {
+                    try {
+                        localStorage.removeItem(STORAGE_KEY);
+                        localStorage.removeItem(BACKUP_KEY);
+                        showNotification('🧹 Yerel veriler temizlendi. Sayfa yenileniyor...', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } catch (error) {
+                        console.error('LocalStorage temizleme hatası:', error);
+                        showNotification('Yerel veriler temizlenirken hata oluştu.', 'error');
+                    }
+                }
+            );
         }
 
         function updateNextNumbers() {
@@ -1355,14 +1399,14 @@
                 currentFormNo = formNo;
             }
 
-            return {
+            const newRow = {
                 sira_no: nextSiraNo++,
                 sof_form_no: currentFormNo,
                 malzeme_tipi: malzemeTipi,
                 talep_eden: '',
                 talep_tarihi: talepTarihi,
                 istenen_teslim_tarihi: istenenTeslimTarihi,
-                teslimat_durumu: istenenTeslimTarihi ? 'TAMAMLANDI' : 'BEKLEMEDE',
+                teslimat_durumu: 'BELİRLENMEDİ', // Başlangıçta belirlenmedi
                 talep_edilen_malzeme: '',
                 detay_1: '',
                 detay_2: '',
@@ -1381,14 +1425,49 @@
                 aciklama: '',
                 is_from_csv: false
             };
+            
+            // Teslimat durumunu hesapla
+            updateDeliveryStatus(newRow);
+            
+            return newRow;
         }
 
-        // Teslimat durumu güncelleme fonksiyonu
+        // Teslimat durumu güncelleme fonksiyonu - teslimat tarihine göre
         function updateDeliveryStatus(row) {
-            if (row.istenen_teslim_tarihi && row.istenen_teslim_tarihi.trim() !== '') {
-                row.teslimat_durumu = 'TAMAMLANDI';
+            const teslimatTarihi = row.teslimat_tarihi;
+            
+            // Teslimat tarihi boşsa
+            if (!teslimatTarihi || teslimatTarihi.trim() === '') {
+                row.teslimat_durumu = 'BELİRLENMEDİ';
+                return;
+            }
+            
+            // Tarih formatını kontrol et (DD.MM.YY)
+            const datePattern = /^(\d{1,2})\.(\d{1,2})\.(\d{2})$/;
+            const match = teslimatTarihi.match(datePattern);
+            
+            if (!match) {
+                row.teslimat_durumu = 'BELİRLENMEDİ';
+                return;
+            }
+            
+            // Tarihi parse et
+            const day = parseInt(match[1]);
+            const month = parseInt(match[2]) - 1; // JavaScript ayları 0-11
+            const year = parseInt('20' + match[3]); // YY -> YYYY
+            
+            const teslimatDate = new Date(year, month, day);
+            const today = new Date();
+            
+            // Sadece tarihi karşılaştır (saat bilgisini sıfırla)
+            today.setHours(0, 0, 0, 0);
+            teslimatDate.setHours(0, 0, 0, 0);
+            
+            // Tarih karşılaştırması
+            if (teslimatDate <= today) {
+                row.teslimat_durumu = 'TAMAMLANDI'; // Bugün veya öncesi
             } else {
-                row.teslimat_durumu = 'BEKLEMEDE';
+                row.teslimat_durumu = 'BEKLEMEDE'; // Gelecek tarih
             }
         }
 
@@ -1408,10 +1487,34 @@
             });
         }
 
+        // Tüm teslimat durumlarını güncelle
+        function updateAllDeliveryStatuses() {
+            let updated = false;
+            currentData.forEach(row => {
+                const oldStatus = row.teslimat_durumu;
+                updateDeliveryStatus(row);
+                if (oldStatus !== row.teslimat_durumu) {
+                    updated = true;
+                }
+            });
+            
+            if (updated) {
+                renderTable();
+                showNotification('📅 Teslimat durumları güncellendi', 'success');
+            }
+        }
+
         // Optimized: Tek satır oluşturma fonksiyonu
         function createTableRow(row, index) {
             const tr = document.createElement('tr');
-            tr.className = getStatusClass(row.onay_durumu);
+            let rowClass = getStatusClass(row.onay_durumu);
+            
+            // Talep eden dolu ise satır rengini hafif griye çevir
+            if (row.talep_eden && row.talep_eden.trim() !== '') {
+                rowClass += ' talep-eden-filled';
+            }
+            
+            tr.className = rowClass;
             tr.dataset.rowId = row.__backendId || index;
             
             // CSV'den gelen veriler için readonly kontrolü
@@ -1420,7 +1523,12 @@
             const readonlyAttr = isFromCSV ? 'readonly' : '';
             
             // Teslimat durumu için stil
-            const deliveryStatusClass = row.teslimat_durumu === 'TAMAMLANDI' ? 'delivery-status-tamamlandi' : 'delivery-status-beklemede';
+            let deliveryStatusClass = 'delivery-status-belirlenmedi';
+            if (row.teslimat_durumu === 'TAMAMLANDI') {
+                deliveryStatusClass = 'delivery-status-tamamlandi';
+            } else if (row.teslimat_durumu === 'BEKLEMEDE') {
+                deliveryStatusClass = 'delivery-status-beklemede';
+            }
             
             // Teslimat tarihi dolu ise onay durumu readonly
             const approvalReadonly = (row.teslimat_tarihi && row.teslimat_tarihi.trim() !== '') ? 'readonly-field' : '';
@@ -1438,7 +1546,7 @@
                 </td>
                 <td><input type="text" value="${row.talep_eden}" onchange="updateField(${index}, 'talep_eden', this.value)"></td>
                 <td><input type="text" value="${row.talep_tarihi}" onchange="updateField(${index}, 'talep_tarihi', this.value)" class="${readonlyClass}" ${readonlyAttr}></td>
-                <td><input type="text" value="${row.istenen_teslim_tarihi}" onchange="updateFieldWithDeliveryCheck(${index}, 'istenen_teslim_tarihi', this.value)" class="${readonlyClass}" ${readonlyAttr}></td>
+                <td><input type="text" value="${row.istenen_teslim_tarihi}" onchange="updateField(${index}, 'istenen_teslim_tarihi', this.value)" class="${readonlyClass}" ${readonlyAttr}></td>
                 <td><span class="${deliveryStatusClass}">${row.teslimat_durumu}</span></td>
                 <td><input type="text" value="${row.talep_edilen_malzeme}" onchange="updateField(${index}, 'talep_edilen_malzeme', this.value)"></td>
                 <td><input type="text" value="${row.detay_1}" onchange="updateField(${index}, 'detay_1', this.value)"></td>
@@ -1464,7 +1572,7 @@
                 <td><input type="text" value="${row.satinalma_sorumlusu}" onchange="updateField(${index}, 'satinalma_sorumlusu', this.value)"></td>
                 <td><input type="text" value="${row.planlanan_teslim_tarihi}" onchange="updateField(${index}, 'planlanan_teslim_tarihi', this.value)"></td>
                 <td><input type="number" value="${row.teslimat_miktari}" onchange="updateField(${index}, 'teslimat_miktari', parseFloat(this.value) || 0)"></td>
-                <td><input type="text" value="${row.teslimat_tarihi}" onchange="updateFieldWithApprovalCheck(${index}, 'teslimat_tarihi', this.value)"></td>
+                <td><input type="text" value="${row.teslimat_tarihi}" onchange="updateFieldWithDeliveryCheck(${index}, 'teslimat_tarihi', this.value)"></td>
                 <td><input type="number" value="${row.kalan_miktar}" onchange="updateField(${index}, 'kalan_miktar', parseFloat(this.value) || 0)"></td>
                 <td>
                     <select onchange="updateField(${index}, 'onay_durumu', this.value)" class="${approvalReadonly}" ${approvalDisabled}>
@@ -1886,22 +1994,30 @@
             }
         }
 
-        // Teslimat durumu kontrolü ile alan güncelleme
+        // Teslimat tarihi güncelleme fonksiyonu
         async function updateFieldWithDeliveryCheck(index, field, value) {
             if (isLoading) return;
             
             const row = currentData[index];
             row[field] = value;
             
-            // İstenen teslimat tarihi değiştiğinde teslimat durumunu kontrol et
-            if (field === 'istenen_teslim_tarihi') {
+            // Teslimat tarihi değiştiğinde teslimat durumunu kontrol et
+            if (field === 'teslimat_tarihi') {
                 updateDeliveryStatus(row);
                 
                 // Teslimat durumu hücresini güncelle
                 const deliveryCell = document.querySelector(`#table-body tr:nth-child(${index + 1}) td:nth-child(8) span`);
                 if (deliveryCell) {
                     deliveryCell.textContent = row.teslimat_durumu;
-                    deliveryCell.className = row.teslimat_durumu === 'TAMAMLANDI' ? 'delivery-status-tamamlandi' : 'delivery-status-beklemede';
+                    
+                    // CSS sınıfını güncelle
+                    let newClass = 'delivery-status-belirlenmedi';
+                    if (row.teslimat_durumu === 'TAMAMLANDI') {
+                        newClass = 'delivery-status-tamamlandi';
+                    } else if (row.teslimat_durumu === 'BEKLEMEDE') {
+                        newClass = 'delivery-status-beklemede';
+                    }
+                    deliveryCell.className = newClass;
                 }
             }
             
@@ -1957,6 +2073,18 @@
                 debouncedCalculateTotal();
             }
             
+            // Talep eden değiştiğinde satır rengini güncelle
+            if (field === 'talep_eden') {
+                const tableRow = document.querySelector(`#table-body tr:nth-child(${index + 1})`);
+                if (tableRow) {
+                    if (value && value.trim() !== '') {
+                        tableRow.classList.add('talep-eden-filled');
+                    } else {
+                        tableRow.classList.remove('talep-eden-filled');
+                    }
+                }
+            }
+            
             // Onay durumu değiştiğinde satır rengini güncelle
             if (field === 'onay_durumu') {
                 const tableRow = document.querySelector(`#table-body tr:nth-child(${index + 1})`);
@@ -1965,6 +2093,11 @@
                     tableRow.className = tableRow.className.replace(/status-\w+/g, '');
                     // Yeni status sınıfını ekle
                     tableRow.classList.add(getStatusClass(value));
+                    
+                    // Talep eden dolu ise sınıfı koru
+                    if (row.talep_eden && row.talep_eden.trim() !== '') {
+                        tableRow.classList.add('talep-eden-filled');
+                    }
                 }
             }
             
@@ -2313,7 +2446,7 @@
 
             try {
                 // Yedekleme için localStorage'a kaydet
-                localStorage.setItem("sofBackup", JSON.stringify(currentData));
+                localStorage.setItem(BACKUP_KEY, JSON.stringify(currentData));
 
                 // Excel için veri hazırla
                 const excelData = currentData.map(row => ({
@@ -2609,6 +2742,8 @@
                 showLoading();
                 
                 try {
+                    console.log(`LocalStorage'dan ${localData.length} kayıt yükleniyor...`);
+                    
                     // LocalStorage'daki her kayıt için Data SDK'ya ekle
                     for (const record of localData) {
                         // __backendId'yi kaldır çünkü create işlemi için gerekli değil
@@ -2620,7 +2755,7 @@
                     }
                     
                     hideLoading();
-                    showNotification('✅ Yerel kayıt geri yüklendi', 'success');
+                    showNotification('✅ Yerel veriler başarıyla yüklendi', 'success');
                     return true; // Başarılı yükleme
                 } catch (error) {
                     hideLoading();
@@ -2639,6 +2774,8 @@
                 showLoading();
                 
                 try {
+                    console.log(`Yedek veriden ${backupData.length} kayıt yükleniyor...`);
+                    
                     // Yedek verideki her kayıt için Data SDK'ya ekle
                     for (const record of backupData) {
                         // __backendId'yi kaldır çünkü create işlemi için gerekli değil
@@ -2662,18 +2799,14 @@
             return false; // Yedek veri yok
         }
 
-        // GitHub'dan CSV otomatik yükleme fonksiyonu - tek seferlik
-        async function csvOtomatikYukle() {
-            // localStorage'dan daha önce yüklenmiş mi kontrol et
-            if (localStorage.getItem('sofDataLoaded') === 'true') {
-                console.log('Veriler daha önce yüklenmiş, tekrar yükleme yapılmıyor.');
-                return;
-            }
-
+        // GitHub'dan CSV yükleme fonksiyonu - tek seferlik
+        async function loadFromGitHubCSV(isManual = false) {
             const csvUrl = 'https://raw.githubusercontent.com/okarsli/deneme/refs/heads/main/data.csv';
             
             try {
                 showLoading();
+                
+                console.log('GitHub CSV\'den veri çekiliyor (tek seferlik)...');
                 
                 // GitHub'dan CSV dosyasını CORS modunda indir
                 const response = await fetch(csvUrl, {
@@ -2694,13 +2827,16 @@
                 // CSV'yi ayrıştır ve tabloya ekle
                 await parseCSVandFillTable(csvText);
                 
-                // Başarılı yükleme sonrası localStorage'a işaretle
-                localStorage.setItem('sofDataLoaded', 'true');
-                
                 hideLoading();
                 
                 // Başarı bildirimi göster
-                showNotification('✅ Veriler başarıyla yüklendi (tek seferlik)', 'success');
+                if (isManual) {
+                    showNotification('✅ Veriler başarıyla yeniden yüklendi ve kaydedildi (tek seferlik)', 'success');
+                } else {
+                    showNotification('✅ Veriler başarıyla yüklendi ve kaydedildi (tek seferlik)', 'success');
+                }
+                
+                return true;
                 
             } catch (error) {
                 hideLoading();
@@ -2708,7 +2844,51 @@
                 
                 // CORS veya network hatası kontrolü
                 showNotification('❌ CSV verisi alınamadı veya biçimi hatalı.', 'error');
+                return false;
             }
+        }
+
+        // Manuel CSV yeniden yükleme fonksiyonu
+        async function reloadFromGitHub() {
+            if (!hasPermission('canManageSystem')) {
+                showNotification('Bu işlem için yetkiniz bulunmuyor.', 'error');
+                return;
+            }
+            
+            showConfirmModal(
+                'Verileri Yeniden Yükle',
+                'Mevcut veriler sıfırlanacak ve GitHub CSV\'den tekrar çekilecek. Bu işlem geri alınamaz. Emin misiniz?',
+                async () => {
+                    try {
+                        // Mevcut verileri yedekle
+                        if (currentData.length > 0) {
+                            localStorage.setItem(BACKUP_KEY, JSON.stringify(currentData));
+                        }
+                        
+                        showLoading();
+                        
+                        // 1. LocalStorage'daki verileri sil
+                        localStorage.removeItem(STORAGE_KEY);
+                        console.log('LocalStorage temizlendi (sofData_2025)');
+                        
+                        // 2. Mevcut Data SDK verilerini temizle
+                        for (const record of currentData) {
+                            await window.dataSdk.delete(record);
+                        }
+                        
+                        hideLoading();
+                        
+                        // 3. GitHub CSV'den verileri tekrar çek
+                        console.log('GitHub CSV\'den veriler yeniden çekiliyor...');
+                        await loadFromGitHubCSV(true);
+                        
+                    } catch (error) {
+                        hideLoading();
+                        console.error('Yeniden yükleme hatası:', error);
+                        showNotification('Veriler yeniden yüklenirken hata oluştu.', 'error');
+                    }
+                }
+            );
         }
 
         // Başlık normalizasyon fonksiyonu - Türkçe karakterleri ve boşlukları temizler
@@ -2726,7 +2906,7 @@
                 .trim();
         }
 
-        // CSV parse ve tablo doldurma fonksiyonu - noktalı virgül ayracıyla
+        // CSV parse ve tablo doldurma fonksiyonu - STF TALEP NO bazlı gruplama ile
         async function parseCSVandFillTable(csvText) {
             // UTF-8 BOM karakterini temizle
             const cleanedText = csvText.replace(/^\uFEFF/, '');
@@ -2758,10 +2938,14 @@
             // Normalize edilmiş başlık eşleştirme haritası
             const headerMap = {
                 'SIRANO': 'SIRA_NO',
+                'STFTALEPNO': 'STF_TALEP_NO',
                 'SOFFORMNO': 'SOF_FORM_NO', 
                 'MALZEMETIPI': 'MALZEME_TIPI',
                 'TALEPEDEN': 'TALEP_EDEN',
+                'TALEBIYAPAN': 'TALEP_EDEN',
+                'ISTEKYAPAN': 'TALEP_EDEN',
                 'TALEPTARIHI': 'TALEP_TARIHI',
+                'TARIH': 'TALEP_TARIHI',
                 'ISTENENTESLIMTARIHI': 'TESLIM_TARIHI',
                 'TALEPEDILENMALZEME': 'MALZEME',
                 'DETAY1(MARKA,MODELVB)': 'DETAY1',
@@ -2803,10 +2987,12 @@
             console.log('Normalize edilmiş başlıklar:', normalizedHeaders);
             console.log('Eşleşen indeksler:', indexes);
 
-            // Veri satırlarını işle
+            // Veri satırlarını işle ve STF TALEP NO'ya göre grupla
             const dataRows = rows.slice(1);
-            let processedCount = 0;
+            const groupedData = new Map(); // STF_TALEP_NO -> satırlar
+            const processedRows = [];
             
+            // Önce tüm satırları işle ve grupla
             for (let i = 0; i < dataRows.length; i++) {
                 const row = dataRows[i];
                 
@@ -2826,40 +3012,78 @@
                     }
                 }
                 
-                // En az bir veri varsa tabloya ekle
+                // En az bir veri varsa işle
                 const hasData = Object.values(rowData).some(value => value && value.trim() !== '');
                 if (hasData) {
-                    await addRowToTable(rowData, i + 1);
-                    processedCount++;
+                    // STF TALEP NO'yu al (boşsa 'TANIMSIZ' kullan)
+                    const stfTalepNo = rowData.STF_TALEP_NO || 'TANIMSIZ';
+                    
+                    if (!groupedData.has(stfTalepNo)) {
+                        groupedData.set(stfTalepNo, []);
+                    }
+                    
+                    // Orijinal sıra numarasını koru
+                    rowData.ORIGINAL_INDEX = i;
+                    groupedData.get(stfTalepNo).push(rowData);
+                    processedRows.push(rowData);
                 }
+            }
+
+            console.log(`Toplam ${groupedData.size} grup bulundu:`, Array.from(groupedData.keys()));
+
+            // Form numarası sayacı
+            let groupIndex = 1;
+            const formNumberMap = new Map(); // STF_TALEP_NO -> form_number
+            
+            // Her grup için form numarası ata
+            for (const [stfTalepNo, groupRows] of groupedData) {
+                if (groupRows.length === 0) continue;
+                
+                // Grubun ilk satırından malzeme tipini al
+                const firstRow = groupRows[0];
+                const malzemeTipi = firstRow.MALZEME_TIPI || 'SARF';
+                
+                // Bu grup için form numarası oluştur
+                const formNumber = generateFormNumber(groupIndex, malzemeTipi);
+                formNumberMap.set(stfTalepNo, formNumber);
+                
+                console.log(`Grup "${stfTalepNo}" (${groupRows.length} satır) -> Form No: ${formNumber}`);
+                groupIndex++;
+            }
+
+            // Satırları orijinal sıraya göre sırala ve tabloya ekle
+            processedRows.sort((a, b) => a.ORIGINAL_INDEX - b.ORIGINAL_INDEX);
+            
+            let processedCount = 0;
+            for (const rowData of processedRows) {
+                const stfTalepNo = rowData.STF_TALEP_NO || 'TANIMSIZ';
+                const assignedFormNumber = formNumberMap.get(stfTalepNo);
+                
+                await addRowToTableWithFormNumber(rowData, assignedFormNumber);
+                processedCount++;
             }
 
             // Toplamları hesapla
             calculateTotal();
             
-            console.log(`CSV başarıyla işlendi: ${processedCount} kayıt yüklendi`);
+            // Teslimat durumlarını güncelle
+            setTimeout(() => {
+                updateAllDeliveryStatuses();
+            }, 500);
+            
+            console.log(`CSV başarıyla işlendi: ${processedCount} kayıt yüklendi, ${groupedData.size} grup oluşturuldu`);
         }
 
-        // Satır ekleme fonksiyonu - noktalı virgül CSV'den gelen veriler için
-        async function addRowToTable(rowData, rowIndex) {
+        // Satır ekleme fonksiyonu - form numarası ile birlikte
+        async function addRowToTableWithFormNumber(rowData, assignedFormNumber) {
             // Malzeme tipini belirle
             const malzemeTipi = rowData.MALZEME_TIPI || 'SARF';
             
-            // Form numarası kontrolü - boşsa otomatik oluştur
-            let formNo = rowData.SOF_FORM_NO;
-            if (!formNo || formNo.trim() === '') {
-                const newIndex = currentData.length + 1;
-                formNo = generateFormNumber(newIndex, malzemeTipi);
-            }
-            
             // 🔄 Eksik alanları otomatik doldur
-            // 1️⃣ TALEP EDEN kontrolü
-            let talepEden = rowData.TALEP_EDEN;
-            if (!talepEden || talepEden.trim() === '') {
-                talepEden = 'Tanımsız';
-            }
+            // 1️⃣ TALEP EDEN kontrolü - boşsa boş bırak
+            let talepEden = rowData.TALEP_EDEN || '';
             
-            // 2️⃣ TALEP TARİHİ kontrolü - CSV'den gelen değer korunur
+            // 2️⃣ TALEP TARİHİ kontrolü - CSV'den gelen değer aynen korunur
             let talepTarihi = rowData.TALEP_TARIHI;
             if (!talepTarihi || talepTarihi.trim() === '') {
                 // CSV'de tarih yoksa bugünün tarihini kullan
@@ -2869,15 +3093,37 @@
             // 3️⃣ İSTENEN TESLİM TARİHİ kontrolü - CSV'den gelen değer korunur
             let istenenTeslimTarihi = rowData.TESLIM_TARIHI || '';
             
+            // 4️⃣ Eğer İSTENEN TESLİM TARİHİ boşsa, TALEP TARİHİ + 7 gün hesapla
+            if (!istenenTeslimTarihi || istenenTeslimTarihi.trim() === '') {
+                if (talepTarihi && talepTarihi.trim() !== '') {
+                    // Talep tarihini parse et ve 7 gün ekle
+                    const talepDateParts = talepTarihi.split('.');
+                    if (talepDateParts.length === 3) {
+                        const day = parseInt(talepDateParts[0]);
+                        const month = parseInt(talepDateParts[1]) - 1; // JavaScript ayları 0-11
+                        const year = parseInt('20' + talepDateParts[2]); // YY -> YYYY
+                        
+                        const talepDate = new Date(year, month, day);
+                        talepDate.setDate(talepDate.getDate() + 7); // 7 gün ekle
+                        
+                        const newDay = String(talepDate.getDate()).padStart(2, '0');
+                        const newMonth = String(talepDate.getMonth() + 1).padStart(2, '0');
+                        const newYear = String(talepDate.getFullYear()).slice(-2);
+                        
+                        istenenTeslimTarihi = `${newDay}.${newMonth}.${newYear}`;
+                    }
+                }
+            }
+            
             // Yeni kayıt oluştur
             const newRecord = {
                 sira_no: parseInt(rowData.SIRA_NO) || nextSiraNo++,
-                sof_form_no: formNo,
+                sof_form_no: assignedFormNumber, // Grup bazlı atanan form numarası
                 malzeme_tipi: malzemeTipi,
                 talep_eden: talepEden,
-                talep_tarihi: talepTarihi,
+                talep_tarihi: talepTarihi, // CSV'den aynen alınan tarih
                 istenen_teslim_tarihi: istenenTeslimTarihi,
-                teslimat_durumu: istenenTeslimTarihi ? 'TAMAMLANDI' : 'BEKLEMEDE',
+                teslimat_durumu: 'BELİRLENMEDİ', // Başlangıçta belirlenmedi, sonra hesaplanacak
                 talep_edilen_malzeme: rowData.MALZEME || '',
                 detay_1: rowData.DETAY1 || '',
                 detay_2: rowData.DETAY2 || '',
@@ -2905,11 +3151,29 @@
             // Teslimat tarihi kontrolü ile onay durumu güncelle
             updateApprovalStatus(newRecord);
             
+            // Teslimat durumunu hesapla
+            updateDeliveryStatus(newRecord);
+            
             // Data SDK'ya kaydet
             const result = await window.dataSdk.create(newRecord);
             if (!result.isOk) {
                 console.error('Kayıt eklenirken hata:', result.error);
             }
+        }
+
+        // Eski satır ekleme fonksiyonu - geriye dönük uyumluluk için
+        async function addRowToTable(rowData, rowIndex) {
+            // Malzeme tipini belirle
+            const malzemeTipi = rowData.MALZEME_TIPI || 'SARF';
+            
+            // Form numarası kontrolü - boşsa otomatik oluştur
+            let formNo = rowData.SOF_FORM_NO;
+            if (!formNo || formNo.trim() === '') {
+                const newIndex = currentData.length + 1;
+                formNo = generateFormNumber(newIndex, malzemeTipi);
+            }
+            
+            await addRowToTableWithFormNumber(rowData, formNo);
         }
 
         // Bildirim gösterme fonksiyonu
@@ -2956,6 +3220,7 @@
         document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
         document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
         document.getElementById('excel-btn').addEventListener('click', exportToExcel);
+        document.getElementById('reload-github-btn').addEventListener('click', reloadFromGitHub);
         document.getElementById('clear-local-btn').addEventListener('click', clearLocalStorage);
 
         // Toplu işlem event listeners
@@ -3069,23 +3334,42 @@
                     return;
                 }
                 
-                // Veri yükleme öncelik sırası:
-                // 1. Ana localStorage verisi (sofTableData)
-                // 2. Yedek verisi (sofBackup) 
-                // 3. GitHub CSV (tek seferlik)
+                // 🔄 YENİ VERİ YÜKLEME MANTĞI (2025):
+                // 1️⃣ GitHub CSV verisi sadece ilk kez alınacak
+                // 2️⃣ Alınan veri localStorage'a "sofData_2025" adıyla kaydedilecek
+                // 3️⃣ Sonraki sayfa yüklemelerinde sistem sadece localStorage'daki veriyi kullanacak
+                // 4️⃣ Eğer localStorage boşsa → GitHub CSV'den otomatik olarak veri çekilecek
+                // 5️⃣ Eğer doluysa → CSV bağlantısına hiç gitmeden veriler localStorage'dan okunacak
                 
-                const localDataLoaded = await loadLocalStorageToDataSDK();
+                console.log('Veri yükleme başlatılıyor (2025 sistemi)...');
                 
-                if (!localDataLoaded) {
-                    const backupDataLoaded = await loadBackupToDataSDK();
+                // LocalStorage'da veri var mı kontrol et (sofData_2025)
+                const localData = loadFromLocalStorage();
+                
+                if (localData && localData.length > 0) {
+                    // LocalStorage'da veri var - CSV'ye gitmeden direkt kullan
+                    console.log(`LocalStorage'da ${localData.length} kayıt bulundu (sofData_2025), CSV'ye gitmeden yükleniyor...`);
+                    await loadLocalStorageToDataSDK();
+                    showNotification('📦 Veriler yerel depodan yüklendi', 'info');
+                } else {
+                    // LocalStorage boş - GitHub'dan tek seferlik çek
+                    console.log('LocalStorage boş (sofData_2025), GitHub CSV\'den tek seferlik çekiliyor...');
+                    const githubLoaded = await loadFromGitHubCSV(false);
                     
-                    if (!backupDataLoaded && localStorage.getItem('sofDataLoaded') !== 'true' && currentData.length === 0) {
-                        await csvOtomatikYukle();
+                    // GitHub yüklenemezse yedek veriyi dene
+                    if (!githubLoaded) {
+                        console.log('GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
+                        await loadBackupToDataSDK();
                     }
                 }
                 
                 // Tüm verilerin onay durumlarını kontrol et
                 updateAllApprovalStatuses();
+                
+                // Teslimat durumlarını güncelle
+                setTimeout(() => {
+                    updateAllDeliveryStatuses();
+                }, 300);
                 
                 // Grafikleri render et
                 setTimeout(() => {
@@ -3099,5 +3383,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ff6ca5a1f0dc59',t:'MTc2MDcwMDIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ff8964b08bdc84',t:'MTc2MDcwMTM4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
