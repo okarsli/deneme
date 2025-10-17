@@ -1286,9 +1286,11 @@
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
                     if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        console.log(`LocalStorage'dan ${parsedData.length} kayıt yüklendi (sofData_2025)`);
                         return parsedData;
                     }
                 }
+                console.log('LocalStorage boş veya geçersiz (sofData_2025)');
                 return null;
             } catch (error) {
                 console.error('LocalStorage okuma hatası:', error);
@@ -2742,20 +2744,13 @@
                 showLoading();
                 
                 try {
-                    console.log(`LocalStorage'dan ${localData.length} kayıt yükleniyor...`);
+                    console.log(`LocalStorage'dan ${localData.length} kayıt Data SDK'ya yükleniyor...`);
                     
                     // LocalStorage'daki her kayıt için Data SDK'ya ekle
-                    for (const record of localData) {
-                        // __backendId'yi kaldır çünkü create işlemi için gerekli değil
-                        const { __backendId, ...recordWithoutId } = record;
-                        const result = await window.dataSdk.create(recordWithoutId);
-                        if (!result.isOk) {
-                            console.error('LocalStorage verisi Data SDK\'ya eklenirken hata:', result.error);
-                        }
-                    }
+                    await loadDataToSDK(localData);
                     
                     hideLoading();
-                    showNotification('✅ Yerel veriler başarıyla yüklendi', 'success');
+                    showNotification('📦 Veriler yerel depodan yüklendi', 'info');
                     return true; // Başarılı yükleme
                 } catch (error) {
                     hideLoading();
@@ -2808,7 +2803,7 @@
                 
                 console.log('GitHub CSV\'den veri çekiliyor (tek seferlik)...');
                 
-                // GitHub'dan CSV dosyasını CORS modunda indir
+                // GitHub'dan CSV dosyasını UTF-8 kodlamasıyla fetch et
                 const response = await fetch(csvUrl, {
                     mode: 'cors',
                     headers: {
@@ -2824,25 +2819,34 @@
                 // UTF-8 olarak oku
                 const csvText = await response.text();
                 
-                // CSV'yi ayrıştır ve tabloya ekle
-                await parseCSVandFillTable(csvText);
+                // CSV'yi ayrıştır ve localStorage'a kaydet
+                const parsedData = await parseCSVToData(csvText);
                 
-                hideLoading();
-                
-                // Başarı bildirimi göster
-                if (isManual) {
-                    showNotification('✅ Veriler başarıyla yeniden yüklendi ve kaydedildi (tek seferlik)', 'success');
+                if (parsedData && parsedData.length > 0) {
+                    // LocalStorage'a JSON formatında kaydet
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedData));
+                    console.log(`${parsedData.length} kayıt localStorage'a kaydedildi (sofData_2025)`);
+                    
+                    // Data SDK'ya yükle
+                    await loadDataToSDK(parsedData);
+                    
+                    hideLoading();
+                    
+                    // Başarı bildirimi göster
+                    if (isManual) {
+                        showNotification('✅ Veriler başarıyla yeniden yüklendi ve kaydedildi. Artık sistem offline çalışıyor.', 'success');
+                    } else {
+                        showNotification('✅ Veriler başarıyla kaydedildi. Artık sistem offline çalışıyor.', 'success');
+                    }
+                    
+                    return true;
                 } else {
-                    showNotification('✅ Veriler başarıyla yüklendi ve kaydedildi (tek seferlik)', 'success');
+                    throw new Error('CSV verisi ayrıştırılamadı veya boş');
                 }
-                
-                return true;
                 
             } catch (error) {
                 hideLoading();
                 console.error('CSV yükleme hatası:', error);
-                
-                // CORS veya network hatası kontrolü
                 showNotification('❌ CSV verisi alınamadı veya biçimi hatalı.', 'error');
                 return false;
             }
@@ -2863,23 +2867,25 @@
                         // Mevcut verileri yedekle
                         if (currentData.length > 0) {
                             localStorage.setItem(BACKUP_KEY, JSON.stringify(currentData));
+                            console.log('Mevcut veriler yedeklendi');
                         }
                         
                         showLoading();
                         
-                        // 1. LocalStorage'daki verileri sil
+                        // 1. LocalStorage'daki verileri sil (sofData_2025)
                         localStorage.removeItem(STORAGE_KEY);
-                        console.log('LocalStorage temizlendi (sofData_2025)');
+                        console.log('✅ LocalStorage temizlendi (sofData_2025)');
                         
                         // 2. Mevcut Data SDK verilerini temizle
+                        console.log('🗑️ Mevcut Data SDK verileri temizleniyor...');
                         for (const record of currentData) {
                             await window.dataSdk.delete(record);
                         }
                         
                         hideLoading();
                         
-                        // 3. GitHub CSV'den verileri tekrar çek
-                        console.log('GitHub CSV\'den veriler yeniden çekiliyor...');
+                        // 3. GitHub CSV'den verileri tekrar çek ve localStorage'a kaydet
+                        console.log('🔄 GitHub CSV\'den veriler yeniden çekiliyor...');
                         await loadFromGitHubCSV(true);
                         
                     } catch (error) {
@@ -2906,8 +2912,8 @@
                 .trim();
         }
 
-        // CSV parse ve tablo doldurma fonksiyonu - STF TALEP NO bazlı gruplama ile
-        async function parseCSVandFillTable(csvText) {
+        // CSV'yi parse edip veri dizisi döndüren fonksiyon
+        async function parseCSVToData(csvText) {
             // UTF-8 BOM karakterini temizle
             const cleanedText = csvText.replace(/^\uFEFF/, '');
             
@@ -2983,9 +2989,7 @@
                 throw new Error('Geçerli başlık bulunamadı');
             }
 
-            console.log('Orijinal başlıklar:', headers);
-            console.log('Normalize edilmiş başlıklar:', normalizedHeaders);
-            console.log('Eşleşen indeksler:', indexes);
+            console.log('CSV başlıkları eşleştirildi:', Object.keys(indexes));
 
             // Veri satırlarını işle ve STF TALEP NO'ya göre grupla
             const dataRows = rows.slice(1);
@@ -3029,7 +3033,7 @@
                 }
             }
 
-            console.log(`Toplam ${groupedData.size} grup bulundu:`, Array.from(groupedData.keys()));
+            console.log(`Toplam ${groupedData.size} grup bulundu`);
 
             // Form numarası sayacı
             let groupIndex = 1;
@@ -3047,31 +3051,115 @@
                 const formNumber = generateFormNumber(groupIndex, malzemeTipi);
                 formNumberMap.set(stfTalepNo, formNumber);
                 
-                console.log(`Grup "${stfTalepNo}" (${groupRows.length} satır) -> Form No: ${formNumber}`);
                 groupIndex++;
             }
 
-            // Satırları orijinal sıraya göre sırala ve tabloya ekle
+            // Satırları orijinal sıraya göre sırala ve veri objelerine dönüştür
             processedRows.sort((a, b) => a.ORIGINAL_INDEX - b.ORIGINAL_INDEX);
             
-            let processedCount = 0;
+            const finalData = [];
+            let siraNo = 1;
+            
             for (const rowData of processedRows) {
                 const stfTalepNo = rowData.STF_TALEP_NO || 'TANIMSIZ';
                 const assignedFormNumber = formNumberMap.get(stfTalepNo);
                 
-                await addRowToTableWithFormNumber(rowData, assignedFormNumber);
-                processedCount++;
+                const record = createRecordFromRowData(rowData, assignedFormNumber, siraNo++);
+                finalData.push(record);
             }
+            
+            console.log(`CSV başarıyla ayrıştırıldı: ${finalData.length} kayıt hazırlandı`);
+            return finalData;
+        }
 
-            // Toplamları hesapla
-            calculateTotal();
+        // Satır verisinden kayıt objesi oluşturan fonksiyon
+        function createRecordFromRowData(rowData, assignedFormNumber, siraNo) {
+            // Malzeme tipini belirle
+            const malzemeTipi = rowData.MALZEME_TIPI || 'SARF';
             
-            // Teslimat durumlarını güncelle
-            setTimeout(() => {
-                updateAllDeliveryStatuses();
-            }, 500);
+            // Tarih kontrolü
+            let talepTarihi = rowData.TALEP_TARIHI;
+            if (!talepTarihi || talepTarihi.trim() === '') {
+                talepTarihi = getFormattedDate(0);
+            }
             
-            console.log(`CSV başarıyla işlendi: ${processedCount} kayıt yüklendi, ${groupedData.size} grup oluşturuldu`);
+            let istenenTeslimTarihi = rowData.TESLIM_TARIHI || '';
+            if (!istenenTeslimTarihi || istenenTeslimTarihi.trim() === '') {
+                if (talepTarihi && talepTarihi.trim() !== '') {
+                    const talepDateParts = talepTarihi.split('.');
+                    if (talepDateParts.length === 3) {
+                        const day = parseInt(talepDateParts[0]);
+                        const month = parseInt(talepDateParts[1]) - 1;
+                        const year = parseInt('20' + talepDateParts[2]);
+                        
+                        const talepDate = new Date(year, month, day);
+                        talepDate.setDate(talepDate.getDate() + 7);
+                        
+                        const newDay = String(talepDate.getDate()).padStart(2, '0');
+                        const newMonth = String(talepDate.getMonth() + 1).padStart(2, '0');
+                        const newYear = String(talepDate.getFullYear()).slice(-2);
+                        
+                        istenenTeslimTarihi = `${newDay}.${newMonth}.${newYear}`;
+                    }
+                }
+            }
+            
+            // Yeni kayıt oluştur
+            const newRecord = {
+                sira_no: siraNo,
+                sof_form_no: assignedFormNumber,
+                malzeme_tipi: malzemeTipi,
+                talep_eden: rowData.TALEP_EDEN || '',
+                talep_tarihi: talepTarihi,
+                istenen_teslim_tarihi: istenenTeslimTarihi,
+                teslimat_durumu: 'BELİRLENMEDİ',
+                talep_edilen_malzeme: rowData.MALZEME || '',
+                detay_1: rowData.DETAY1 || '',
+                detay_2: rowData.DETAY2 || '',
+                birim: rowData.BIRIM || 'ADET',
+                talep_miktari: parseFloat(rowData.TALEP_MIKTARI) || 0,
+                siparis_miktari: parseFloat(rowData.SIPARIS_MIKTARI) || 0,
+                birim_fiyat: parseFloat(rowData.BIRIM_FIYAT) || 0,
+                toplam_fiyat: parseFloat(rowData.TOPLAM_FIYAT) || 0,
+                tedarikci: rowData.TEDARIKCI || '',
+                satinalma_sorumlusu: rowData.SATINALMA_SORUMLUSU || '',
+                planlanan_teslim_tarihi: rowData.PLANLANAN_TESLIM || '',
+                teslimat_miktari: parseFloat(rowData.TESLIMAT_MIKTARI) || 0,
+                teslimat_tarihi: rowData.TESLIMAT_TARIHI || '',
+                kalan_miktar: parseFloat(rowData.KALAN_MIKTAR) || 0,
+                onay_durumu: rowData.ONAY || 'BEKLEMEDE',
+                aciklama: rowData.ACIKLAMA || '',
+                is_from_csv: true
+            };
+            
+            // Eğer CSV'de toplam fiyat yoksa otomatik hesapla
+            if (!newRecord.toplam_fiyat && newRecord.talep_miktari && newRecord.birim_fiyat) {
+                newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
+            }
+            
+            // Teslimat tarihi kontrolü ile onay durumu güncelle
+            updateApprovalStatus(newRecord);
+            
+            // Teslimat durumunu hesapla
+            updateDeliveryStatus(newRecord);
+            
+            return newRecord;
+        }
+
+        // Veri dizisini Data SDK'ya yükleyen fonksiyon
+        async function loadDataToSDK(dataArray) {
+            console.log(`${dataArray.length} kayıt Data SDK'ya yükleniyor...`);
+            
+            for (const record of dataArray) {
+                // __backendId'yi kaldır çünkü create işlemi için gerekli değil
+                const { __backendId, ...recordWithoutId } = record;
+                const result = await window.dataSdk.create(recordWithoutId);
+                if (!result.isOk) {
+                    console.error('Kayıt Data SDK\'ya eklenirken hata:', result.error);
+                }
+            }
+            
+            console.log('Tüm kayıtlar Data SDK\'ya yüklendi');
         }
 
         // Satır ekleme fonksiyonu - form numarası ile birlikte
@@ -3335,30 +3423,32 @@
                 }
                 
                 // 🔄 YENİ VERİ YÜKLEME MANTĞI (2025):
-                // 1️⃣ GitHub CSV verisi sadece ilk kez alınacak
-                // 2️⃣ Alınan veri localStorage'a "sofData_2025" adıyla kaydedilecek
-                // 3️⃣ Sonraki sayfa yüklemelerinde sistem sadece localStorage'daki veriyi kullanacak
-                // 4️⃣ Eğer localStorage boşsa → GitHub CSV'den otomatik olarak veri çekilecek
-                // 5️⃣ Eğer doluysa → CSV bağlantısına hiç gitmeden veriler localStorage'dan okunacak
+                // 1️⃣ CSV verisi sadece 1 defa çekilecek
+                // 2️⃣ Çekilen veri UTF-8 kodlamasıyla okunacak, noktalı virgül (;) ayırıcıyla ayrıştırılacak
+                // 3️⃣ Elde edilen veri localStorage'a "sofData_2025" olarak kaydedilecek
+                // 4️⃣ Eğer localStorage doluysa, GitHub'dan veri çekmeyecek — doğrudan kaydedilmiş veriyi kullanacak
+                // 5️⃣ localStorage'a kaydedilen veri JSON.stringify ile saklanacak ve sayfa her açıldığında JSON.parse ile yüklenecek
+                // 6️⃣ Yükleme tamamlandığında tablo otomatik olarak güncellenecek ve sayfa yenilense bile kayıtlar kaybolmayacak
                 
-                console.log('Veri yükleme başlatılıyor (2025 sistemi)...');
+                console.log('🔄 Veri yükleme sistemi başlatılıyor (2025)...');
                 
-                // LocalStorage'da veri var mı kontrol et (sofData_2025)
+                // Sayfa yüklendiğinde önce localStorage kontrol edilir
                 const localData = loadFromLocalStorage();
                 
                 if (localData && localData.length > 0) {
-                    // LocalStorage'da veri var - CSV'ye gitmeden direkt kullan
-                    console.log(`LocalStorage'da ${localData.length} kayıt bulundu (sofData_2025), CSV'ye gitmeden yükleniyor...`);
+                    // eğer "sofData_2025" varsa: JSON.parse(localStorage.getItem("sofData_2025")) → tabloyu doğrudan bu veriden oluştur
+                    console.log(`✅ LocalStorage'da ${localData.length} kayıt bulundu (sofData_2025)`);
+                    console.log('📦 CSV\'ye gitmeden doğrudan yerel veriden yükleniyor...');
                     await loadLocalStorageToDataSDK();
-                    showNotification('📦 Veriler yerel depodan yüklendi', 'info');
                 } else {
-                    // LocalStorage boş - GitHub'dan tek seferlik çek
-                    console.log('LocalStorage boş (sofData_2025), GitHub CSV\'den tek seferlik çekiliyor...');
+                    // eğer "sofData_2025" yoksa: CSV'yi fetch et → parse et → localStorage.setItem("sofData_2025", JSON.stringify(veri)) → tabloyu oluştur
+                    console.log('❌ LocalStorage boş (sofData_2025)');
+                    console.log('🌐 GitHub CSV\'den tek seferlik çekiliyor...');
                     const githubLoaded = await loadFromGitHubCSV(false);
                     
                     // GitHub yüklenemezse yedek veriyi dene
                     if (!githubLoaded) {
-                        console.log('GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
+                        console.log('⚠️ GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
                         await loadBackupToDataSDK();
                     }
                 }
@@ -3383,5 +3473,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ff8964b08bdc84',t:'MTc2MDcwMTM4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ffa5a016489a18',t:'MTc2MDcwMjU0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
