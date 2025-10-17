@@ -49,6 +49,36 @@
             background-color: white;
         }
         
+        /* Onay durumu renkleri */
+        .status-beklemede {
+            background-color: #e5e7eb !important;
+            transition: all 300ms ease;
+        }
+        
+        .status-onaylandi {
+            background-color: #2459a0 !important;
+            color: white !important;
+            transition: all 300ms ease;
+        }
+        
+        .status-odeme-bekliyor {
+            background-color: #f59e0b !important;
+            color: white !important;
+            transition: all 300ms ease;
+        }
+        
+        .status-tamamlandi {
+            background-color: #10b981 !important;
+            color: white !important;
+            transition: all 300ms ease;
+        }
+        
+        .status-red-edildi {
+            background-color: #dc2626 !important;
+            color: white !important;
+            transition: all 300ms ease;
+        }
+        
         input[type="text"], input[type="number"], input[type="date"], select {
             width: 100%;
             padding: 4px;
@@ -257,7 +287,7 @@
                 teslimat_miktari: 0,
                 teslimat_tarihi: '',
                 kalan_miktar: 0,
-                onay_durumu: 'Beklemede',
+                onay_durumu: 'BEKLEMEDE',
                 aciklama: ''
             };
         }
@@ -268,6 +298,7 @@
 
             currentData.forEach((row, index) => {
                 const tr = document.createElement('tr');
+                tr.className = getStatusClass(row.onay_durumu);
                 tr.innerHTML = `
                     <td><input type="radio" name="selectedRow" value="${index}" onchange="selectRow(${index})"></td>
                     <td>${row.sira_no}</td>
@@ -294,10 +325,11 @@
                     <td><input type="number" value="${row.kalan_miktar}" onchange="updateField(${index}, 'kalan_miktar', parseFloat(this.value) || 0)"></td>
                     <td>
                         <select onchange="updateField(${index}, 'onay_durumu', this.value)">
-                            <option value="Beklemede" ${row.onay_durumu === 'Beklemede' ? 'selected' : ''}>Beklemede</option>
-                            <option value="Onaylandı" ${row.onay_durumu === 'Onaylandı' ? 'selected' : ''}>Onaylandı</option>
-                            <option value="Reddedildi" ${row.onay_durumu === 'Reddedildi' ? 'selected' : ''}>Reddedildi</option>
-                            <option value="Tamamlandı" ${row.onay_durumu === 'Tamamlandı' ? 'selected' : ''}>Tamamlandı</option>
+                            <option value="BEKLEMEDE" ${row.onay_durumu === 'BEKLEMEDE' ? 'selected' : ''}>BEKLEMEDE</option>
+                            <option value="ONAYLANDI" ${row.onay_durumu === 'ONAYLANDI' ? 'selected' : ''}>ONAYLANDI</option>
+                            <option value="ÖDEME BEKLİYOR" ${row.onay_durumu === 'ÖDEME BEKLİYOR' ? 'selected' : ''}>ÖDEME BEKLİYOR</option>
+                            <option value="TAMAMLANDI" ${row.onay_durumu === 'TAMAMLANDI' ? 'selected' : ''}>TAMAMLANDI</option>
+                            <option value="RED EDİLDİ" ${row.onay_durumu === 'RED EDİLDİ' ? 'selected' : ''}>RED EDİLDİ</option>
                         </select>
                     </td>
                     <td><input type="text" value="${row.aciklama}" onchange="updateField(${index}, 'aciklama', this.value)"></td>
@@ -313,6 +345,17 @@
             });
         }
 
+        function getStatusClass(status) {
+            switch(status) {
+                case 'BEKLEMEDE': return 'status-beklemede';
+                case 'ONAYLANDI': return 'status-onaylandi';
+                case 'ÖDEME BEKLİYOR': return 'status-odeme-bekliyor';
+                case 'TAMAMLANDI': return 'status-tamamlandi';
+                case 'RED EDİLDİ': return 'status-red-edildi';
+                default: return 'status-beklemede';
+            }
+        }
+
         async function updateField(index, field, value) {
             if (isLoading) return;
             
@@ -321,6 +364,17 @@
             
             if (field === 'talep_miktari' || field === 'birim_fiyat') {
                 row.toplam_fiyat = row.talep_miktari * row.birim_fiyat;
+            }
+            
+            // Onay durumu değiştiğinde satır rengini güncelle
+            if (field === 'onay_durumu') {
+                const tableRow = document.querySelector(`#table-body tr:nth-child(${index + 1})`);
+                if (tableRow) {
+                    // Eski status sınıflarını kaldır
+                    tableRow.className = tableRow.className.replace(/status-\w+/g, '');
+                    // Yeni status sınıfını ekle
+                    tableRow.classList.add(getStatusClass(value));
+                }
             }
             
             showLoading();
@@ -446,5 +500,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe579e645fd35d',t:'MTc2MDY4ODg2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe60dce679d35d',t:'MTc2MDY4OTI0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
