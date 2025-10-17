@@ -236,7 +236,7 @@
      </div>
     </div>
    </header>
-   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button>
+   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="verileri-yukle-btn" class="btn" style="background-color: #2563eb; color: white;"> 📂 Verileri Yükle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button>
    </div><!-- Toplam Bilgi Paneli -->
    <div class="mb-6">
     <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">📊 Toplam Bilgi Paneli</h2>
@@ -951,6 +951,11 @@
         // Event listeners
         document.getElementById('yeni-talep-btn').addEventListener('click', yeniTalepBaslat);
         document.getElementById('alt-satir-btn').addEventListener('click', altSatirEkle);
+        document.getElementById('verileri-yukle-btn').addEventListener('click', () => {
+            // Manuel veri yükleme - localStorage işaretini sıfırla ve tekrar yükle
+            resetDataLoadedFlag();
+            csvOtomatikYukle();
+        });
         document.getElementById('satir-sil-btn').addEventListener('click', satirSil);
         document.getElementById('pdf-btn').addEventListener('click', pdfIndir);
         document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
@@ -1123,6 +1128,21 @@
             }, 5000);
         }
 
+        // Veri yükleme durumunu kontrol etme fonksiyonu
+        function isDataAlreadyLoaded() {
+            return localStorage.getItem('sofDataLoaded') === 'true';
+        }
+        
+        // Veri yükleme durumunu işaretleme fonksiyonu
+        function markDataAsLoaded() {
+            localStorage.setItem('sofDataLoaded', 'true');
+        }
+        
+        // Veri yükleme durumunu sıfırlama fonksiyonu (gerektiğinde kullanılabilir)
+        function resetDataLoadedFlag() {
+            localStorage.removeItem('sofDataLoaded');
+        }
+
         // Initialize
         window.addEventListener('load', async () => {
             if (window.dataSdk) {
@@ -1132,10 +1152,12 @@
                     return;
                 }
                 
-                // Data SDK başlatıldıktan sonra CSV'yi otomatik yükle
-                // Sadece veri yoksa yükle (tekrar yüklemeyi önle)
-                if (currentData.length === 0) {
+                // Veri yükleme kontrolü
+                // Sadece daha önce yüklenmemişse ve mevcut veri yoksa yükle
+                if (!isDataAlreadyLoaded() && currentData.length === 0) {
                     await csvOtomatikYukle();
+                    // Başarılı yükleme sonrası işareti kaydet
+                    markDataAsLoaded();
                 }
             }
             
@@ -1149,5 +1171,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fec2ddc5459b95',t:'MTc2MDY5MzI1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fed0f507949a18',t:'MTc2MDY5MzgzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
