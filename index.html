@@ -452,74 +452,136 @@
         async function generatePDF() {
             showMessage('PDF hazırlanıyor, lütfen bekleyin...', 'info');
             
-            const pdf = new jsPDF("p", "mm", "a4");
+            try {
+                const pdf = new jsPDF("p", "mm", "a4");
 
-            // Varsayılan logo
-            const logoURL = "https://www.somtech.com.tr/wp-content/uploads/2024/01/logo.png";
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.src = logoURL;
+                // SomTech logosu
+                const logoURL = "https://resimlink.com/TUzslur";
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = logoURL;
 
-            img.onload = function () {
-                // Üst başlık
-                pdf.addImage(img, "PNG", 15, 10, 35, 15);
-                pdf.setFontSize(14);
-                pdf.setTextColor(36, 89, 160);
-                pdf.text("SOMTECH RU", 60, 20);
-                pdf.setTextColor(207, 46, 38);
-                pdf.setFontSize(11);
-                pdf.text("SİPARİŞ ONAY FORMU (SOF)", 60, 27);
+                img.onload = function () {
+                    try {
+                        // Logo sol üst köşede (35mm x 15mm)
+                        pdf.addImage(img, "PNG", 15, 10, 35, 15);
+                        
+                        // Başlık - SOMTECH RU (mavi)
+                        pdf.setFontSize(16);
+                        pdf.setTextColor(36, 89, 160);
+                        pdf.text("SOMTECH RU", 60, 18);
+                        
+                        // Alt başlık - SİPARİŞ ONAY FORMU (kırmızı)
+                        pdf.setFontSize(12);
+                        pdf.setTextColor(207, 46, 38);
+                        pdf.text("SİPARİŞ ONAY FORMU (SOF)", 60, 25);
+                        
+                        // Kırmızı çizgi başlığın altında
+                        pdf.setDrawColor(207, 46, 38);
+                        pdf.setLineWidth(0.5);
+                        pdf.line(15, 28, 195, 28);
 
-                // Tarih
-                const date = new Date().toLocaleDateString("tr-TR");
-                pdf.setFontSize(10);
-                pdf.setTextColor(0, 0, 0);
-                pdf.text(`Tarih: ${date}`, 190, 20, { align: "right" });
+                        // Tarih sağ üstte
+                        const tarih = new Date().toLocaleDateString("tr-TR");
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(0, 0, 0);
+                        pdf.text(`Tarih: ${tarih}`, 190, 20, { align: "right" });
 
-                // Tabloyu PDF'e dönüştür
-                const table = document.querySelector("table");
-                pdf.html(table, {
-                    callback: function (pdf) {
-                        pdf.setFontSize(9);
-                        pdf.text("Bu belge elektronik ortamda hazırlanmıştır.", 105, 290, { align: "center" });
-                        pdf.save(`SOMTECH_SOF_${date.replace(/\./g, '_')}.pdf`);
-                        showMessage('PDF başarıyla indirildi!', 'success');
-                    },
-                    x: 10,
-                    y: 40,
-                    html2canvas: { scale: 0.6 },
-                });
-            };
+                        // Şirket bilgisi
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(100, 100, 100);
+                        pdf.text("RF100, SOMTECH RU, FABRİKA MÜDÜRLÜĞÜ", 105, 33, { align: "center" });
 
-            img.onerror = function () {
-                // Logo yüklenemezse logosuz devam et
-                pdf.setFontSize(14);
-                pdf.setTextColor(36, 89, 160);
-                pdf.text("SOMTECH RU", 15, 20);
-                pdf.setTextColor(207, 46, 38);
-                pdf.setFontSize(11);
-                pdf.text("SİPARİŞ ONAY FORMU (SOF)", 15, 27);
+                        // Tabloyu PDF'e dönüştür
+                        const table = document.querySelector("table");
+                        pdf.html(table, {
+                            callback: function (pdf) {
+                                // Alt kısımda elektronik belge notu (gri)
+                                pdf.setFontSize(8);
+                                pdf.setTextColor(128, 128, 128);
+                                pdf.text("*Bu belge elektronik ortamda hazırlanmıştır.*", 105, 285, { align: "center" });
+                                
+                                // Dosyayı kaydet
+                                const dosyaAdi = `SOMTECH_SOF_${tarih.replace(/\./g, '_')}.pdf`;
+                                pdf.save(dosyaAdi);
+                                showMessage('PDF başarıyla indirildi!', 'success');
+                            },
+                            x: 10,
+                            y: 45,
+                            html2canvas: { 
+                                scale: 0.65,
+                                useCORS: true,
+                                allowTaint: true
+                            },
+                        });
+                    } catch (error) {
+                        console.error('PDF oluşturma hatası:', error);
+                        showMessage('PDF oluşturulurken hata oluştu!', 'error');
+                    }
+                };
 
-                // Tarih
-                const date = new Date().toLocaleDateString("tr-TR");
-                pdf.setFontSize(10);
-                pdf.setTextColor(0, 0, 0);
-                pdf.text(`Tarih: ${date}`, 190, 20, { align: "right" });
+                img.onerror = function () {
+                    try {
+                        // Logo yüklenemezse logosuz devam et
+                        console.warn('Logo yüklenemedi, logosuz PDF oluşturuluyor...');
+                        
+                        // Başlık - SOMTECH RU (mavi)
+                        pdf.setFontSize(16);
+                        pdf.setTextColor(36, 89, 160);
+                        pdf.text("SOMTECH RU", 15, 18);
+                        
+                        // Alt başlık - SİPARİŞ ONAY FORMU (kırmızı)
+                        pdf.setFontSize(12);
+                        pdf.setTextColor(207, 46, 38);
+                        pdf.text("SİPARİŞ ONAY FORMU (SOF)", 15, 25);
+                        
+                        // Kırmızı çizgi başlığın altında
+                        pdf.setDrawColor(207, 46, 38);
+                        pdf.setLineWidth(0.5);
+                        pdf.line(15, 28, 195, 28);
 
-                // Tabloyu PDF'e dönüştür
-                const table = document.querySelector("table");
-                pdf.html(table, {
-                    callback: function (pdf) {
-                        pdf.setFontSize(9);
-                        pdf.text("Bu belge elektronik ortamda hazırlanmıştır.", 105, 290, { align: "center" });
-                        pdf.save(`SOMTECH_SOF_${date.replace(/\./g, '_')}.pdf`);
-                        showMessage('PDF başarıyla indirildi!', 'success');
-                    },
-                    x: 10,
-                    y: 40,
-                    html2canvas: { scale: 0.6 },
-                });
-            };
+                        // Tarih sağ üstte
+                        const tarih = new Date().toLocaleDateString("tr-TR");
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(0, 0, 0);
+                        pdf.text(`Tarih: ${tarih}`, 190, 20, { align: "right" });
+
+                        // Şirket bilgisi
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(100, 100, 100);
+                        pdf.text("RF100, SOMTECH RU, FABRİKA MÜDÜRLÜĞÜ", 105, 33, { align: "center" });
+
+                        // Tabloyu PDF'e dönüştür
+                        const table = document.querySelector("table");
+                        pdf.html(table, {
+                            callback: function (pdf) {
+                                // Alt kısımda elektronik belge notu (gri)
+                                pdf.setFontSize(8);
+                                pdf.setTextColor(128, 128, 128);
+                                pdf.text("*Bu belge elektronik ortamda hazırlanmıştır.*", 105, 285, { align: "center" });
+                                
+                                // Dosyayı kaydet
+                                const dosyaAdi = `SOMTECH_SOF_${tarih.replace(/\./g, '_')}.pdf`;
+                                pdf.save(dosyaAdi);
+                                showMessage('PDF başarıyla indirildi! (Logo yüklenemedi)', 'warning');
+                            },
+                            x: 10,
+                            y: 45,
+                            html2canvas: { 
+                                scale: 0.65,
+                                useCORS: true,
+                                allowTaint: true
+                            },
+                        });
+                    } catch (error) {
+                        console.error('PDF oluşturma hatası (logosuz):', error);
+                        showMessage('PDF oluşturulurken hata oluştu!', 'error');
+                    }
+                };
+            } catch (error) {
+                console.error('PDF başlatma hatası:', error);
+                showMessage('PDF oluşturulamadı!', 'error');
+            }
         }
 
 
@@ -658,5 +720,5 @@
             }, 1000);
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe25d8232235e7',t:'MTc2MDY4NjgyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe2e79a39135e7',t:'MTc2MDY4NzE4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
