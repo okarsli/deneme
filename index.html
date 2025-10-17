@@ -169,8 +169,6 @@
        <th>Seç</th>
        <th>SIRA NO</th>
        <th>SOF FORM NO</th>
-       <th>PROJE KODU</th>
-       <th>TALEP NO</th>
        <th>MALZEME TİPİ</th>
        <th>TALEP EDEN</th>
        <th>TALEP TARİHİ</th>
@@ -197,7 +195,7 @@
      </tbody>
      <tfoot>
       <tr class="total-row">
-       <td colspan="16" class="text-right font-bold">GENEL TOPLAM (₽ RUB):</td>
+       <td colspan="14" class="text-right font-bold">GENEL TOPLAM (₽ RUB):</td>
        <td id="genel-toplam" class="font-bold">0.00</td>
        <td colspan="8"></td>
       </tr>
@@ -267,9 +265,7 @@
             return {
                 sira_no: nextSiraNo++,
                 sof_form_no: currentFormNo,
-                proje_kodu: '',
-                talep_no: '',
-                malzeme_tipi: '',
+                malzeme_tipi: 'SARF',
                 talep_eden: '',
                 talep_tarihi: today,
                 istenen_teslim_tarihi: '',
@@ -303,9 +299,12 @@
                     <td><input type="radio" name="selectedRow" value="${index}" onchange="selectRow(${index})"></td>
                     <td>${row.sira_no}</td>
                     <td>${row.sof_form_no}</td>
-                    <td><input type="text" value="${row.proje_kodu}" onchange="updateField(${index}, 'proje_kodu', this.value)"></td>
-                    <td><input type="text" value="${row.talep_no}" onchange="updateField(${index}, 'talep_no', this.value)"></td>
-                    <td><input type="text" value="${row.malzeme_tipi}" onchange="updateField(${index}, 'malzeme_tipi', this.value)"></td>
+                    <td>
+                        <select onchange="updateField(${index}, 'malzeme_tipi', this.value)">
+                            <option value="SARF" ${row.malzeme_tipi === 'SARF' ? 'selected' : ''}>SARF</option>
+                            <option value="DEMİRBAŞ" ${row.malzeme_tipi === 'DEMİRBAŞ' ? 'selected' : ''}>DEMİRBAŞ</option>
+                        </select>
+                    </td>
                     <td><input type="text" value="${row.talep_eden}" onchange="updateField(${index}, 'talep_eden', this.value)"></td>
                     <td><input type="date" value="${row.talep_tarihi}" onchange="updateField(${index}, 'talep_tarihi', this.value)"></td>
                     <td><input type="date" value="${row.istenen_teslim_tarihi}" onchange="updateField(${index}, 'istenen_teslim_tarihi', this.value)"></td>
@@ -500,5 +499,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe60dce679d35d',t:'MTc2MDY4OTI0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fe6a342396d35d',t:'MTc2MDY4OTYyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
