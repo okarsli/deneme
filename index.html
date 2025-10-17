@@ -69,78 +69,36 @@
             background-color: white;
         }
         
-        /* Onay durumu renkleri */
+        /* Onay durumu renkleri - sadece arka plan */
         .status-beklemede {
-            background-color: #e5e7eb !important;
-            color: #000000 !important;
-            transition: all 300ms ease;
-        }
-        
-        .status-onay-bekliyor {
-            background-color: #a855f7 !important;
-            color: #000000 !important;
+            background-color: #fef3c7 !important; /* bg-yellow-100 */
             transition: all 300ms ease;
         }
         
         .status-onaylandi {
-            background-color: #2459a0 !important;
-            color: #ffffff !important;
-            transition: all 300ms ease;
-        }
-        
-        .status-odeme-bekliyor {
-            background-color: #f59e0b !important;
-            color: #ffffff !important;
-            transition: all 300ms ease;
-        }
-        
-        .status-tamamlandi {
-            background-color: #10b981 !important;
-            color: #ffffff !important;
+            background-color: #dcfce7 !important; /* bg-green-100 */
             transition: all 300ms ease;
         }
         
         .status-red-edildi {
-            background-color: #dc2626 !important;
-            color: #ffffff !important;
+            background-color: #fee2e2 !important; /* bg-red-100 */
             transition: all 300ms ease;
         }
         
-        /* Dropdown menülerde kontrast korunması */
-        .status-beklemede select,
-        .status-beklemede input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
+        .status-odeme-bekliyor {
+            background-color: #dbeafe !important; /* bg-blue-100 */
+            transition: all 300ms ease;
         }
         
-        .status-onay-bekliyor select,
-        .status-onay-bekliyor input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
+        /* Diğer durumlar için varsayılan */
+        .status-onay-bekliyor {
+            background-color: #fef3c7 !important; /* bg-yellow-100 */
+            transition: all 300ms ease;
         }
         
-        .status-onaylandi select,
-        .status-onaylandi input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
-        }
-        
-        .status-odeme-bekliyor select,
-        .status-odeme-bekliyor input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
-        }
-        
-        .status-tamamlandi select,
-        .status-tamamlandi input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
-        }
-        
-        .status-red-edildi select,
-        .status-red-edildi input {
-            color: #000000 !important;
-            background-color: #ffffff !important;
+        .status-tamamlandi {
+            background-color: #dcfce7 !important; /* bg-green-100 */
+            transition: all 300ms ease;
         }
         
         input[type="text"], input[type="number"], input[type="date"], select {
@@ -217,49 +175,85 @@
             opacity: 0.6;
             pointer-events: none;
         }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.success {
+            background-color: #10b981;
+        }
+        
+        .notification.error {
+            background-color: #dc2626;
+        }
+        
+        .notification.info {
+            background-color: #3b82f6;
+        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="bg-gray-100 min-h-full">
   <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg my-4">
-   <header class="mb-6">
-    <div class="flex flex-col md:flex-row items-center justify-center gap-4"><!-- Logo Bölümü -->
-     <div class="flex flex-col items-center"><img src="https://resimlink.com/TUzslur" alt="SOMTECH RU Logo" class="h-16 w-auto object-contain" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-      <div id="logo-fallback" class="hidden bg-blue-600 text-white px-4 py-2 rounded font-bold">
-       SOMTECH RU
+   <header class="mb-6 bg-white">
+    <div class="flex flex-col items-center justify-center"><!-- Logo Bölümü -->
+     <div class="flex flex-col items-center mb-2"><a href="https://www.somtech.ru/" target="_blank" rel="noopener noreferrer" class="block mb-2"> <img src="https://raw.githubusercontent.com/okarsli/deneme/main/%C5%9Eeffaf%20Logo.png" alt="SOMTECH RU Logo" class="w-32 h-auto object-contain hover:opacity-80 transition-opacity cursor-pointer" style="width: 130px;" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';"> </a>
+      <div id="logo-fallback" class="hidden mb-2"><a href="https://www.somtech.ru/" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded font-bold hover:bg-blue-700 transition-colors"> SOMTECH RU </a>
       </div>
-      <p class="text-xs text-gray-500 mt-1 font-medium">SOMTECH RU</p>
-     </div><!-- Ana Başlık -->
-     <div class="text-center md:ml-6">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1">Satın Alma Yönetim Sistemi</h1>
-      <div class="h-1 w-24 bg-blue-600 mx-auto rounded"></div>
-     </div>
+      <p class="text-center" style="font-size: 14px; font-family: 'Calibri', sans-serif; color: #6b7280;">Satın Alma Yönetim Sistemi</p>
+     </div><!-- Ayraç Çizgi -->
+     <div class="w-full h-px bg-gray-300 mt-4 mb-2" style="background-color: #d1d5db;"></div><!-- Bildirim Alanı -->
+     <div id="notification-area" class="w-full mt-2 mb-2"></div>
     </div>
    </header>
-   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="verileri-yukle-btn" class="btn" style="background-color: #2563eb; color: white;"> 📂 Verileri Yükle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button>
+   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button> <button id="export-csv-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm w-full md:w-auto transition-colors"> 📦 Verileri Dışa Aktar </button> <button id="clear-local-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🧹 Yerel Veriyi Temizle </button>
    </div><!-- Toplam Bilgi Paneli -->
-   <div class="mb-6">
-    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">📊 Toplam Bilgi Paneli</h2>
-    <div class="flex justify-center gap-4 max-w-2xl mx-auto"><!-- SARF TOPLAMI Kartı -->
-     <div class="bg-gray-100 rounded-lg shadow-md p-3 text-center border-l-4 border-gray-500 w-1/3">
-      <div class="flex items-center justify-center mb-2"><span class="text-lg mr-1">📦</span>
-       <h3 class="text-base font-bold text-gray-700">SARF TOPLAMI</h3>
+   <div class="mb-8">
+    <div class="text-center mb-6">
+     <h2 class="text-xl font-bold text-gray-800 mb-2">📊 Toplam Bilgi Paneli</h2>
+     <div class="w-32 h-px bg-gray-300 mx-auto"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto"><!-- SARF TOPLAMI Kartı -->
+     <div class="bg-gray-100 hover:bg-gray-200 rounded-xl shadow-md p-6 text-center transition-all duration-300 max-h-[110px] flex flex-col justify-between">
+      <div class="flex items-center justify-start mb-2"><span class="text-xl mr-3">💼</span>
+       <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">SARF TOPLAMI</h3>
       </div>
-      <div class="text-xl font-bold text-gray-800" id="sarf-toplam-panel">
-       0.00
+      <div class="text-2xl font-bold text-gray-800 mb-1" id="sarf-toplam-panel">
+       ₽ 0,00
       </div>
-      <div class="text-xs text-gray-600">
+      <div class="text-xs text-gray-500 font-medium">
        ₽ RUB
       </div>
      </div><!-- DEMİRBAŞ TOPLAMI Kartı -->
-     <div class="bg-red-50 rounded-lg shadow-md p-3 text-center border-l-4 border-red-400 w-1/3">
-      <div class="flex items-center justify-center mb-2"><span class="text-lg mr-1">🏭</span>
-       <h3 class="text-base font-bold text-red-700">DEMİRBAŞ TOPLAMI</h3>
+     <div class="bg-red-50 hover:bg-red-100 rounded-xl shadow-md p-6 text-center transition-all duration-300 max-h-[110px] flex flex-col justify-between">
+      <div class="flex items-center justify-start mb-2"><span class="text-xl mr-3">🧱</span>
+       <h3 class="text-sm font-bold text-red-700 uppercase tracking-wide">DEMİRBAŞ TOPLAMI</h3>
       </div>
-      <div class="text-xl font-bold text-red-800" id="demirbas-toplam-panel">
-       0.00
+      <div class="text-2xl font-bold text-red-800 mb-1" id="demirbas-toplam-panel">
+       ₽ 0,00
       </div>
-      <div class="text-xs text-red-600">
+      <div class="text-xs text-red-500 font-medium">
+       ₽ RUB
+      </div>
+     </div><!-- GENEL TOPLAM Kartı -->
+     <div class="bg-cyan-50 hover:bg-cyan-100 rounded-xl shadow-md p-6 text-center transition-all duration-300 max-h-[110px] flex flex-col justify-between">
+      <div class="flex items-center justify-start mb-2"><span class="text-xl mr-3">💰</span>
+       <h3 class="text-sm font-bold text-cyan-700 uppercase tracking-wide">GENEL TOPLAM</h3>
+      </div>
+      <div class="text-2xl font-bold text-cyan-800 mb-1" id="genel-toplam-panel">
+       ₽ 0,00
+      </div>
+      <div class="text-xs text-cyan-500 font-medium">
        ₽ RUB
       </div>
      </div>
@@ -300,13 +294,6 @@
      </thead>
      <tbody id="table-body">
      </tbody>
-     <tfoot>
-      <tr class="grand-total-row">
-       <td colspan="14" class="text-right font-bold">GENEL TOPLAM (₽ RUB):</td>
-       <td id="genel-toplam" class="font-bold">0.00</td>
-       <td colspan="8"></td>
-      </tr>
-     </tfoot>
     </table>
    </div>
   </div>
@@ -319,10 +306,6 @@
         let isLoading = false;
         let jsPDFLoaded = false;
         let calculateTotalTimeout = null;
-
-        const defaultConfig = {
-            // Logo ve başlık artık sabit olduğu için config boş
-        };
 
         // Debounce fonksiyonu - toplam hesaplamalarını optimize eder
         function debouncedCalculateTotal() {
@@ -340,14 +323,59 @@
                 updateNextNumbers();
                 renderTable();
                 calculateTotal();
+                // LocalStorage'a otomatik kaydet
+                saveToLocalStorage();
             }
         };
+
+        // LocalStorage kaydetme fonksiyonu
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem("sofTableData", JSON.stringify(currentData));
+                console.log('Veriler localStorage\'a kaydedildi');
+            } catch (error) {
+                console.error('LocalStorage kaydetme hatası:', error);
+            }
+        }
+
+        // LocalStorage'dan veri yükleme fonksiyonu
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem("sofTableData");
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        return parsedData;
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error('LocalStorage okuma hatası:', error);
+                return null;
+            }
+        }
+
+        // Yerel veriyi temizleme fonksiyonu
+        function clearLocalStorage() {
+            try {
+                localStorage.removeItem("sofTableData");
+                localStorage.removeItem("sofDataLoaded"); // GitHub CSV yükleme işaretini de temizle
+                showNotification('🧹 Yerel veriler temizlendi. Sayfa yenileniyor...', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } catch (error) {
+                console.error('LocalStorage temizleme hatası:', error);
+                showNotification('Yerel veriler temizlenirken hata oluştu.', 'error');
+            }
+        }
 
         function updateNextNumbers() {
             if (currentData.length > 0) {
                 nextSiraNo = Math.max(...currentData.map(item => item.sira_no)) + 1;
                 const formNumbers = currentData.map(item => {
-                    const match = item.sof_form_no.match(/RF100\.SOF-(\d+)/);
+                    // Yeni format: RF100.SOFS-0001 veya RF100.SOFD-0001
+                    const match = item.sof_form_no.match(/RF100\.SOF[SD]-(\d+)/);
                     return match ? parseInt(match[1]) : 0;
                 });
                 nextFormNo = Math.max(...formNumbers, 0) + 1;
@@ -370,12 +398,19 @@
             return date.toISOString().split('T')[0];
         }
 
-        function createNewRow(formNo = null) {
+        // Form numarası otomatik oluşturma
+        function generateFormNumber(index, malzemeTipi) {
+            const tipKodu = malzemeTipi === "SARF" ? "S" : "D";
+            const formNo = String(index).padStart(4, "0");
+            return `RF100.SOF${tipKodu}-${formNo}`;
+        }
+
+        function createNewRow(formNo = null, malzemeTipi = 'SARF') {
             const today = formatDate(new Date());
             
             if (!formNo) {
-                currentFormNo = `RF100.SOF-${String(nextFormNo).padStart(4, '0')}`;
-                nextFormNo++;
+                const newIndex = currentData.length + 1;
+                currentFormNo = generateFormNumber(newIndex, malzemeTipi);
             } else {
                 currentFormNo = formNo;
             }
@@ -383,7 +418,7 @@
             return {
                 sira_no: nextSiraNo++,
                 sof_form_no: currentFormNo,
-                malzeme_tipi: 'SARF',
+                malzeme_tipi: malzemeTipi,
                 talep_eden: '',
                 talep_tarihi: today,
                 istenen_teslim_tarihi: '',
@@ -432,8 +467,12 @@
                         <option value="ADET" ${row.birim === 'ADET' ? 'selected' : ''}>ADET</option>
                         <option value="KG" ${row.birim === 'KG' ? 'selected' : ''}>KG</option>
                         <option value="LT" ${row.birim === 'LT' ? 'selected' : ''}>LT</option>
-                        <option value="MT" ${row.birim === 'MT' ? 'selected' : ''}>MT</option>
+                        <option value="METRE" ${row.birim === 'METRE' ? 'selected' : ''}>METRE</option>
+                        <option value="M2" ${row.birim === 'M2' ? 'selected' : ''}>M2</option>
+                        <option value="M3" ${row.birim === 'M3' ? 'selected' : ''}>M3</option>
                         <option value="SET" ${row.birim === 'SET' ? 'selected' : ''}>SET</option>
+                        <option value="PAKET" ${row.birim === 'PAKET' ? 'selected' : ''}>PAKET</option>
+                        <option value="KUTU" ${row.birim === 'KUTU' ? 'selected' : ''}>KUTU</option>
                     </select>
                 </td>
                 <td><input type="number" value="${row.talep_miktari}" onchange="updateField(${index}, 'talep_miktari', parseFloat(this.value) || 0)"></td>
@@ -520,6 +559,29 @@
             const row = currentData[index];
             row[field] = value;
             
+            // Malzeme tipi değiştiğinde form numarasını güncelle
+            if (field === 'malzeme_tipi') {
+                // Mevcut form numarasından index'i çıkar veya satır pozisyonunu kullan
+                const currentMatch = row.sof_form_no.match(/RF100\.SOF[SD]-(\d+)/);
+                let formIndex;
+                
+                if (currentMatch) {
+                    formIndex = parseInt(currentMatch[1]);
+                } else {
+                    // Form numarası yoksa veya geçersizse, satır pozisyonunu kullan
+                    formIndex = index + 1;
+                }
+                
+                row.sof_form_no = generateFormNumber(formIndex, value);
+                
+                // Form numarası hücresini güncelle
+                const formNoCell = document.querySelector(`#table-body tr:nth-child(${index + 1}) td:nth-child(3)`);
+                if (formNoCell) {
+                    formNoCell.textContent = row.sof_form_no;
+                }
+                debouncedCalculateTotal();
+            }
+            
             // Otomatik hesaplama: TOPLAM FİYAT = TALEP MİKTARI × BİRİM FİYAT
             if (field === 'talep_miktari' || field === 'birim_fiyat') {
                 row.toplam_fiyat = row.talep_miktari * row.birim_fiyat;
@@ -531,11 +593,6 @@
                 }
                 
                 // Debounced toplam hesaplama
-                debouncedCalculateTotal();
-            }
-            
-            // Malzeme tipi değiştiğinde alt toplamları güncelle
-            if (field === 'malzeme_tipi') {
                 debouncedCalculateTotal();
             }
             
@@ -562,7 +619,7 @@
             }
             
             if (!result.isOk) {
-                alert('Güncelleme sırasında hata oluştu: ' + result.error.message);
+                showNotification('Güncelleme sırasında hata oluştu: ' + result.error.message, 'error');
             }
         }
 
@@ -577,18 +634,16 @@
             
             const genelTotal = sarfTotal + demirbasTotal;
             
-            // Tablo altındaki genel toplamı güncelle
-            document.getElementById('genel-toplam').textContent = genelTotal.toFixed(2);
-            
-            // Üstteki panel kartlarını güncelle
-            document.getElementById('sarf-toplam-panel').textContent = sarfTotal.toFixed(2);
-            document.getElementById('demirbas-toplam-panel').textContent = demirbasTotal.toFixed(2);
+            // Türkçe format ile panel kartlarını güncelle (₽ 125.430,00)
+            document.getElementById('sarf-toplam-panel').textContent = `₽ ${sarfTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('demirbas-toplam-panel').textContent = `₽ ${demirbasTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('genel-toplam-panel').textContent = `₽ ${genelTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         }
 
         async function yeniTalepBaslat() {
             if (isLoading) return;
             if (currentData.length >= 999) {
-                alert('Maksimum 999 kayıt sınırına ulaşıldı. Lütfen önce bazı kayıtları silin.');
+                showNotification('Maksimum 999 kayıt sınırına ulaşıldı. Lütfen önce bazı kayıtları silin.', 'error');
                 return;
             }
             
@@ -598,19 +653,19 @@
             hideLoading();
             
             if (!result.isOk) {
-                alert('Yeni talep oluşturulurken hata oluştu: ' + result.error.message);
+                showNotification('Yeni talep oluşturulurken hata oluştu: ' + result.error.message, 'error');
             }
         }
 
         async function altSatirEkle() {
             if (isLoading) return;
             if (currentData.length >= 999) {
-                alert('Maksimum 999 kayıt sınırına ulaşıldı. Lütfen önce bazı kayıtları silin.');
+                showNotification('Maksimum 999 kayıt sınırına ulaşıldı. Lütfen önce bazı kayıtları silin.', 'error');
                 return;
             }
             
             if (currentData.length === 0) {
-                alert('Önce "Yeni Talep Başlat" butonuna basarak bir form oluşturun.');
+                showNotification('Önce "Yeni Talep Başlat" butonuna basarak bir form oluşturun.', 'info');
                 return;
             }
             
@@ -622,14 +677,14 @@
             hideLoading();
             
             if (!result.isOk) {
-                alert('Alt satır eklenirken hata oluştu: ' + result.error.message);
+                showNotification('Alt satır eklenirken hata oluştu: ' + result.error.message, 'error');
             }
         }
 
         async function satirSil() {
             if (isLoading) return;
             if (selectedRowIndex === -1) {
-                alert('Lütfen silmek istediğiniz satırı seçin.');
+                showNotification('Lütfen silmek istediğiniz satırı seçin.', 'info');
                 return;
             }
             
@@ -641,8 +696,9 @@
             
             if (result.isOk) {
                 selectedRowIndex = -1;
+                showNotification('Satır başarıyla silindi.', 'success');
             } else {
-                alert('Satır silinirken hata oluştu: ' + result.error.message);
+                showNotification('Satır silinirken hata oluştu: ' + result.error.message, 'error');
             }
         }
 
@@ -668,7 +724,7 @@
 
         function csvDısaAktar() {
             if (currentData.length === 0) {
-                alert('Dışa aktarılacak veri bulunmuyor. Önce veri ekleyin.');
+                showNotification('Dışa aktarılacak veri bulunmuyor. Önce veri ekleyin.', 'info');
                 return;
             }
 
@@ -702,7 +758,7 @@
             let csvContent = '\uFEFF'; // UTF-8 BOM for Excel compatibility
             
             // Başlıkları ekle
-            csvContent += headers.join(',') + '\n';
+            csvContent += headers.join(';') + '\n';
             
             // Veri satırlarını ekle
             currentData.forEach(row => {
@@ -730,7 +786,7 @@
                     `"${row.onay_durumu}"`,
                     `"${row.aciklama}"`
                 ];
-                csvContent += csvRow.join(',') + '\n';
+                csvContent += csvRow.join(';') + '\n';
             });
 
             // Alt toplamları ekle
@@ -744,9 +800,9 @@
                 .reduce((sum, row) => sum + row.toplam_fiyat, 0);
             const genelTotal = sarfTotal + demirbasTotal;
             
-            csvContent += `"SARF TOPLAMI (₽ RUB):",,,,,,,,,,,,,"${sarfTotal.toFixed(2)}"\n`;
-            csvContent += `"DEMİRBAŞ TOPLAMI (₽ RUB):",,,,,,,,,,,,,"${demirbasTotal.toFixed(2)}"\n`;
-            csvContent += `"GENEL TOPLAM (₽ RUB):",,,,,,,,,,,,,"${genelTotal.toFixed(2)}"\n`;
+            csvContent += `"SARF TOPLAMI (₽ RUB):";;;;;;;;;;;;;;;"${sarfTotal.toFixed(2)}"\n`;
+            csvContent += `"DEMİRBAŞ TOPLAMI (₽ RUB):";;;;;;;;;;;;;;;"${demirbasTotal.toFixed(2)}"\n`;
+            csvContent += `"GENEL TOPLAM (₽ RUB):";;;;;;;;;;;;;;;"${genelTotal.toFixed(2)}"\n`;
 
             // Dosya adı oluştur
             const today = new Date().toLocaleDateString('tr-TR');
@@ -766,9 +822,83 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
                 
-                alert(`CSV dosyası başarıyla indirildi: ${fileName}`);
+                showNotification(`CSV dosyası başarıyla indirildi: ${fileName}`, 'success');
             } else {
-                alert('Tarayıcınız dosya indirmeyi desteklemiyor.');
+                showNotification('Tarayıcınız dosya indirmeyi desteklemiyor.', 'error');
+            }
+        }
+
+        // Yeni CSV dışa aktarma fonksiyonu - istenen formatta
+        function exportToCSV() {
+            if (currentData.length === 0) {
+                showNotification('Dışa aktarılacak veri bulunmuyor. Önce veri ekleyin.', 'info');
+                return;
+            }
+
+            const today = new Date();
+            const fileName = `SOF_TALEP_LISTESI_${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}.csv`;
+
+            // Tablo verilerinden başlıkları al
+            const headers = [
+                'sira_no',
+                'sof_form_no',
+                'malzeme_tipi',
+                'talep_eden',
+                'talep_tarihi',
+                'istenen_teslim_tarihi',
+                'talep_edilen_malzeme',
+                'detay_1',
+                'detay_2',
+                'birim',
+                'talep_miktari',
+                'siparis_miktari',
+                'birim_fiyat',
+                'toplam_fiyat',
+                'tedarikci',
+                'satinalma_sorumlusu',
+                'planlanan_teslim_tarihi',
+                'teslimat_miktari',
+                'teslimat_tarihi',
+                'kalan_miktar',
+                'onay_durumu',
+                'aciklama'
+            ];
+
+            // CSV satırları oluştur
+            const csvRows = [headers.join(";")];
+
+            currentData.forEach(row => {
+                const values = headers.map(h => {
+                    const value = row[h];
+                    if (value === null || value === undefined) {
+                        return "";
+                    }
+                    // String değerleri çift tırnak içine al ve içindeki çift tırnakları escape et
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(";"));
+            });
+
+            // UTF-8 BOM ekleyerek CSV string oluştur
+            const csvString = '\uFEFF' + csvRows.join("\n");
+            
+            // Blob oluştur ve indir
+            const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = fileName;
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                showNotification(`📦 Veriler başarıyla dışa aktarıldı: ${fileName}`, 'success');
+            } else {
+                showNotification('Tarayıcınız dosya indirmeyi desteklemiyor.', 'error');
             }
         }
 
@@ -780,21 +910,26 @@
                 hideLoading();
             } catch (error) {
                 hideLoading();
-                alert('PDF kütüphanesi yüklenemedi. Lütfen tekrar deneyin.');
+                showNotification('PDF kütüphanesi yüklenemedi. Lütfen tekrar deneyin.', 'error');
                 return;
             }
 
             const { jsPDF } = window.jsPDF;
-            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+            const doc = new jsPDF('l', 'mm', 'a4'); // A4 Landscape - 297x210mm
             
             // Logo ekleme
-            const logoUrl = 'https://resimlink.com/TUzslur';
+            const logoUrl = 'https://raw.githubusercontent.com/okarsli/deneme/main/%C5%9Eeffaf%20Logo.png';
             const img = new Image();
             img.crossOrigin = 'anonymous';
             
             img.onload = function() {
                 try {
-                    doc.addImage(img, 'PNG', 10, 10, 40, 20);
+                    // Logo ortada hizalanmış, max 120px genişlik
+                    const logoWidth = 40; // mm cinsinden
+                    const logoHeight = 20; // mm cinsinden
+                    const pageWidth = 297; // A4 landscape genişlik
+                    const logoX = (pageWidth - logoWidth) / 2; // Ortala
+                    doc.addImage(img, 'PNG', logoX, 20, logoWidth, logoHeight);
                 } catch (e) {
                     console.log('Logo eklenemedi:', e);
                 }
@@ -810,81 +945,104 @@
         }
 
         function generatePDFContent(doc) {
-            // Tarih sağ üstte
-            const today = new Date().toLocaleDateString('tr-TR');
+            const pageWidth = 297; // A4 landscape genişlik
+            const pageHeight = 210; // A4 landscape yükseklik
+            const margin = 15; // 15mm kenar boşluğu
+            
+            // Logo altında "Satın Alma Yönetim Sistemi" metni - gri renkte
             doc.setFontSize(10);
-            doc.text(`Tarih: ${today}`, 250, 15);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(107, 114, 128); // Gri renk (#6b7280)
+            doc.text('Satın Alma Yönetim Sistemi', pageWidth / 2, 50, { align: 'center' });
             
-            // Ana başlık - ortada
-            doc.setFontSize(18);
-            doc.setFont(undefined, 'bold');
-            doc.text('SOMTECH RU – SİPARİŞ ONAY FORMU (SOF)', 148, 40, { align: 'center' });
+            // Logo altına ince gri çizgi (#d1d5db)
+            doc.setDrawColor(209, 213, 219); // #d1d5db
+            doc.setLineWidth(0.5);
+            doc.line(margin, 55, pageWidth - margin, 55);
             
-            // Tablo başlıkları - daha kompakt
+            // Ana başlık
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0); // Siyah
+            doc.text('SİPARİŞ ONAY FORMU (SOF)', pageWidth / 2, 65, { align: 'center' });
+            
+            // Tarih - sağ üstte
+            const today = new Date().toLocaleDateString('tr-TR');
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Tarih: ${today}`, pageWidth - margin, 25, { align: 'right' });
+            
+            // Tablo başlıkları
             const headers = [
-                'Sıra', 'Form No', 'Tip', 'Talep Eden', 'Malzeme', 
-                'Birim', 'Miktar', 'B.Fiyat', 'Toplam', 'Durum'
+                'Sıra No', 'Form No', 'Malzeme Tipi', 'Talep Eden', 'Talep Edilen Malzeme', 
+                'Birim', 'Talep Miktarı', 'Birim Fiyat (₽ RUB)', 'Toplam Fiyat (₽ RUB)', 'Onay Durumu'
             ];
             
-            let yPos = 55;
+            let yPos = 75;
             doc.setFontSize(8);
-            doc.setFont(undefined, 'bold');
+            doc.setFont('helvetica', 'bold');
             
-            // Başlık satırı - mavi arka plan
-            doc.setFillColor(36, 89, 160); // #2459a0
-            doc.setTextColor(255, 255, 255); // Beyaz yazı
+            // Tablo genişliği hesaplama
+            const tableWidth = pageWidth - (2 * margin);
+            const colWidths = [20, 35, 25, 30, 60, 15, 20, 30, 30, 25]; // Toplam: 290mm
             
-            let xPos = 10;
-            const colWidths = [15, 30, 20, 30, 50, 15, 20, 20, 25, 25];
+            // Başlık satırı - gri arka plan (#f3f4f6)
+            doc.setFillColor(243, 244, 246);
+            doc.setTextColor(0, 0, 0);
+            doc.setDrawColor(209, 213, 219); // Gri kenarlık
             
+            let xPos = margin;
             headers.forEach((header, i) => {
-                doc.rect(xPos, yPos, colWidths[i], 8, 'F');
-                doc.text(header, xPos + 2, yPos + 5);
+                doc.rect(xPos, yPos, colWidths[i], 10, 'FD'); // Fill and Draw
+                doc.text(header, xPos + 2, yPos + 6);
                 xPos += colWidths[i];
             });
             
-            yPos += 8;
-            doc.setFont(undefined, 'normal');
-            doc.setTextColor(0, 0, 0); // Siyah yazı
+            yPos += 10;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
             
             // Veri satırları
             currentData.forEach((row, index) => {
-                if (yPos > 170) { // Yeni sayfa
+                // Sayfa kontrolü - alt kısımda imza alanı için yer bırak
+                if (yPos > pageHeight - 50) {
                     doc.addPage();
-                    yPos = 20;
+                    yPos = 25; // Yeni sayfada üstten başla
                 }
                 
-                xPos = 10;
+                xPos = margin;
                 const rowData = [
                     row.sira_no.toString(),
                     row.sof_form_no,
                     row.malzeme_tipi,
-                    row.talep_eden.substring(0, 15),
-                    row.talep_edilen_malzeme.substring(0, 30),
+                    row.talep_eden.length > 18 ? row.talep_eden.substring(0, 18) + '...' : row.talep_eden,
+                    row.talep_edilen_malzeme.length > 35 ? row.talep_edilen_malzeme.substring(0, 35) + '...' : row.talep_edilen_malzeme,
                     row.birim,
                     row.talep_miktari.toString(),
-                    row.birim_fiyat.toFixed(2),
-                    row.toplam_fiyat.toFixed(2),
+                    `${row.birim_fiyat.toFixed(2)} ₽`,
+                    `${row.toplam_fiyat.toFixed(2)} ₽`,
                     row.onay_durumu
                 ];
                 
-                // Zebra striping
+                // Zebra striping - çift satırlar açık gri
                 if (index % 2 === 0) {
-                    doc.setFillColor(249, 250, 251); // Açık gri
-                    doc.rect(10, yPos, 250, 6, 'F');
+                    doc.setFillColor(249, 250, 251);
+                    doc.rect(margin, yPos, tableWidth, 8, 'F');
                 }
                 
+                // Hücre kenarlıkları ve veriler
                 rowData.forEach((data, i) => {
-                    doc.rect(xPos, yPos, colWidths[i], 6);
-                    doc.text(data, xPos + 1, yPos + 4);
+                    doc.setDrawColor(209, 213, 219); // Gri kenarlık
+                    doc.rect(xPos, yPos, colWidths[i], 8, 'D');
+                    doc.text(data, xPos + 1, yPos + 5);
                     xPos += colWidths[i];
                 });
                 
-                yPos += 6;
+                yPos += 8;
             });
             
             // Alt toplamlar
-            yPos += 10;
+            yPos += 15;
             const sarfTotal = currentData
                 .filter(row => row.malzeme_tipi === 'SARF')
                 .reduce((sum, row) => sum + row.toplam_fiyat, 0);
@@ -893,90 +1051,118 @@
                 .reduce((sum, row) => sum + row.toplam_fiyat, 0);
             const genelTotal = sarfTotal + demirbasTotal;
             
-            // SARF TOPLAMI - gri arka plan
+            // Toplam tablosu
+            const totalTableX = pageWidth - margin - 120;
+            
+            // SARF TOPLAMI
             doc.setFillColor(243, 244, 246);
-            doc.rect(150, yPos, 110, 8, 'F');
-            doc.setFont(undefined, 'bold');
-            doc.text('SARF TOPLAMI:', 155, yPos + 5);
-            doc.text(`${sarfTotal.toFixed(2)} ₽`, 220, yPos + 5);
+            doc.rect(totalTableX, yPos, 120, 8, 'FD');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text('SARF TOPLAMI:', totalTableX + 5, yPos + 5);
+            doc.text(`${sarfTotal.toFixed(2)} ₽ RUB`, totalTableX + 80, yPos + 5);
             
             yPos += 8;
             
-            // DEMİRBAŞ TOPLAMI - gri arka plan
+            // DEMİRBAŞ TOPLAMI
             doc.setFillColor(243, 244, 246);
-            doc.rect(150, yPos, 110, 8, 'F');
-            doc.text('DEMİRBAŞ TOPLAMI:', 155, yPos + 5);
-            doc.text(`${demirbasTotal.toFixed(2)} ₽`, 220, yPos + 5);
+            doc.rect(totalTableX, yPos, 120, 8, 'FD');
+            doc.text('DEMİRBAŞ TOPLAMI:', totalTableX + 5, yPos + 5);
+            doc.text(`${demirbasTotal.toFixed(2)} ₽ RUB`, totalTableX + 80, yPos + 5);
             
             yPos += 8;
             
-            // GENEL TOPLAM - mavi arka plan
+            // GENEL TOPLAM
             doc.setFillColor(36, 89, 160);
             doc.setTextColor(255, 255, 255);
-            doc.rect(150, yPos, 110, 10, 'F');
+            doc.rect(totalTableX, yPos, 120, 10, 'FD');
             doc.setFontSize(10);
-            doc.text('GENEL TOPLAM:', 155, yPos + 6);
-            doc.text(`${genelTotal.toFixed(2)} ₽`, 220, yPos + 6);
+            doc.text('GENEL TOPLAM:', totalTableX + 5, yPos + 6);
+            doc.text(`${genelTotal.toFixed(2)} ₽ RUB`, totalTableX + 80, yPos + 6);
             
-            // Alt not
-            doc.setFontSize(8);
-            doc.setFont(undefined, 'italic');
-            doc.setTextColor(128, 128, 128);
-            doc.text('Bu belge elektronik ortamda hazırlanmıştır.', 148, 200, { align: 'center' });
+            // İmza alanları - sayfa altında
+            const signatureY = pageHeight - 25;
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            
+            // İmza alanları yatayda eşit aralıkta
+            const signatureWidth = (pageWidth - 2 * margin) / 3;
+            const signatures = ['Oğuzhan Karslı', 'Osman Talaş', 'Mutlu Doğan'];
+            
+            signatures.forEach((name, index) => {
+                const signatureX = margin + (index * signatureWidth);
+                const centerX = signatureX + (signatureWidth / 2);
+                
+                // İsim
+                doc.text(name, centerX, signatureY, { align: 'center' });
+                
+                // Altı çizili boşluk (imza çizgisi)
+                const lineWidth = 60; // mm
+                const lineX = centerX - (lineWidth / 2);
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.5);
+                doc.line(lineX, signatureY + 3, lineX + lineWidth, signatureY + 3);
+            });
             
             // PDF kaydet
             const fileName = `SOMTECH_SOF_${today.replace(/\./g, '_')}.pdf`;
             doc.save(fileName);
+            showNotification(`PDF dosyası başarıyla indirildi: ${fileName}`, 'success');
         }
 
-        async function render(config) {
-            // Logo ve başlık artık sabit olduğu için render fonksiyonu boş
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [],
-                borderables: [],
-                fontEditable: undefined,
-                fontSizeable: undefined
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                // Logo ve başlık artık sabit olduğu için edit panel boş
-            ]);
-        }
-
-        // Event listeners
-        document.getElementById('yeni-talep-btn').addEventListener('click', yeniTalepBaslat);
-        document.getElementById('alt-satir-btn').addEventListener('click', altSatirEkle);
-        document.getElementById('verileri-yukle-btn').addEventListener('click', () => {
-            // Manuel veri yükleme - localStorage işaretini sıfırla ve tekrar yükle
-            if (confirm('Mevcut veriler silinecek ve GitHub\'dan yeni veriler yüklenecek. Devam etmek istiyor musunuz?')) {
-                resetDataLoadedFlag();
-                csvOtomatikYukle();
+        // LocalStorage'dan veri yükleme ve Data SDK'ya aktarma
+        async function loadLocalStorageToDataSDK() {
+            const localData = loadFromLocalStorage();
+            if (localData && localData.length > 0) {
+                showLoading();
+                
+                try {
+                    // LocalStorage'daki her kayıt için Data SDK'ya ekle
+                    for (const record of localData) {
+                        // __backendId'yi kaldır çünkü create işlemi için gerekli değil
+                        const { __backendId, ...recordWithoutId } = record;
+                        const result = await window.dataSdk.create(recordWithoutId);
+                        if (!result.isOk) {
+                            console.error('LocalStorage verisi Data SDK\'ya eklenirken hata:', result.error);
+                        }
+                    }
+                    
+                    hideLoading();
+                    showNotification('✅ Yerel kayıt geri yüklendi', 'success');
+                    return true; // Başarılı yükleme
+                } catch (error) {
+                    hideLoading();
+                    console.error('LocalStorage verisi yüklenirken hata:', error);
+                    showNotification('Yerel veriler yüklenirken hata oluştu.', 'error');
+                    return false;
+                }
             }
-        });
-        document.getElementById('satir-sil-btn').addEventListener('click', satirSil);
-        document.getElementById('pdf-btn').addEventListener('click', pdfIndir);
-        document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
+            return false; // Yerel veri yok
+        }
 
-        // CSV otomatik yükleme fonksiyonu - tek seferlik
+        // GitHub'dan CSV otomatik yükleme fonksiyonu - tek seferlik
         async function csvOtomatikYukle() {
-            // Daha önce yüklenmiş mi kontrol et
+            // localStorage'dan daha önce yüklenmiş mi kontrol et
             if (localStorage.getItem('sofDataLoaded') === 'true') {
                 console.log('Veriler daha önce yüklenmiş, tekrar yükleme yapılmıyor.');
                 return;
             }
 
-            const csvUrl = 'https://raw.githubusercontent.com/okarsli/deneme/main/data.csv';
+            const csvUrl = 'https://raw.githubusercontent.com/okarsli/deneme/refs/heads/main/data.csv';
             
             try {
                 showLoading();
                 
-                // CSV dosyasını indir
-                const response = await fetch(csvUrl);
+                // GitHub'dan CSV dosyasını CORS modunda indir
+                const response = await fetch(csvUrl, {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'text/csv,text/plain,*/*',
+                        'Accept-Charset': 'utf-8'
+                    }
+                });
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -987,55 +1173,114 @@
                 // CSV'yi ayrıştır ve tabloya ekle
                 await parseCSVandFillTable(csvText);
                 
-                // Başarılı yükleme sonrası işareti kaydet
+                // Başarılı yükleme sonrası localStorage'a işaretle
                 localStorage.setItem('sofDataLoaded', 'true');
                 
                 hideLoading();
                 
+                // Başarı bildirimi göster
+                showNotification('✅ Veriler başarıyla yüklendi (tek seferlik)', 'success');
+                
             } catch (error) {
                 hideLoading();
                 console.error('CSV yükleme hatası:', error);
-                showErrorNotification(`❌ CSV yüklenirken hata oluştu: ${error.message}`);
+                
+                // CORS veya network hatası kontrolü
+                showNotification('❌ CSV verisi alınamadı veya biçimi hatalı.', 'error');
             }
         }
 
-        // CSV parse ve tablo doldurma fonksiyonu
+        // Başlık normalizasyon fonksiyonu - Türkçe karakterleri ve boşlukları temizler
+        function normalizeHeader(header) {
+            return header
+                .toUpperCase()
+                .replace(/[İI]/g, "I")
+                .replace(/Ş/g, "S")
+                .replace(/Ğ/g, "G")
+                .replace(/Ü/g, "U")
+                .replace(/Ö/g, "O")
+                .replace(/Ç/g, "C")
+                .replace(/["']/g, "")
+                .replace(/\s+/g, "")
+                .trim();
+        }
+
+        // CSV parse ve tablo doldurma fonksiyonu - noktalı virgül ayracıyla
         async function parseCSVandFillTable(csvText) {
-            // CSV'yi satırlara böl, noktalı virgül ayracıyla
-            const rows = csvText.split('\n').map(row => row.split(';'));
-            if (rows.length < 2) {
-                showErrorNotification('❌ CSV dosyası geçersiz veya boş.');
-                return;
+            // UTF-8 BOM karakterini temizle
+            const cleanedText = csvText.replace(/^\uFEFF/, '');
+            
+            // CSV'yi satırlara böl
+            const lines = cleanedText.split('\n');
+            
+            // Boş satırları ve sadece noktalı virgül içeren satırları filtrele
+            const validLines = lines.filter(line => {
+                const trimmed = line.trim();
+                return trimmed !== '' && trimmed !== ';' && !trimmed.match(/^;+$/);
+            });
+            
+            if (validLines.length < 2) {
+                throw new Error('CSV dosyası geçersiz veya boş');
             }
+            
+            // Noktalı virgül ayracıyla ayrıştır
+            const rows = validLines.map(line => {
+                return line.split(';').map(cell => 
+                    cell ? cell.trim().replace(/^"|"$/g, '') : ''
+                );
+            });
 
-            // Başlıkları al ve temizle
-            const headers = rows[0].map(h => h.trim().toUpperCase());
+            // Başlıkları al ve normalize et
+            const headers = rows[0].map(h => h.trim());
+            const normalizedHeaders = headers.map(normalizeHeader);
 
-            // Programın beklediği başlık adları
+            // Normalize edilmiş başlık eşleştirme haritası
             const headerMap = {
-                'SIRA NO': 'SIRA_NO',
-                'SOF FORM NO': 'SOF_FORM_NO',
-                'MALZEME TİPİ': 'MALZEME_TIPI',
-                'TALEP EDEN': 'TALEP_EDEN',
-                'TALEP TARİHİ': 'TALEP_TARIHI',
-                'İSTENEN TESLİM TARİHİ': 'TESLIM_TARIHI',
-                'TALEP EDİLEN MALZEME': 'MALZEME',
-                'DETAY 1': 'DETAY1',
-                'DETAY 2': 'DETAY2',
-                'BİRİM': 'BIRIM',
-                'TALEP MİKTARI': 'TALEP_MIKTARI',
-                'BİRİM FİYAT (₽ RUB)': 'BIRIM_FIYAT',
-                'TOPLAM FİYAT (₽ RUB)': 'TOPLAM_FIYAT',
-                'ONAY DURUMU': 'ONAY',
-                'AÇIKLAMA': 'ACIKLAMA'
+                'SIRANO': 'SIRA_NO',
+                'SOFFORMNO': 'SOF_FORM_NO', 
+                'MALZEMETIPI': 'MALZEME_TIPI',
+                'TALEPEDEN': 'TALEP_EDEN',
+                'TALEPTARIHI': 'TALEP_TARIHI',
+                'ISTENENTESLIMTARIHI': 'TESLIM_TARIHI',
+                'TALEPEDILENMALZEME': 'MALZEME',
+                'DETAY1(MARKA,MODELVB)': 'DETAY1',
+                'DETAY1': 'DETAY1',
+                'DETAY2(PROJE,STANDARTVBKODLAR)': 'DETAY2',
+                'DETAY2': 'DETAY2',
+                'BIRIM': 'BIRIM',
+                'TALEPMIKTARI': 'TALEP_MIKTARI',
+                'SIPARISMIKTARI': 'SIPARIS_MIKTARI',
+                'BIRIMFIYAT(₽RUB)': 'BIRIM_FIYAT',
+                'BIRIMFIYAT': 'BIRIM_FIYAT',
+                'TOPLAMFIYAT(₽RUB)': 'TOPLAM_FIYAT',
+                'TOPLAMFIYAT': 'TOPLAM_FIYAT',
+                'TEDARIKCI': 'TEDARIKCI',
+                'SATINALMASORUMLUSU': 'SATINALMA_SORUMLUSU',
+                'PLANLANANTESLIMTARIHI': 'PLANLANAN_TESLIM',
+                'TESLIMATMIKTARI': 'TESLIMAT_MIKTARI',
+                'TESLIMATTARIHI': 'TESLIMAT_TARIHI',
+                'KALANMIKTAR': 'KALAN_MIKTAR',
+                'ONAYDURUMU': 'ONAY',
+                'ACIKLAMA': 'ACIKLAMA'
             };
 
-            // Başlık indekslerini bul
+            // Normalize edilmiş başlık indekslerini bul
             const indexes = {};
-            for (const [key, value] of Object.entries(headerMap)) {
-                const index = headers.indexOf(key);
-                indexes[value] = index !== -1 ? index : null;
+            for (const [normalizedKey, value] of Object.entries(headerMap)) {
+                const index = normalizedHeaders.indexOf(normalizedKey);
+                if (index !== -1) {
+                    indexes[value] = index;
+                }
             }
+
+            // Eksik başlıkları kontrol et
+            if (Object.keys(indexes).length === 0) {
+                throw new Error('Geçerli başlık bulunamadı');
+            }
+
+            console.log('Orijinal başlıklar:', headers);
+            console.log('Normalize edilmiş başlıklar:', normalizedHeaders);
+            console.log('Eşleşen indeksler:', indexes);
 
             // Veri satırlarını işle
             const dataRows = rows.slice(1);
@@ -1044,59 +1289,92 @@
             for (let i = 0; i < dataRows.length; i++) {
                 const row = dataRows[i];
                 
-                // Boş satırları veya sadece noktalı virgül içeren satırları atla
-                if (row.every(cell => !cell || cell.trim() === '' || cell.trim() === ';')) {
+                // Boş satırları atla
+                if (!row || row.length === 0 || row.every(cell => !cell || cell.trim() === '')) {
                     continue;
                 }
                 
                 // Satır verilerini hazırla
                 const rowData = {};
                 for (const [key, index] of Object.entries(indexes)) {
-                    rowData[key] = index !== null ? (row[index]?.trim() || '') : '';
+                    if (index !== undefined && row[index] !== undefined) {
+                        const cellValue = row[index];
+                        rowData[key] = cellValue ? cellValue.toString().trim() : '';
+                    } else {
+                        rowData[key] = '';
+                    }
                 }
                 
-                // Tabloya ekle
-                await addRowToTable(rowData, i + 1);
-                processedCount++;
+                // En az bir veri varsa tabloya ekle
+                const hasData = Object.values(rowData).some(value => value && value.trim() !== '');
+                if (hasData) {
+                    await addRowToTable(rowData, i + 1);
+                    processedCount++;
+                }
             }
 
             // Toplamları hesapla
             calculateTotal();
             
-            // Başarı bildirimi
-            showSuccessNotification(`✅ Veriler başarıyla yüklendi (tek seferlik). ${processedCount} kayıt işlendi.`);
+            console.log(`CSV başarıyla işlendi: ${processedCount} kayıt yüklendi`);
         }
 
-        // Satır ekleme fonksiyonu
+        // Satır ekleme fonksiyonu - noktalı virgül CSV'den gelen veriler için
         async function addRowToTable(rowData, rowIndex) {
+            // Malzeme tipini belirle
+            const malzemeTipi = rowData.MALZEME_TIPI || 'SARF';
+            
+            // Form numarası kontrolü - boşsa otomatik oluştur
+            let formNo = rowData.SOF_FORM_NO;
+            if (!formNo || formNo.trim() === '') {
+                const newIndex = currentData.length + 1;
+                formNo = generateFormNumber(newIndex, malzemeTipi);
+            }
+            
+            // 🔄 Eksik alanları otomatik doldur
+            // 1️⃣ TALEP EDEN kontrolü
+            let talepEden = rowData.TALEP_EDEN;
+            if (!talepEden || talepEden.trim() === '') {
+                talepEden = 'Tanımsız';
+            }
+            
+            // 2️⃣ TALEP TARİHİ kontrolü - GG.AA.YYYY formatında
+            let talepTarihi = rowData.TALEP_TARIHI;
+            if (!talepTarihi || talepTarihi.trim() === '') {
+                const today = new Date();
+                talepTarihi = `${String(today.getDate()).padStart(2, '0')}.${String(today.getMonth() + 1).padStart(2, '0')}.${today.getFullYear()}`;
+            }
+            
             // Yeni kayıt oluştur
             const newRecord = {
                 sira_no: parseInt(rowData.SIRA_NO) || nextSiraNo++,
-                sof_form_no: rowData.SOF_FORM_NO || `RF100.SOF-${String(nextFormNo++).padStart(4, '0')}`,
-                malzeme_tipi: rowData.MALZEME_TIPI || 'SARF',
-                talep_eden: rowData.TALEP_EDEN || '',
-                talep_tarihi: rowData.TALEP_TARIHI || formatDate(new Date()),
+                sof_form_no: formNo,
+                malzeme_tipi: malzemeTipi,
+                talep_eden: talepEden,
+                talep_tarihi: talepTarihi,
                 istenen_teslim_tarihi: rowData.TESLIM_TARIHI || '',
                 talep_edilen_malzeme: rowData.MALZEME || '',
                 detay_1: rowData.DETAY1 || '',
                 detay_2: rowData.DETAY2 || '',
                 birim: rowData.BIRIM || 'ADET',
                 talep_miktari: parseFloat(rowData.TALEP_MIKTARI) || 0,
-                siparis_miktari: 0,
+                siparis_miktari: parseFloat(rowData.SIPARIS_MIKTARI) || 0,
                 birim_fiyat: parseFloat(rowData.BIRIM_FIYAT) || 0,
-                toplam_fiyat: 0, // Otomatik hesaplanacak
-                tedarikci: '',
-                satinalma_sorumlusu: '',
-                planlanan_teslim_tarihi: '',
-                teslimat_miktari: 0,
-                teslimat_tarihi: '',
-                kalan_miktar: 0,
+                toplam_fiyat: parseFloat(rowData.TOPLAM_FIYAT) || 0, // CSV'den gelen değer kullanılır
+                tedarikci: rowData.TEDARIKCI || '',
+                satinalma_sorumlusu: rowData.SATINALMA_SORUMLUSU || '',
+                planlanan_teslim_tarihi: rowData.PLANLANAN_TESLIM || '',
+                teslimat_miktari: parseFloat(rowData.TESLIMAT_MIKTARI) || 0,
+                teslimat_tarihi: rowData.TESLIMAT_TARIHI || '',
+                kalan_miktar: parseFloat(rowData.KALAN_MIKTAR) || 0,
                 onay_durumu: rowData.ONAY || 'BEKLEMEDE',
                 aciklama: rowData.ACIKLAMA || ''
             };
             
-            // TOPLAM FİYAT otomatik hesapla
-            newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
+            // Eğer CSV'de toplam fiyat yoksa otomatik hesapla: TOPLAM FİYAT = TALEP MİKTARI × BİRİM FİYAT
+            if (!newRecord.toplam_fiyat && newRecord.talep_miktari && newRecord.birim_fiyat) {
+                newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
+            }
             
             // Data SDK'ya kaydet
             const result = await window.dataSdk.create(newRecord);
@@ -1104,18 +1382,33 @@
                 console.error('Kayıt eklenirken hata:', result.error);
             }
         }
-        
 
-        
-        // Başarı bildirimi gösterme
-        function showSuccessNotification(message) {
+        // Bildirim gösterme fonksiyonu
+        function showNotification(message, type = 'info') {
+            const notificationArea = document.getElementById('notification-area');
+            
+            // Mevcut bildirimleri temizle
+            notificationArea.innerHTML = '';
+            
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
+            
+            // Tailwind sınıflarını type'a göre ayarla
+            let classes = 'p-2 rounded-md shadow-sm text-center transition-all duration-300 ';
+            
+            if (type === 'success') {
+                classes += 'bg-green-100 text-green-800 border border-green-300';
+            } else if (type === 'error') {
+                classes += 'bg-red-100 text-red-800 border border-red-300';
+            } else {
+                classes += 'bg-blue-100 text-blue-800 border border-blue-300';
+            }
+            
+            notification.className = classes;
             notification.textContent = message;
             
-            document.body.appendChild(notification);
+            notificationArea.appendChild(notification);
             
-            // 3 saniye sonra kaldır
+            // 3 saniye sonra otomatik kaybolma
             setTimeout(() => {
                 notification.style.opacity = '0';
                 setTimeout(() => {
@@ -1125,40 +1418,15 @@
                 }, 300);
             }, 3000);
         }
-        
-        // Hata bildirimi gösterme
-        function showErrorNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            // 5 saniye sonra kaldır
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 5000);
-        }
 
-        // Veri yükleme durumunu kontrol etme fonksiyonu
-        function isDataAlreadyLoaded() {
-            return localStorage.getItem('sofDataLoaded') === 'true';
-        }
-        
-        // Veri yükleme durumunu işaretleme fonksiyonu
-        function markDataAsLoaded() {
-            localStorage.setItem('sofDataLoaded', 'true');
-        }
-        
-        // Veri yükleme durumunu sıfırlama fonksiyonu (gerektiğinde kullanılabilir)
-        function resetDataLoadedFlag() {
-            localStorage.removeItem('sofDataLoaded');
-        }
+        // Event listeners
+        document.getElementById('yeni-talep-btn').addEventListener('click', yeniTalepBaslat);
+        document.getElementById('alt-satir-btn').addEventListener('click', altSatirEkle);
+        document.getElementById('satir-sil-btn').addEventListener('click', satirSil);
+        document.getElementById('pdf-btn').addEventListener('click', pdfIndir);
+        document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
+        document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
+        document.getElementById('clear-local-btn').addEventListener('click', clearLocalStorage);
 
         // Initialize
         window.addEventListener('load', async () => {
@@ -1169,22 +1437,15 @@
                     return;
                 }
                 
-                // Veri yükleme kontrolü - sadece bir kez yükle
-                // localStorage kontrolü ile tek seferlik yükleme garantisi
-                if (localStorage.getItem('sofDataLoaded') !== 'true' && currentData.length === 0) {
+                // Önce localStorage'dan veri yüklemeyi dene
+                const localDataLoaded = await loadLocalStorageToDataSDK();
+                
+                // Eğer localStorage'da veri yoksa ve daha önce CSV yüklenmemişse GitHub'dan yükle
+                if (!localDataLoaded && localStorage.getItem('sofDataLoaded') !== 'true' && currentData.length === 0) {
                     await csvOtomatikYukle();
                 }
             }
-            
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    render,
-                    mapToCapabilities,
-                    mapToEditPanelValues
-                });
-            }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fedc64559a3a72',t:'MTc2MDY5NDMwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ff2e78312dd35d',t:'MTc2MDY5NzY2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
