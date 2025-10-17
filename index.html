@@ -953,15 +953,23 @@
         document.getElementById('alt-satir-btn').addEventListener('click', altSatirEkle);
         document.getElementById('verileri-yukle-btn').addEventListener('click', () => {
             // Manuel veri yükleme - localStorage işaretini sıfırla ve tekrar yükle
-            resetDataLoadedFlag();
-            csvOtomatikYukle();
+            if (confirm('Mevcut veriler silinecek ve GitHub\'dan yeni veriler yüklenecek. Devam etmek istiyor musunuz?')) {
+                resetDataLoadedFlag();
+                csvOtomatikYukle();
+            }
         });
         document.getElementById('satir-sil-btn').addEventListener('click', satirSil);
         document.getElementById('pdf-btn').addEventListener('click', pdfIndir);
         document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
 
-        // CSV otomatik yükleme fonksiyonu
+        // CSV otomatik yükleme fonksiyonu - tek seferlik
         async function csvOtomatikYukle() {
+            // Daha önce yüklenmiş mi kontrol et
+            if (localStorage.getItem('sofDataLoaded') === 'true') {
+                console.log('Veriler daha önce yüklenmiş, tekrar yükleme yapılmıyor.');
+                return;
+            }
+
             const csvUrl = 'https://raw.githubusercontent.com/okarsli/deneme/main/data.csv';
             
             try {
@@ -976,80 +984,13 @@
                 // UTF-8 olarak oku
                 const csvText = await response.text();
                 
-                // CSV'yi satırlara böl
-                const lines = csvText.trim().split('\n');
-                if (lines.length < 2) {
-                    throw new Error('CSV dosyası boş veya geçersiz format');
-                }
+                // CSV'yi ayrıştır ve tabloya ekle
+                await parseCSVandFillTable(csvText);
                 
-                // Başlık satırını al ve temizle
-                const headers = lines[0].split(',').map(header => 
-                    header.replace(/"/g, '').trim()
-                );
-                
-                // Başlık indekslerini bul
-                const headerMap = {};
-                headers.forEach((header, index) => {
-                    headerMap[header] = index;
-                });
-                
-                // Veri satırlarını işle
-                const csvData = [];
-                let siraNo = 1;
-                
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    // CSV satırını parse et (virgülle ayrılmış, tırnak içindeki virgülleri dikkate al)
-                    const values = parseCSVLine(line);
-                    
-                    if (values.length < headers.length) continue;
-                    
-                    // Yeni kayıt oluştur
-                    const newRecord = {
-                        sira_no: siraNo++,
-                        sof_form_no: getValue(values, headerMap, 'SOF FORM NO') || `RF100.SOF-${String(siraNo).padStart(4, '0')}`,
-                        malzeme_tipi: getValue(values, headerMap, 'MALZEME TİPİ') || 'SARF',
-                        talep_eden: getValue(values, headerMap, 'TALEP EDEN') || '',
-                        talep_tarihi: getValue(values, headerMap, 'TALEP TARİHİ') || formatDate(new Date()),
-                        istenen_teslim_tarihi: getValue(values, headerMap, 'İSTENEN TESLİM TARİHİ') || '',
-                        talep_edilen_malzeme: getValue(values, headerMap, 'TALEP EDİLEN MALZEME') || '',
-                        detay_1: getValue(values, headerMap, 'DETAY 1') || getValue(values, headerMap, 'DETAY 1 (MARKA, MODEL VB)') || '',
-                        detay_2: getValue(values, headerMap, 'DETAY 2') || getValue(values, headerMap, 'DETAY 2 (PROJE, STANDART VB KODLAR)') || '',
-                        birim: getValue(values, headerMap, 'BİRİM') || 'ADET',
-                        talep_miktari: parseFloat(getValue(values, headerMap, 'TALEP MİKTARI')) || 0,
-                        siparis_miktari: parseFloat(getValue(values, headerMap, 'SİPARİŞ MİKTARI')) || 0,
-                        birim_fiyat: parseFloat(getValue(values, headerMap, 'BİRİM FİYAT (₽ RUB)') || getValue(values, headerMap, 'BİRİM FİYAT')) || 0,
-                        toplam_fiyat: 0, // Otomatik hesaplanacak
-                        tedarikci: getValue(values, headerMap, 'TEDARİKÇİ') || '',
-                        satinalma_sorumlusu: getValue(values, headerMap, 'SATINALMA SORUMLUSU') || '',
-                        planlanan_teslim_tarihi: getValue(values, headerMap, 'PLANLANAN TESLİM TARİHİ') || '',
-                        teslimat_miktari: parseFloat(getValue(values, headerMap, 'TESLİMAT MİKTARI')) || 0,
-                        teslimat_tarihi: getValue(values, headerMap, 'TESLİMAT TARİHİ') || '',
-                        kalan_miktar: parseFloat(getValue(values, headerMap, 'KALAN MİKTAR')) || 0,
-                        onay_durumu: getValue(values, headerMap, 'ONAY DURUMU') || 'BEKLEMEDE',
-                        aciklama: getValue(values, headerMap, 'AÇIKLAMA') || ''
-                    };
-                    
-                    // TOPLAM FİYAT otomatik hesapla
-                    newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
-                    
-                    csvData.push(newRecord);
-                }
-                
-                // Verileri Data SDK'ya kaydet
-                for (const record of csvData) {
-                    const result = await window.dataSdk.create(record);
-                    if (!result.isOk) {
-                        console.error('Kayıt eklenirken hata:', result.error);
-                    }
-                }
+                // Başarılı yükleme sonrası işareti kaydet
+                localStorage.setItem('sofDataLoaded', 'true');
                 
                 hideLoading();
-                
-                // Başarı bildirimi göster
-                showSuccessNotification(`✅ ${csvData.length} kayıt başarıyla yüklendi.`);
                 
             } catch (error) {
                 hideLoading();
@@ -1057,38 +998,114 @@
                 showErrorNotification(`❌ CSV yüklenirken hata oluştu: ${error.message}`);
             }
         }
-        
-        // CSV satırını parse etme fonksiyonu (tırnak içindeki virgülleri dikkate alır)
-        function parseCSVLine(line) {
-            const values = [];
-            let current = '';
-            let inQuotes = false;
+
+        // CSV parse ve tablo doldurma fonksiyonu
+        async function parseCSVandFillTable(csvText) {
+            // CSV'yi satırlara böl, noktalı virgül ayracıyla
+            const rows = csvText.split('\n').map(row => row.split(';'));
+            if (rows.length < 2) {
+                showErrorNotification('❌ CSV dosyası geçersiz veya boş.');
+                return;
+            }
+
+            // Başlıkları al ve temizle
+            const headers = rows[0].map(h => h.trim().toUpperCase());
+
+            // Programın beklediği başlık adları
+            const headerMap = {
+                'SIRA NO': 'SIRA_NO',
+                'SOF FORM NO': 'SOF_FORM_NO',
+                'MALZEME TİPİ': 'MALZEME_TIPI',
+                'TALEP EDEN': 'TALEP_EDEN',
+                'TALEP TARİHİ': 'TALEP_TARIHI',
+                'İSTENEN TESLİM TARİHİ': 'TESLIM_TARIHI',
+                'TALEP EDİLEN MALZEME': 'MALZEME',
+                'DETAY 1': 'DETAY1',
+                'DETAY 2': 'DETAY2',
+                'BİRİM': 'BIRIM',
+                'TALEP MİKTARI': 'TALEP_MIKTARI',
+                'BİRİM FİYAT (₽ RUB)': 'BIRIM_FIYAT',
+                'TOPLAM FİYAT (₽ RUB)': 'TOPLAM_FIYAT',
+                'ONAY DURUMU': 'ONAY',
+                'AÇIKLAMA': 'ACIKLAMA'
+            };
+
+            // Başlık indekslerini bul
+            const indexes = {};
+            for (const [key, value] of Object.entries(headerMap)) {
+                const index = headers.indexOf(key);
+                indexes[value] = index !== -1 ? index : null;
+            }
+
+            // Veri satırlarını işle
+            const dataRows = rows.slice(1);
+            let processedCount = 0;
             
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
+            for (let i = 0; i < dataRows.length; i++) {
+                const row = dataRows[i];
                 
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
+                // Boş satırları veya sadece noktalı virgül içeren satırları atla
+                if (row.every(cell => !cell || cell.trim() === '' || cell.trim() === ';')) {
+                    continue;
                 }
+                
+                // Satır verilerini hazırla
+                const rowData = {};
+                for (const [key, index] of Object.entries(indexes)) {
+                    rowData[key] = index !== null ? (row[index]?.trim() || '') : '';
+                }
+                
+                // Tabloya ekle
+                await addRowToTable(rowData, i + 1);
+                processedCount++;
             }
+
+            // Toplamları hesapla
+            calculateTotal();
             
-            values.push(current.trim());
-            return values;
+            // Başarı bildirimi
+            showSuccessNotification(`✅ Veriler başarıyla yüklendi (tek seferlik). ${processedCount} kayıt işlendi.`);
+        }
+
+        // Satır ekleme fonksiyonu
+        async function addRowToTable(rowData, rowIndex) {
+            // Yeni kayıt oluştur
+            const newRecord = {
+                sira_no: parseInt(rowData.SIRA_NO) || nextSiraNo++,
+                sof_form_no: rowData.SOF_FORM_NO || `RF100.SOF-${String(nextFormNo++).padStart(4, '0')}`,
+                malzeme_tipi: rowData.MALZEME_TIPI || 'SARF',
+                talep_eden: rowData.TALEP_EDEN || '',
+                talep_tarihi: rowData.TALEP_TARIHI || formatDate(new Date()),
+                istenen_teslim_tarihi: rowData.TESLIM_TARIHI || '',
+                talep_edilen_malzeme: rowData.MALZEME || '',
+                detay_1: rowData.DETAY1 || '',
+                detay_2: rowData.DETAY2 || '',
+                birim: rowData.BIRIM || 'ADET',
+                talep_miktari: parseFloat(rowData.TALEP_MIKTARI) || 0,
+                siparis_miktari: 0,
+                birim_fiyat: parseFloat(rowData.BIRIM_FIYAT) || 0,
+                toplam_fiyat: 0, // Otomatik hesaplanacak
+                tedarikci: '',
+                satinalma_sorumlusu: '',
+                planlanan_teslim_tarihi: '',
+                teslimat_miktari: 0,
+                teslimat_tarihi: '',
+                kalan_miktar: 0,
+                onay_durumu: rowData.ONAY || 'BEKLEMEDE',
+                aciklama: rowData.ACIKLAMA || ''
+            };
+            
+            // TOPLAM FİYAT otomatik hesapla
+            newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
+            
+            // Data SDK'ya kaydet
+            const result = await window.dataSdk.create(newRecord);
+            if (!result.isOk) {
+                console.error('Kayıt eklenirken hata:', result.error);
+            }
         }
         
-        // CSV değerini güvenli şekilde alma fonksiyonu
-        function getValue(values, headerMap, headerName) {
-            const index = headerMap[headerName];
-            if (index !== undefined && values[index] !== undefined) {
-                return values[index].replace(/"/g, '').trim();
-            }
-            return '';
-        }
+
         
         // Başarı bildirimi gösterme
         function showSuccessNotification(message) {
@@ -1152,12 +1169,10 @@
                     return;
                 }
                 
-                // Veri yükleme kontrolü
-                // Sadece daha önce yüklenmemişse ve mevcut veri yoksa yükle
-                if (!isDataAlreadyLoaded() && currentData.length === 0) {
+                // Veri yükleme kontrolü - sadece bir kez yükle
+                // localStorage kontrolü ile tek seferlik yükleme garantisi
+                if (localStorage.getItem('sofDataLoaded') !== 'true' && currentData.length === 0) {
                     await csvOtomatikYukle();
-                    // Başarılı yükleme sonrası işareti kaydet
-                    markDataAsLoaded();
                 }
             }
             
@@ -1171,5 +1186,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fed0f507949a18',t:'MTc2MDY5MzgzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fedc64559a3a72',t:'MTc2MDY5NDMwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
