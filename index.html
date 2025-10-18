@@ -394,7 +394,7 @@
     <div class="flex flex-wrap gap-2 justify-center"><button id="bulkEditBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> ✏️ Toplu Düzenle </button> <button id="bulkDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🗑️ Toplu Sil </button> <button id="bulkApproveBtn" class="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled> ✅ Toplu Onayla </button> <button id="selectAllBtn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors"> 📋 Tümünü Seç </button> <button id="deselectAllBtn" class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2 font-semibold shadow-sm transition-colors"> ❌ Seçimi Temizle </button>
     </div>
    </div>
-   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button> <button id="export-csv-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm w-full md:w-auto transition-colors"> 📦 Verileri Dışa Aktar </button> <button id="excel-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 shadow-md w-full md:w-auto transition-colors"> 📊 Excel Olarak Dışa Aktar </button> <button id="reload-github-btn" class="bg-orange-600 hover:bg-orange-700 text-white rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🔄 Verileri Yeniden Yükle </button> <button id="clear-local-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg px-4 py-2 w-full md:w-auto transition-colors"> 🧹 Yerel Veriyi Temizle </button>
+   <div class="mb-6 flex flex-wrap gap-2 justify-center"><button id="yeni-talep-btn" class="btn btn-primary"> 📝 Yeni Talep Başlat </button> <button id="alt-satir-btn" class="btn btn-secondary"> ➕ Alt Satır Ekle </button> <button id="satir-sil-btn" class="btn btn-danger"> 🗑️ Satır Sil </button> <button id="pdf-btn" class="btn btn-success"> 📄 PDF İndir </button> <button id="kaydet-btn" class="btn btn-success"> 📊 CSV İndir </button> <button id="export-csv-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold shadow-sm w-full md:w-auto transition-colors"> 📦 Verileri Dışa Aktar </button> <button id="excel-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-4 py-2 shadow-md w-full md:w-auto transition-colors"> 📊 Excel Olarak Dışa Aktar </button>
    </div><!-- Toplam Bilgi Paneli -->
    <div class="mb-8">
     <div class="text-center mb-6">
@@ -564,7 +564,7 @@
       </div><!-- Veri Yönetimi -->
       <div class="border-b border-gray-200 dark:border-gray-600 pb-4">
        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">💾 Veri Yönetimi</h3>
-       <div class="space-y-2"><button id="settingsExportBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 font-medium transition-colors"> Verileri Dışa Aktar (CSV) </button> <button id="settingsClearBtn" class="w-full bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 font-medium transition-colors"> 🧹 Yerel Veriyi Temizle </button>
+       <div class="space-y-2"><button id="settingsExportBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 font-medium transition-colors"> Verileri Dışa Aktar (CSV) </button>
        </div>
       </div><!-- Rol Seçimi -->
       <div class="border-b border-gray-200 dark:border-gray-600 pb-4">
@@ -797,8 +797,7 @@
                 'kaydet-btn': permissions.canExport,
                 'export-csv-btn': permissions.canExport,
                 'excel-btn': permissions.canExport,
-                'reload-github-btn': permissions.canManageSystem,
-                'clear-local-btn': permissions.canManageSystem,
+
                 'bulkEditBtn': permissions.canBulkEdit,
                 'bulkDeleteBtn': permissions.canBulkEdit && permissions.canDelete,
                 'bulkApproveBtn': permissions.canApprove,
@@ -1169,20 +1168,26 @@
             });
         }
 
-        // Arama ve filtreleme fonksiyonları
+        // 🚀 Ultra hızlı arama ve filtreleme - optimized search
         function applyFiltersAndSearch() {
-            let filtered = [...currentData];
+            let filtered = currentData;
             
-            // Arama filtresi
+            // Hızlı arama filtresi - sadece gerekli alanlarda ara
             if (searchTerm) {
+                const searchLower = searchTerm.toLowerCase();
                 filtered = filtered.filter(row => {
-                    return Object.values(row).some(val => 
-                        val && val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                    // Sadece önemli alanlarda ara (performans için)
+                    return (
+                        (row.sof_form_no && row.sof_form_no.toLowerCase().includes(searchLower)) ||
+                        (row.talep_eden && row.talep_eden.toLowerCase().includes(searchLower)) ||
+                        (row.talep_edilen_malzeme && row.talep_edilen_malzeme.toLowerCase().includes(searchLower)) ||
+                        (row.tedarikci && row.tedarikci.toLowerCase().includes(searchLower)) ||
+                        (row.detay_2 && row.detay_2.toLowerCase().includes(searchLower))
                     );
                 });
             }
             
-            // Kategori filtresi
+            // Hızlı kategori filtresi
             if (filterValue !== 'Tümü') {
                 filtered = filtered.filter(row => {
                     return row.malzeme_tipi === filterValue || 
@@ -1191,14 +1196,40 @@
                 });
             }
             
-            // Sıralama uygula
+            // Hızlı sıralama
             if (currentSortColumn) {
-                filtered = sortData(filtered, currentSortColumn, currentSortDirection);
+                filtered = sortDataFast(filtered, currentSortColumn, currentSortDirection);
             }
             
             filteredData = filtered;
-            renderTable();
-            updateSearchResults();
+            
+            // Debounced render
+            requestAnimationFrame(() => {
+                renderTable();
+                updateSearchResults();
+            });
+        }
+        
+        // 🚀 Ultra hızlı sıralama - optimized sorting
+        function sortDataFast(data, column, direction) {
+            // Sayısal sütunlar için hızlı lookup
+            const numericColumns = new Set(['sira_no', 'talep_miktari', 'siparis_miktari', 'birim_fiyat', 'toplam_fiyat', 'teslimat_miktari', 'kalan_miktar']);
+            
+            return data.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+                
+                if (numericColumns.has(column)) {
+                    aVal = parseFloat(aVal) || 0;
+                    bVal = parseFloat(bVal) || 0;
+                } else {
+                    aVal = (aVal || '').toString().toLowerCase();
+                    bVal = (bVal || '').toString().toLowerCase();
+                }
+                
+                const result = aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                return direction === 'asc' ? result : -result;
+            });
         }
 
         function sortData(data, column, direction) {
@@ -1508,136 +1539,354 @@
             }
         }
 
-        // Optimized: Tek satır oluşturma fonksiyonu
-        function createTableRow(row, index) {
-            const tr = document.createElement('tr');
-            let rowClass = getStatusClass(row.onay_durumu);
-            
-            // Talep eden dolu ise satır rengini hafif griye çevir
-            if (row.talep_eden && row.talep_eden.trim() !== '') {
-                rowClass += ' talep-eden-filled';
+        // 🚀 JET HIZI TABLO OPTİMİZASYONU - VIRTUAL SCROLLING + BATCH RENDERING
+        
+        // Virtual scrolling parametreleri
+        const VIRTUAL_SCROLL = {
+            ITEM_HEIGHT: 40, // Her satırın yüksekliği (px)
+            BUFFER_SIZE: 10, // Görünür alanın dışında render edilecek satır sayısı
+            CONTAINER_HEIGHT: 600, // Tablo container yüksekliği
+            VISIBLE_ITEMS: Math.ceil(600 / 40) + 20 // Görünür satır sayısı + buffer
+        };
+        
+        let virtualScrollState = {
+            scrollTop: 0,
+            startIndex: 0,
+            endIndex: VIRTUAL_SCROLL.VISIBLE_ITEMS,
+            totalHeight: 0
+        };
+        
+        // Hızlı DOM element cache
+        const domCache = new Map();
+        
+        // Batch rendering için queue
+        let renderQueue = [];
+        let isRendering = false;
+        
+        // 🚀 Ultra hızlı satır oluşturma - Template cloning
+        function createTableRowFast(row, index) {
+            // Template cache kontrolü
+            let template = domCache.get('row-template');
+            if (!template) {
+                template = document.createElement('tr');
+                template.innerHTML = `
+                    <td><input type="checkbox" class="row-checkbox w-4 h-4"></td>
+                    <td class="sira-no"></td>
+                    <td class="form-no"></td>
+                    <td class="malzeme-select"></td>
+                    <td><input type="text" class="talep-eden"></td>
+                    <td><input type="text" class="talep-tarihi"></td>
+                    <td><input type="text" class="istenen-teslim"></td>
+                    <td><span class="teslimat-durumu"></span></td>
+                    <td><input type="text" class="talep-malzeme"></td>
+                    <td><input type="text" class="detay-1"></td>
+                    <td><input type="text" class="detay-2"></td>
+                    <td class="birim-select"></td>
+                    <td><input type="number" class="talep-miktar"></td>
+                    <td><input type="number" class="siparis-miktar"></td>
+                    <td><input type="number" step="0.01" class="birim-fiyat"></td>
+                    <td class="toplam-fiyat font-bold"></td>
+                    <td><input type="text" class="tedarikci"></td>
+                    <td><input type="text" class="satinalma"></td>
+                    <td><input type="text" class="planlanan-teslim"></td>
+                    <td><input type="number" class="teslimat-miktar"></td>
+                    <td><input type="text" class="teslimat-tarihi"></td>
+                    <td><input type="number" class="kalan-miktar"></td>
+                    <td class="onay-select"></td>
+                    <td><input type="text" class="aciklama"></td>
+                `;
+                domCache.set('row-template', template);
             }
             
-            tr.className = rowClass;
+            // Template'i clone et
+            const tr = template.cloneNode(true);
+            
+            // Hızlı class assignment
+            tr.className = getStatusClassFast(row.onay_durumu);
+            if (row.talep_eden?.trim()) tr.classList.add('talep-eden-filled');
             tr.dataset.rowId = row.__backendId || index;
             
-            // CSV'den gelen veriler için readonly kontrolü
-            const isFromCSV = row.is_from_csv === true;
-            const readonlyClass = isFromCSV ? 'readonly-field' : '';
-            const readonlyAttr = isFromCSV ? 'readonly' : '';
+            // Hızlı veri doldurma - querySelector yerine direct access
+            const cells = tr.children;
             
-            // Teslimat durumu için stil
-            let deliveryStatusClass = 'delivery-status-belirlenmedi';
-            if (row.teslimat_durumu === 'TAMAMLANDI') {
-                deliveryStatusClass = 'delivery-status-tamamlandi';
-            } else if (row.teslimat_durumu === 'BEKLEMEDE') {
-                deliveryStatusClass = 'delivery-status-beklemede';
-            }
+            // Checkbox
+            const checkbox = cells[0].firstElementChild;
+            checkbox.dataset.index = index;
+            checkbox.onchange = () => toggleRowSelection(index);
             
-            // Teslimat tarihi dolu ise onay durumu readonly
-            const approvalReadonly = (row.teslimat_tarihi && row.teslimat_tarihi.trim() !== '') ? 'readonly-field' : '';
-            const approvalDisabled = (row.teslimat_tarihi && row.teslimat_tarihi.trim() !== '') ? 'disabled' : '';
+            // Sıra No
+            cells[1].textContent = row.sira_no;
             
-            tr.innerHTML = `
-                <td><input type="checkbox" class="row-checkbox w-4 h-4" data-index="${index}" onchange="toggleRowSelection(${index})"></td>
-                <td>${row.sira_no}</td>
-                <td class="${readonlyClass}">${row.sof_form_no}</td>
-                <td>
-                    <select onchange="updateField(${index}, 'malzeme_tipi', this.value)" ${readonlyAttr}>
-                        <option value="SARF" ${row.malzeme_tipi === 'SARF' ? 'selected' : ''}>SARF</option>
-                        <option value="DEMİRBAŞ" ${row.malzeme_tipi === 'DEMİRBAŞ' ? 'selected' : ''}>DEMİRBAŞ</option>
-                    </select>
-                </td>
-                <td><input type="text" value="${row.talep_eden}" onchange="updateField(${index}, 'talep_eden', this.value)"></td>
-                <td><input type="text" value="${row.talep_tarihi}" onchange="updateField(${index}, 'talep_tarihi', this.value)" class="${readonlyClass}" ${readonlyAttr}></td>
-                <td><input type="text" value="${row.istenen_teslim_tarihi}" onchange="updateField(${index}, 'istenen_teslim_tarihi', this.value)" class="${readonlyClass}" ${readonlyAttr}></td>
-                <td><span class="${deliveryStatusClass}">${row.teslimat_durumu}</span></td>
-                <td><input type="text" value="${row.talep_edilen_malzeme}" onchange="updateField(${index}, 'talep_edilen_malzeme', this.value)"></td>
-                <td><input type="text" value="${row.detay_1}" onchange="updateField(${index}, 'detay_1', this.value)"></td>
-                <td><input type="text" value="${row.detay_2}" onchange="updateField(${index}, 'detay_2', this.value)"></td>
-                <td>
-                    <select onchange="updateField(${index}, 'birim', this.value)">
-                        <option value="ADET" ${row.birim === 'ADET' ? 'selected' : ''}>ADET</option>
-                        <option value="KG" ${row.birim === 'KG' ? 'selected' : ''}>KG</option>
-                        <option value="LT" ${row.birim === 'LT' ? 'selected' : ''}>LT</option>
-                        <option value="METRE" ${row.birim === 'METRE' ? 'selected' : ''}>METRE</option>
-                        <option value="M2" ${row.birim === 'M2' ? 'selected' : ''}>M2</option>
-                        <option value="M3" ${row.birim === 'M3' ? 'selected' : ''}>M3</option>
-                        <option value="SET" ${row.birim === 'SET' ? 'selected' : ''}>SET</option>
-                        <option value="PAKET" ${row.birim === 'PAKET' ? 'selected' : ''}>PAKET</option>
-                        <option value="KUTU" ${row.birim === 'KUTU' ? 'selected' : ''}>KUTU</option>
-                    </select>
-                </td>
-                <td><input type="number" value="${row.talep_miktari}" onchange="updateField(${index}, 'talep_miktari', parseFloat(this.value) || 0)"></td>
-                <td><input type="number" value="${row.siparis_miktari}" onchange="updateField(${index}, 'siparis_miktari', parseFloat(this.value) || 0)"></td>
-                <td><input type="number" step="0.01" value="${row.birim_fiyat}" onchange="updateField(${index}, 'birim_fiyat', parseFloat(this.value) || 0)"></td>
-                <td class="font-bold">${row.toplam_fiyat.toFixed(2)}</td>
-                <td><input type="text" value="${row.tedarikci}" onchange="updateField(${index}, 'tedarikci', this.value)"></td>
-                <td><input type="text" value="${row.satinalma_sorumlusu}" onchange="updateField(${index}, 'satinalma_sorumlusu', this.value)"></td>
-                <td><input type="text" value="${row.planlanan_teslim_tarihi}" onchange="updateField(${index}, 'planlanan_teslim_tarihi', this.value)"></td>
-                <td><input type="number" value="${row.teslimat_miktari}" onchange="updateField(${index}, 'teslimat_miktari', parseFloat(this.value) || 0)"></td>
-                <td><input type="text" value="${row.teslimat_tarihi}" onchange="updateFieldWithDeliveryCheck(${index}, 'teslimat_tarihi', this.value)"></td>
-                <td><input type="number" value="${row.kalan_miktar}" onchange="updateField(${index}, 'kalan_miktar', parseFloat(this.value) || 0)"></td>
-                <td>
-                    <select onchange="updateField(${index}, 'onay_durumu', this.value)" class="${approvalReadonly}" ${approvalDisabled}>
-                        <option value="BEKLEMEDE" ${row.onay_durumu === 'BEKLEMEDE' ? 'selected' : ''}>BEKLEMEDE</option>
-                        <option value="ONAY BEKLİYOR" ${row.onay_durumu === 'ONAY BEKLİYOR' ? 'selected' : ''}>ONAY BEKLİYOR</option>
-                        <option value="ONAYLANDI" ${row.onay_durumu === 'ONAYLANDI' ? 'selected' : ''}>ONAYLANDI</option>
-                        <option value="ÖDEME BEKLİYOR" ${row.onay_durumu === 'ÖDEME BEKLİYOR' ? 'selected' : ''}>ÖDEME BEKLİYOR</option>
-                        <option value="TAMAMLANDI" ${row.onay_durumu === 'TAMAMLANDI' ? 'selected' : ''}>TAMAMLANDI</option>
-                        <option value="RED EDİLDİ" ${row.onay_durumu === 'RED EDİLDİ' ? 'selected' : ''}>RED EDİLDİ</option>
-                    </select>
-                </td>
-                <td><input type="text" value="${row.aciklama}" onchange="updateField(${index}, 'aciklama', this.value)"></td>
-            `;
+            // Form No
+            cells[2].textContent = row.sof_form_no;
+            cells[2].className = row.is_from_csv ? 'readonly-field' : '';
+            
+            // Malzeme Tipi Select
+            cells[3].innerHTML = createSelectFast('malzeme_tipi', [
+                {value: 'SARF', text: 'SARF'},
+                {value: 'DEMİRBAŞ', text: 'DEMİRBAŞ'}
+            ], row.malzeme_tipi, index, row.is_from_csv);
+            
+            // Input alanları - batch update
+            const inputs = [
+                {cell: 4, field: 'talep_eden', value: row.talep_eden},
+                {cell: 5, field: 'talep_tarihi', value: row.talep_tarihi, readonly: row.is_from_csv},
+                {cell: 6, field: 'istenen_teslim_tarihi', value: row.istenen_teslim_tarihi, readonly: row.is_from_csv},
+                {cell: 8, field: 'talep_edilen_malzeme', value: row.talep_edilen_malzeme},
+                {cell: 9, field: 'detay_1', value: row.detay_1},
+                {cell: 10, field: 'detay_2', value: row.detay_2},
+                {cell: 12, field: 'talep_miktari', value: row.talep_miktari, type: 'number'},
+                {cell: 13, field: 'siparis_miktari', value: row.siparis_miktari, type: 'number'},
+                {cell: 14, field: 'birim_fiyat', value: row.birim_fiyat, type: 'number'},
+                {cell: 16, field: 'tedarikci', value: row.tedarikci},
+                {cell: 17, field: 'satinalma_sorumlusu', value: row.satinalma_sorumlusu},
+                {cell: 18, field: 'planlanan_teslim_tarihi', value: row.planlanan_teslim_tarihi},
+                {cell: 19, field: 'teslimat_miktari', value: row.teslimat_miktari, type: 'number'},
+                {cell: 20, field: 'teslimat_tarihi', value: row.teslimat_tarihi, special: 'delivery'},
+                {cell: 21, field: 'kalan_miktar', value: row.kalan_miktar, type: 'number'},
+                {cell: 23, field: 'aciklama', value: row.aciklama}
+            ];
+            
+            // Batch input update
+            inputs.forEach(({cell, field, value, type, readonly, special}) => {
+                const input = cells[cell].firstElementChild;
+                input.value = value || '';
+                if (readonly) {
+                    input.className += ' readonly-field';
+                    input.readOnly = true;
+                }
+                
+                if (special === 'delivery') {
+                    input.onchange = () => updateFieldWithDeliveryCheck(index, field, input.value);
+                } else {
+                    input.onchange = () => updateField(index, field, type === 'number' ? (parseFloat(input.value) || 0) : input.value);
+                }
+            });
+            
+            // Teslimat Durumu
+            const deliverySpan = cells[7].firstElementChild;
+            deliverySpan.textContent = row.teslimat_durumu;
+            deliverySpan.className = getDeliveryStatusClassFast(row.teslimat_durumu);
+            
+            // Birim Select
+            cells[11].innerHTML = createSelectFast('birim', [
+                {value: 'ADET', text: 'ADET'}, {value: 'KG', text: 'KG'}, {value: 'LT', text: 'LT'},
+                {value: 'METRE', text: 'METRE'}, {value: 'M2', text: 'M2'}, {value: 'M3', text: 'M3'},
+                {value: 'SET', text: 'SET'}, {value: 'PAKET', text: 'PAKET'}, {value: 'KUTU', text: 'KUTU'}
+            ], row.birim, index);
+            
+            // Toplam Fiyat
+            cells[15].textContent = row.toplam_fiyat.toFixed(2);
+            
+            // Onay Durumu Select
+            const approvalReadonly = row.teslimat_tarihi?.trim() ? 'readonly-field' : '';
+            const approvalDisabled = row.teslimat_tarihi?.trim() ? true : false;
+            cells[22].innerHTML = createSelectFast('onay_durumu', [
+                {value: 'BEKLEMEDE', text: 'BEKLEMEDE'},
+                {value: 'ONAY BEKLİYOR', text: 'ONAY BEKLİYOR'},
+                {value: 'ONAYLANDI', text: 'ONAYLANDI'},
+                {value: 'ÖDEME BEKLİYOR', text: 'ÖDEME BEKLİYOR'},
+                {value: 'TAMAMLANDI', text: 'TAMAMLANDI'},
+                {value: 'RED EDİLDİ', text: 'RED EDİLDİ'}
+            ], row.onay_durumu, index, false, approvalReadonly, approvalDisabled);
+            
             return tr;
         }
-
-        // Optimized: Selective DOM updates with filtering
-        function renderTable() {
+        
+        // 🚀 Ultra hızlı select oluşturma
+        function createSelectFast(field, options, selected, index, readonly = false, extraClass = '', disabled = false) {
+            const readonlyAttr = readonly ? 'readonly disabled' : '';
+            const disabledAttr = disabled ? 'disabled' : '';
+            const className = readonly ? 'readonly-field' : extraClass;
+            
+            let html = `<select onchange="updateField(${index}, '${field}', this.value)" ${readonlyAttr} ${disabledAttr} class="${className}">`;
+            options.forEach(opt => {
+                html += `<option value="${opt.value}" ${selected === opt.value ? 'selected' : ''}>${opt.text}</option>`;
+            });
+            html += '</select>';
+            return html;
+        }
+        
+        // 🚀 Hızlı class getters - lookup table
+        const statusClassMap = {
+            'BEKLEMEDE': 'status-beklemede',
+            'ONAY BEKLİYOR': 'status-onay-bekliyor',
+            'ONAYLANDI': 'status-onaylandi',
+            'ÖDEME BEKLİYOR': 'status-odeme-bekliyor',
+            'TAMAMLANDI': 'status-tamamlandi',
+            'RED EDİLDİ': 'status-red-edildi'
+        };
+        
+        const deliveryClassMap = {
+            'TAMAMLANDI': 'delivery-status-tamamlandi',
+            'BEKLEMEDE': 'delivery-status-beklemede',
+            'BELİRLENMEDİ': 'delivery-status-belirlenmedi'
+        };
+        
+        function getStatusClassFast(status) {
+            return statusClassMap[status] || 'status-beklemede';
+        }
+        
+        function getDeliveryStatusClassFast(status) {
+            return deliveryClassMap[status] || 'delivery-status-belirlenmedi';
+        }
+        
+        // 🚀 Virtual Scrolling ile Ultra Hızlı Tablo Render
+        function renderTableVirtual() {
             const tbody = document.getElementById('table-body');
             const dataToRender = filteredData.length > 0 || searchTerm || filterValue !== 'Tümü' ? filteredData : currentData;
             
-            // Tabloyu temizle
-            tbody.innerHTML = '';
+            // Veri yoksa
+            if (dataToRender.length === 0) {
+                if (searchTerm || filterValue !== 'Tümü') {
+                    tbody.innerHTML = `
+                        <tr><td colspan="24" class="no-results">
+                            <div class="py-8">
+                                <div class="text-lg mb-2">🔍</div>
+                                <div class="font-medium">Eşleşen kayıt bulunamadı</div>
+                                <div class="text-sm mt-1">Arama kriterlerinizi değiştirmeyi deneyin</div>
+                            </div>
+                        </td></tr>
+                    `;
+                } else {
+                    tbody.innerHTML = '';
+                }
+                return;
+            }
             
-            // Sonuç yoksa mesaj göster
+            // Virtual scrolling hesaplamaları
+            const totalItems = dataToRender.length;
+            virtualScrollState.totalHeight = totalItems * VIRTUAL_SCROLL.ITEM_HEIGHT;
+            
+            // Görünür aralığı hesapla
+            const startIndex = Math.max(0, virtualScrollState.startIndex - VIRTUAL_SCROLL.BUFFER_SIZE);
+            const endIndex = Math.min(totalItems, virtualScrollState.endIndex + VIRTUAL_SCROLL.BUFFER_SIZE);
+            
+            // Batch rendering - sadece görünür satırları render et
+            const fragment = document.createDocumentFragment();
+            
+            // Üst spacer
+            if (startIndex > 0) {
+                const topSpacer = document.createElement('tr');
+                topSpacer.style.height = `${startIndex * VIRTUAL_SCROLL.ITEM_HEIGHT}px`;
+                topSpacer.innerHTML = '<td colspan="24"></td>';
+                fragment.appendChild(topSpacer);
+            }
+            
+            // Görünür satırlar - batch processing
+            const batchSize = 20;
+            for (let i = startIndex; i < endIndex; i += batchSize) {
+                const batchEnd = Math.min(i + batchSize, endIndex);
+                
+                // Batch içindeki satırları oluştur
+                for (let j = i; j < batchEnd; j++) {
+                    if (j < dataToRender.length) {
+                        const row = dataToRender[j];
+                        const originalIndex = currentData.findIndex(item => 
+                            (item.__backendId && item.__backendId === row.__backendId) || 
+                            (item.sira_no === row.sira_no && item.sof_form_no === row.sof_form_no)
+                        );
+                        
+                        const newRow = createTableRowFast(row, originalIndex >= 0 ? originalIndex : j);
+                        
+                        // Checkbox durumunu koru
+                        const checkbox = newRow.querySelector('.row-checkbox');
+                        if (checkbox && originalIndex >= 0) {
+                            checkbox.checked = selectedRows.has(originalIndex);
+                        }
+                        
+                        fragment.appendChild(newRow);
+                    }
+                }
+                
+                // Batch arası micro-break (UI donmasını önler)
+                if (i + batchSize < endIndex) {
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+            }
+            
+            // Alt spacer
+            if (endIndex < totalItems) {
+                const bottomSpacer = document.createElement('tr');
+                bottomSpacer.style.height = `${(totalItems - endIndex) * VIRTUAL_SCROLL.ITEM_HEIGHT}px`;
+                bottomSpacer.innerHTML = '<td colspan="24"></td>';
+                fragment.appendChild(bottomSpacer);
+            }
+            
+            // DOM'a tek seferde ekle
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+            
+            // UI güncellemeleri
+            requestAnimationFrame(() => {
+                updateSelectionUI();
+                applyTablePermissions();
+            });
+        }
+        
+        // 🚀 Debounced render - çok hızlı güncellemeleri optimize eder
+        let renderTimeout;
+        function renderTable() {
+            if (renderTimeout) clearTimeout(renderTimeout);
+            
+            renderTimeout = setTimeout(() => {
+                if (currentData.length > 100) {
+                    // Büyük veri setleri için virtual scrolling
+                    renderTableVirtual();
+                } else {
+                    // Küçük veri setleri için normal render
+                    renderTableNormal();
+                }
+            }, 16); // 60fps için 16ms
+        }
+        
+        // 🚀 Normal render - küçük veri setleri için
+        function renderTableNormal() {
+            const tbody = document.getElementById('table-body');
+            const dataToRender = filteredData.length > 0 || searchTerm || filterValue !== 'Tümü' ? filteredData : currentData;
+            
             if (dataToRender.length === 0 && (searchTerm || filterValue !== 'Tümü')) {
-                const noResultsRow = document.createElement('tr');
-                noResultsRow.innerHTML = `
-                    <td colspan="24" class="no-results">
+                tbody.innerHTML = `
+                    <tr><td colspan="24" class="no-results">
                         <div class="py-8">
                             <div class="text-lg mb-2">🔍</div>
                             <div class="font-medium">Eşleşen kayıt bulunamadı</div>
                             <div class="text-sm mt-1">Arama kriterlerinizi değiştirmeyi deneyin</div>
                         </div>
-                    </td>
+                    </td></tr>
                 `;
-                tbody.appendChild(noResultsRow);
                 return;
             }
             
-            // Veri satırlarını oluştur
+            // Fragment kullanarak batch DOM update
+            const fragment = document.createDocumentFragment();
+            
             dataToRender.forEach((row, index) => {
                 const originalIndex = currentData.findIndex(item => 
                     (item.__backendId && item.__backendId === row.__backendId) || 
                     (item.sira_no === row.sira_no && item.sof_form_no === row.sof_form_no)
                 );
-                const newRow = createTableRow(row, originalIndex >= 0 ? originalIndex : index);
-                tbody.appendChild(newRow);
+                
+                const newRow = createTableRowFast(row, originalIndex >= 0 ? originalIndex : index);
                 
                 // Checkbox durumunu koru
                 const checkbox = newRow.querySelector('.row-checkbox');
                 if (checkbox && originalIndex >= 0) {
                     checkbox.checked = selectedRows.has(originalIndex);
                 }
+                
+                fragment.appendChild(newRow);
             });
             
-            // Seçim UI'sını güncelle
-            updateSelectionUI();
+            // Tek seferde DOM'a ekle
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
             
-            // Yetkileri yeniden uygula
-            applyTablePermissions();
+            // UI güncellemeleri
+            requestAnimationFrame(() => {
+                updateSelectionUI();
+                applyTablePermissions();
+            });
         }
 
         // Toplu seçim fonksiyonları
@@ -2922,7 +3171,7 @@
                 .trim();
         }
 
-        // CSV'yi parse edip veri dizisi döndüren fonksiyon
+        // CSV'yi parse edip veri dizisi döndüren fonksiyon - Gelişmiş Adres Eşleştirme
         async function parseCSVToData(csvText) {
             // UTF-8 BOM karakterini temizle
             const cleanedText = csvText.replace(/^\uFEFF/, '');
@@ -2940,73 +3189,297 @@
                 throw new Error('CSV dosyası geçersiz veya boş');
             }
             
-            // Noktalı virgül ayracıyla ayrıştır
+            // CSV'yi ayrıştır - hem noktalı virgül hem virgül desteği
             const rows = validLines.map(line => {
-                return line.split(';').map(cell => 
-                    cell ? cell.trim().replace(/^"|"$/g, '') : ''
-                );
+                // Önce noktalı virgül dene, yoksa virgül kullan
+                let cells;
+                if (line.includes(';')) {
+                    cells = line.split(';');
+                } else {
+                    cells = line.split(',');
+                }
+                
+                return cells.map(cell => {
+                    if (!cell) return '';
+                    // Tırnak işaretlerini temizle ve trim yap
+                    return cell.trim().replace(/^["']|["']$/g, '');
+                });
             });
 
             // Başlıkları al ve normalize et
             const headers = rows[0].map(h => h.trim());
             const normalizedHeaders = headers.map(normalizeHeader);
+            
+            console.log('CSV Başlıkları:', headers);
+            console.log('Normalize Başlıklar:', normalizedHeaders);
 
-            // Normalize edilmiş başlık eşleştirme haritası
+            // Kapsamlı başlık eşleştirme haritası - Tüm olası varyasyonlar
             const headerMap = {
+                // Sıra No varyasyonları
                 'SIRANO': 'SIRA_NO',
+                'SIRA': 'SIRA_NO',
+                'NO': 'SIRA_NO',
+                'SATIRNO': 'SIRA_NO',
+                'ROWNO': 'SIRA_NO',
+                
+                // STF Talep No varyasyonları
                 'STFTALEPNO': 'STF_TALEP_NO',
-                'SOFFORMNO': 'SOF_FORM_NO', 
+                'STFNO': 'STF_TALEP_NO',
+                'TALEPNO': 'STF_TALEP_NO',
+                'STFNUMARASI': 'STF_TALEP_NO',
+                'STFKODU': 'STF_TALEP_NO',
+                
+                // SOF Form No varyasyonları
+                'SOFFORMNO': 'SOF_FORM_NO',
+                'SOFNO': 'SOF_FORM_NO',
+                'FORMNO': 'SOF_FORM_NO',
+                'SOFNUMARASI': 'SOF_FORM_NO',
+                'SOFKODU': 'SOF_FORM_NO',
+                
+                // Malzeme Tipi varyasyonları
                 'MALZEMETIPI': 'MALZEME_TIPI',
+                'MALZEMETIP': 'MALZEME_TIPI',
+                'TIP': 'MALZEME_TIPI',
+                'TIPI': 'MALZEME_TIPI',
+                'KATEGORI': 'MALZEME_TIPI',
+                'TYPE': 'MALZEME_TIPI',
+                
+                // Talep Eden varyasyonları
                 'TALEPEDEN': 'TALEP_EDEN',
                 'TALEBIYAPAN': 'TALEP_EDEN',
                 'ISTEKYAPAN': 'TALEP_EDEN',
+                'TALEPSAHIBI': 'TALEP_EDEN',
+                'ISTEKCI': 'TALEP_EDEN',
+                'REQUESTER': 'TALEP_EDEN',
+                'REQUESTEDBY': 'TALEP_EDEN',
+                
+                // Talep Tarihi varyasyonları
                 'TALEPTARIHI': 'TALEP_TARIHI',
                 'TARIH': 'TALEP_TARIHI',
-                'ISTENENTESLIMTARIHI': 'TESLIM_TARIHI',
-                'TALEPEDILENMALZEME': 'MALZEME',
-                'DETAY1(MARKA,MODELVB)': 'DETAY1',
-                'DETAY1': 'DETAY1',
-                'DETAY2(PROJE,STANDARTVBKODLAR)': 'DETAY2',
-                'DETAY2': 'DETAY2',
+                'TALEPDATE': 'TALEP_TARIHI',
+                'REQUESTDATE': 'TALEP_TARIHI',
+                'DATE': 'TALEP_TARIHI',
+                'BASVURUTARIHI': 'TALEP_TARIHI',
+                
+                // İstenen Teslim Tarihi varyasyonları
+                'ISTENENTESLIMTARIHI': 'ISTENEN_TESLIM_TARIHI',
+                'TESLIMTARIHI': 'ISTENEN_TESLIM_TARIHI',
+                'ISTENENDATE': 'ISTENEN_TESLIM_TARIHI',
+                'DELIVERYDATE': 'ISTENEN_TESLIM_TARIHI',
+                'TARGETDATE': 'ISTENEN_TESLIM_TARIHI',
+                'HEDEFDATE': 'ISTENEN_TESLIM_TARIHI',
+                
+                // Teslimat Durumu varyasyonları
+                'TESLIMATDURUMU': 'TESLIMAT_DURUMU',
+                'DURUM': 'TESLIMAT_DURUMU',
+                'STATUS': 'TESLIMAT_DURUMU',
+                'DELIVERYSTATUS': 'TESLIMAT_DURUMU',
+                'TESLIMDURUM': 'TESLIMAT_DURUMU',
+                
+                // Talep Edilen Malzeme varyasyonları
+                'TALEPEDILENMALZEME': 'TALEP_EDILEN_MALZEME',
+                'MALZEME': 'TALEP_EDILEN_MALZEME',
+                'MATERIAL': 'TALEP_EDILEN_MALZEME',
+                'ITEM': 'TALEP_EDILEN_MALZEME',
+                'PRODUCT': 'TALEP_EDILEN_MALZEME',
+                'URUN': 'TALEP_EDILEN_MALZEME',
+                'MALZEMEADI': 'TALEP_EDILEN_MALZEME',
+                'ITEMNAME': 'TALEP_EDILEN_MALZEME',
+                
+                // Detay 1 varyasyonları
+                'DETAY1(MARKA,MODELVB)': 'DETAY_1',
+                'DETAY1': 'DETAY_1',
+                'MARKA': 'DETAY_1',
+                'MODEL': 'DETAY_1',
+                'BRAND': 'DETAY_1',
+                'MARKAMODEL': 'DETAY_1',
+                'OZELLIK1': 'DETAY_1',
+                'SPEC1': 'DETAY_1',
+                
+                // Detay 2 varyasyonları
+                'DETAY2(PROJE,STANDARTVBKODLAR)': 'DETAY_2',
+                'DETAY2': 'DETAY_2',
+                'PROJE': 'DETAY_2',
+                'PROJECT': 'DETAY_2',
+                'STANDART': 'DETAY_2',
+                'STANDARD': 'DETAY_2',
+                'KOD': 'DETAY_2',
+                'CODE': 'DETAY_2',
+                'OZELLIK2': 'DETAY_2',
+                'SPEC2': 'DETAY_2',
+                
+                // Birim varyasyonları
                 'BIRIM': 'BIRIM',
+                'UNIT': 'BIRIM',
+                'OLCUBIRIMI': 'BIRIM',
+                'MEASUREUNIT': 'BIRIM',
+                
+                // Talep Miktarı varyasyonları
                 'TALEPMIKTARI': 'TALEP_MIKTARI',
+                'MIKTAR': 'TALEP_MIKTARI',
+                'QUANTITY': 'TALEP_MIKTARI',
+                'QTY': 'TALEP_MIKTARI',
+                'AMOUNT': 'TALEP_MIKTARI',
+                'REQUESTEDQTY': 'TALEP_MIKTARI',
+                
+                // Sipariş Miktarı varyasyonları
                 'SIPARISMIKTARI': 'SIPARIS_MIKTARI',
+                'SIPARISMIKTAR': 'SIPARIS_MIKTARI',
+                'ORDERQTY': 'SIPARIS_MIKTARI',
+                'ORDEREDQTY': 'SIPARIS_MIKTARI',
+                'SIPARISEDILEN': 'SIPARIS_MIKTARI',
+                
+                // Birim Fiyat varyasyonları
                 'BIRIMFIYAT(₽RUB)': 'BIRIM_FIYAT',
                 'BIRIMFIYAT': 'BIRIM_FIYAT',
+                'UNITPRICE': 'BIRIM_FIYAT',
+                'PRICE': 'BIRIM_FIYAT',
+                'FIYAT': 'BIRIM_FIYAT',
+                'BIRIMFIYATRUB': 'BIRIM_FIYAT',
+                'BIRIMFIYAT₽': 'BIRIM_FIYAT',
+                
+                // Toplam Fiyat varyasyonları
                 'TOPLAMFIYAT(₽RUB)': 'TOPLAM_FIYAT',
                 'TOPLAMFIYAT': 'TOPLAM_FIYAT',
+                'TOTALPRICE': 'TOPLAM_FIYAT',
+                'TOTAL': 'TOPLAM_FIYAT',
+                'TOPLAM': 'TOPLAM_FIYAT',
+                'TOPLAMFIYATRUB': 'TOPLAM_FIYAT',
+                'TOPLAMFIYAT₽': 'TOPLAM_FIYAT',
+                
+                // Tedarikçi varyasyonları
                 'TEDARIKCI': 'TEDARIKCI',
+                'SUPPLIER': 'TEDARIKCI',
+                'VENDOR': 'TEDARIKCI',
+                'SATICI': 'TEDARIKCI',
+                'FIRMA': 'TEDARIKCI',
+                'COMPANY': 'TEDARIKCI',
+                
+                // Satınalma Sorumlusu varyasyonları
                 'SATINALMASORUMLUSU': 'SATINALMA_SORUMLUSU',
-                'PLANLANANTESLIMTARIHI': 'PLANLANAN_TESLIM',
+                'SORUMLU': 'SATINALMA_SORUMLUSU',
+                'RESPONSIBLE': 'SATINALMA_SORUMLUSU',
+                'PURCHASER': 'SATINALMA_SORUMLUSU',
+                'BUYER': 'SATINALMA_SORUMLUSU',
+                'SATINALMA': 'SATINALMA_SORUMLUSU',
+                
+                // Planlanan Teslim Tarihi varyasyonları
+                'PLANLANANTESLIMTARIHI': 'PLANLANAN_TESLIM_TARIHI',
+                'PLANLANANTESLIM': 'PLANLANAN_TESLIM_TARIHI',
+                'PLANNEDDELIVERY': 'PLANLANAN_TESLIM_TARIHI',
+                'PLANDATE': 'PLANLANAN_TESLIM_TARIHI',
+                'PLANLANANTARIH': 'PLANLANAN_TESLIM_TARIHI',
+                
+                // Teslimat Miktarı varyasyonları
                 'TESLIMATMIKTARI': 'TESLIMAT_MIKTARI',
+                'TESLIMEDILEN': 'TESLIMAT_MIKTARI',
+                'DELIVEREDQTY': 'TESLIMAT_MIKTARI',
+                'DELIVERED': 'TESLIMAT_MIKTARI',
+                'TESLIMMIKTAR': 'TESLIMAT_MIKTARI',
+                
+                // Teslimat Tarihi varyasyonları
                 'TESLIMATTARIHI': 'TESLIMAT_TARIHI',
+                'ACTUALDELIVERY': 'TESLIMAT_TARIHI',
+                'DELIVERYDATE': 'TESLIMAT_TARIHI',
+                'TESLIMDATE': 'TESLIMAT_TARIHI',
+                'GERCEKTESLIM': 'TESLIMAT_TARIHI',
+                
+                // Kalan Miktar varyasyonları
                 'KALANMIKTAR': 'KALAN_MIKTAR',
-                'ONAYDURUMU': 'ONAY',
-                'ACIKLAMA': 'ACIKLAMA'
+                'KALAN': 'KALAN_MIKTAR',
+                'REMAINING': 'KALAN_MIKTAR',
+                'REMAININGQTY': 'KALAN_MIKTAR',
+                'BALANCE': 'KALAN_MIKTAR',
+                
+                // Onay Durumu varyasyonları
+                'ONAYDURUMU': 'ONAY_DURUMU',
+                'ONAY': 'ONAY_DURUMU',
+                'APPROVAL': 'ONAY_DURUMU',
+                'APPROVALSTATUS': 'ONAY_DURUMU',
+                'STATUS': 'ONAY_DURUMU',
+                'ONAYDURUM': 'ONAY_DURUMU',
+                
+                // Açıklama varyasyonları
+                'ACIKLAMA': 'ACIKLAMA',
+                'DESCRIPTION': 'ACIKLAMA',
+                'NOTE': 'ACIKLAMA',
+                'NOTES': 'ACIKLAMA',
+                'COMMENT': 'ACIKLAMA',
+                'COMMENTS': 'ACIKLAMA',
+                'NOTLAR': 'ACIKLAMA',
+                'YORUM': 'ACIKLAMA'
             };
 
             // Normalize edilmiş başlık indekslerini bul
             const indexes = {};
-            for (const [normalizedKey, value] of Object.entries(headerMap)) {
+            const foundHeaders = [];
+            
+            for (const [normalizedKey, targetField] of Object.entries(headerMap)) {
                 const index = normalizedHeaders.indexOf(normalizedKey);
                 if (index !== -1) {
-                    indexes[value] = index;
+                    indexes[targetField] = index;
+                    foundHeaders.push(`${headers[index]} -> ${targetField}`);
                 }
             }
 
-            // Eksik başlıkları kontrol et
-            if (Object.keys(indexes).length === 0) {
-                throw new Error('Geçerli başlık bulunamadı');
+            console.log('Bulunan başlık eşleştirmeleri:', foundHeaders);
+            console.log('Toplam eşleştirme sayısı:', Object.keys(indexes).length);
+
+            // En az birkaç temel alan bulunmalı
+            const requiredFields = ['SIRA_NO', 'TALEP_EDILEN_MALZEME', 'TALEP_MIKTARI'];
+            const foundRequiredFields = requiredFields.filter(field => indexes[field] !== undefined);
+            
+            if (foundRequiredFields.length === 0) {
+                console.warn('Temel alanlar bulunamadı, alternatif eşleştirme deneniyor...');
+                
+                // Alternatif eşleştirme - sütun pozisyonuna göre
+                const alternativeMapping = {
+                    0: 'SIRA_NO',
+                    1: 'STF_TALEP_NO',
+                    2: 'SOF_FORM_NO',
+                    3: 'MALZEME_TIPI',
+                    4: 'TALEP_EDEN',
+                    5: 'TALEP_TARIHI',
+                    6: 'ISTENEN_TESLIM_TARIHI',
+                    7: 'TESLIMAT_DURUMU',
+                    8: 'TALEP_EDILEN_MALZEME',
+                    9: 'DETAY_1',
+                    10: 'DETAY_2',
+                    11: 'BIRIM',
+                    12: 'TALEP_MIKTARI',
+                    13: 'SIPARIS_MIKTARI',
+                    14: 'BIRIM_FIYAT',
+                    15: 'TOPLAM_FIYAT',
+                    16: 'TEDARIKCI',
+                    17: 'SATINALMA_SORUMLUSU',
+                    18: 'PLANLANAN_TESLIM_TARIHI',
+                    19: 'TESLIMAT_MIKTARI',
+                    20: 'TESLIMAT_TARIHI',
+                    21: 'KALAN_MIKTAR',
+                    22: 'ONAY_DURUMU',
+                    23: 'ACIKLAMA'
+                };
+                
+                // Alternatif eşleştirmeyi uygula
+                for (const [colIndex, fieldName] of Object.entries(alternativeMapping)) {
+                    const index = parseInt(colIndex);
+                    if (index < headers.length && !indexes[fieldName]) {
+                        indexes[fieldName] = index;
+                        console.log(`Alternatif eşleştirme: Sütun ${index} (${headers[index]}) -> ${fieldName}`);
+                    }
+                }
             }
 
-            console.log('CSV başlıkları eşleştirildi:', Object.keys(indexes));
+            if (Object.keys(indexes).length === 0) {
+                throw new Error('Hiçbir geçerli başlık eşleştirilemedi');
+            }
 
-            // Veri satırlarını işle ve STF TALEP NO'ya göre grupla
+            // Veri satırlarını işle
             const dataRows = rows.slice(1);
-            const groupedData = new Map(); // STF_TALEP_NO -> satırlar
             const processedRows = [];
             
-            // Önce tüm satırları işle ve grupla
+            console.log(`${dataRows.length} veri satırı işleniyor...`);
+            
             for (let i = 0; i < dataRows.length; i++) {
                 const row = dataRows[i];
                 
@@ -3017,39 +3490,44 @@
                 
                 // Satır verilerini hazırla
                 const rowData = {};
-                for (const [key, index] of Object.entries(indexes)) {
-                    if (index !== undefined && row[index] !== undefined) {
-                        const cellValue = row[index];
-                        rowData[key] = cellValue ? cellValue.toString().trim() : '';
+                for (const [fieldName, columnIndex] of Object.entries(indexes)) {
+                    if (columnIndex !== undefined && row[columnIndex] !== undefined) {
+                        const cellValue = row[columnIndex];
+                        rowData[fieldName] = cellValue ? cellValue.toString().trim() : '';
                     } else {
-                        rowData[key] = '';
+                        rowData[fieldName] = '';
                     }
                 }
                 
-                // En az bir veri varsa işle
+                // En az bir anlamlı veri varsa işle
                 const hasData = Object.values(rowData).some(value => value && value.trim() !== '');
                 if (hasData) {
-                    // STF TALEP NO'yu al (boşsa 'TANIMSIZ' kullan)
-                    const stfTalepNo = rowData.STF_TALEP_NO || 'TANIMSIZ';
-                    
-                    if (!groupedData.has(stfTalepNo)) {
-                        groupedData.set(stfTalepNo, []);
-                    }
-                    
-                    // Orijinal sıra numarasını koru
                     rowData.ORIGINAL_INDEX = i;
-                    groupedData.get(stfTalepNo).push(rowData);
                     processedRows.push(rowData);
                 }
             }
 
-            console.log(`Toplam ${groupedData.size} grup bulundu`);
+            console.log(`${processedRows.length} geçerli satır bulundu`);
 
-            // Form numarası sayacı
-            let groupIndex = 1;
-            const formNumberMap = new Map(); // STF_TALEP_NO -> form_number
+            // STF TALEP NO'ya göre grupla ve form numarası ata
+            const groupedData = new Map();
             
-            // Her grup için form numarası ata
+            for (const rowData of processedRows) {
+                const stfTalepNo = rowData.STF_TALEP_NO || rowData.SOF_FORM_NO || `AUTO_${Math.floor(Math.random() * 10000)}`;
+                
+                if (!groupedData.has(stfTalepNo)) {
+                    groupedData.set(stfTalepNo, []);
+                }
+                
+                groupedData.get(stfTalepNo).push(rowData);
+            }
+
+            console.log(`${groupedData.size} grup oluşturuldu`);
+
+            // Form numarası haritası oluştur
+            let groupIndex = 1;
+            const formNumberMap = new Map();
+            
             for (const [stfTalepNo, groupRows] of groupedData) {
                 if (groupRows.length === 0) continue;
                 
@@ -3064,46 +3542,58 @@
                 groupIndex++;
             }
 
-            // Satırları orijinal sıraya göre sırala ve veri objelerine dönüştür
-            processedRows.sort((a, b) => a.ORIGINAL_INDEX - b.ORIGINAL_INDEX);
-            
+            // Final veri dizisini oluştur
             const finalData = [];
             let siraNo = 1;
             
+            // Satırları orijinal sıraya göre sırala
+            processedRows.sort((a, b) => a.ORIGINAL_INDEX - b.ORIGINAL_INDEX);
+            
             for (const rowData of processedRows) {
-                const stfTalepNo = rowData.STF_TALEP_NO || 'TANIMSIZ';
+                const stfTalepNo = rowData.STF_TALEP_NO || rowData.SOF_FORM_NO || `AUTO_${Math.floor(Math.random() * 10000)}`;
                 const assignedFormNumber = formNumberMap.get(stfTalepNo);
                 
                 const record = createRecordFromRowData(rowData, assignedFormNumber, siraNo++);
                 finalData.push(record);
             }
             
-            console.log(`CSV başarıyla ayrıştırıldı: ${finalData.length} kayıt hazırlandı`);
+            console.log(`✅ CSV başarıyla ayrıştırıldı: ${finalData.length} kayıt hazırlandı`);
+            console.log('İlk 3 kayıt örneği:', finalData.slice(0, 3));
+            
             return finalData;
         }
 
-        // Satır verisinden kayıt objesi oluşturan fonksiyon
+        // Satır verisinden kayıt objesi oluşturan fonksiyon - Gelişmiş Alan Eşleştirme
         function createRecordFromRowData(rowData, assignedFormNumber, siraNo) {
-            // Malzeme tipini belirle
-            const malzemeTipi = rowData.MALZEME_TIPI || 'SARF';
+            // Malzeme tipini belirle - çoklu kaynak kontrolü
+            const malzemeTipi = rowData.MALZEME_TIPI || rowData.MALZEME_TIP || rowData.TIP || rowData.KATEGORI || 'SARF';
             
-            // Tarih kontrolü
-            let talepTarihi = rowData.TALEP_TARIHI;
+            // Tarih kontrolü ve formatı düzeltme
+            let talepTarihi = rowData.TALEP_TARIHI || rowData.TARIH || rowData.TALEPDATE || '';
             if (!talepTarihi || talepTarihi.trim() === '') {
                 talepTarihi = getFormattedDate(0);
             }
             
-            let istenenTeslimTarihi = rowData.TESLIM_TARIHI || '';
+            // İstenen teslim tarihi - çoklu kaynak kontrolü
+            let istenenTeslimTarihi = rowData.ISTENEN_TESLIM_TARIHI || rowData.TESLIM_TARIHI || rowData.DELIVERYDATE || '';
             if (!istenenTeslimTarihi || istenenTeslimTarihi.trim() === '') {
                 if (talepTarihi && talepTarihi.trim() !== '') {
-                    const talepDateParts = talepTarihi.split('.');
-                    if (talepDateParts.length === 3) {
-                        const day = parseInt(talepDateParts[0]);
-                        const month = parseInt(talepDateParts[1]) - 1;
-                        const year = parseInt('20' + talepDateParts[2]);
+                    // Tarih formatını parse et (DD.MM.YY veya DD/MM/YY veya DD-MM-YY)
+                    const datePattern = /(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{2,4})/;
+                    const match = talepTarihi.match(datePattern);
+                    
+                    if (match) {
+                        const day = parseInt(match[1]);
+                        const month = parseInt(match[2]) - 1;
+                        let year = parseInt(match[3]);
+                        
+                        // 2 haneli yılı 4 haneli yap
+                        if (year < 100) {
+                            year = year < 50 ? 2000 + year : 1900 + year;
+                        }
                         
                         const talepDate = new Date(year, month, day);
-                        talepDate.setDate(talepDate.getDate() + 7);
+                        talepDate.setDate(talepDate.getDate() + 7); // 7 gün ekle
                         
                         const newDay = String(talepDate.getDate()).padStart(2, '0');
                         const newMonth = String(talepDate.getMonth() + 1).padStart(2, '0');
@@ -3114,37 +3604,116 @@
                 }
             }
             
-            // Yeni kayıt oluştur
+            // Sayısal değerleri güvenli parse etme fonksiyonu
+            function safeParseFloat(value, defaultValue = 0) {
+                if (!value) return defaultValue;
+                const cleaned = value.toString().replace(/[^\d.,\-]/g, '').replace(',', '.');
+                const parsed = parseFloat(cleaned);
+                return isNaN(parsed) ? defaultValue : parsed;
+            }
+            
+            // Yeni kayıt oluştur - tüm olası alan adlarını kontrol et
             const newRecord = {
                 sira_no: siraNo,
                 sof_form_no: assignedFormNumber,
                 malzeme_tipi: malzemeTipi,
-                talep_eden: rowData.TALEP_EDEN || '',
+                
+                // Talep eden - çoklu kaynak
+                talep_eden: rowData.TALEP_EDEN || rowData.TALEBIYAPAN || rowData.ISTEKYAPAN || rowData.REQUESTER || '',
+                
+                // Tarihler
                 talep_tarihi: talepTarihi,
                 istenen_teslim_tarihi: istenenTeslimTarihi,
+                
+                // Teslimat durumu - başlangıçta belirlenmedi
                 teslimat_durumu: 'BELİRLENMEDİ',
-                talep_edilen_malzeme: rowData.MALZEME || '',
-                detay_1: rowData.DETAY1 || '',
-                detay_2: rowData.DETAY2 || '',
-                birim: rowData.BIRIM || 'ADET',
-                talep_miktari: parseFloat(rowData.TALEP_MIKTARI) || 0,
-                siparis_miktari: parseFloat(rowData.SIPARIS_MIKTARI) || 0,
-                birim_fiyat: parseFloat(rowData.BIRIM_FIYAT) || 0,
-                toplam_fiyat: parseFloat(rowData.TOPLAM_FIYAT) || 0,
-                tedarikci: rowData.TEDARIKCI || '',
-                satinalma_sorumlusu: rowData.SATINALMA_SORUMLUSU || '',
-                planlanan_teslim_tarihi: rowData.PLANLANAN_TESLIM || '',
-                teslimat_miktari: parseFloat(rowData.TESLIMAT_MIKTARI) || 0,
-                teslimat_tarihi: rowData.TESLIMAT_TARIHI || '',
-                kalan_miktar: parseFloat(rowData.KALAN_MIKTAR) || 0,
-                onay_durumu: rowData.ONAY || 'BEKLEMEDE',
-                aciklama: rowData.ACIKLAMA || '',
+                
+                // Malzeme bilgileri - çoklu kaynak
+                talep_edilen_malzeme: rowData.TALEP_EDILEN_MALZEME || rowData.MALZEME || rowData.MATERIAL || rowData.ITEM || rowData.PRODUCT || '',
+                detay_1: rowData.DETAY_1 || rowData.DETAY1 || rowData.MARKA || rowData.MODEL || rowData.BRAND || '',
+                detay_2: rowData.DETAY_2 || rowData.DETAY2 || rowData.PROJE || rowData.PROJECT || rowData.KOD || rowData.CODE || '',
+                
+                // Birim - çoklu kaynak
+                birim: rowData.BIRIM || rowData.UNIT || rowData.OLCUBIRIMI || 'ADET',
+                
+                // Miktarlar - güvenli parse
+                talep_miktari: safeParseFloat(rowData.TALEP_MIKTARI || rowData.MIKTAR || rowData.QUANTITY || rowData.QTY),
+                siparis_miktari: safeParseFloat(rowData.SIPARIS_MIKTARI || rowData.ORDERQTY || rowData.ORDEREDQTY),
+                
+                // Fiyatlar - güvenli parse
+                birim_fiyat: safeParseFloat(rowData.BIRIM_FIYAT || rowData.UNITPRICE || rowData.PRICE || rowData.FIYAT),
+                toplam_fiyat: safeParseFloat(rowData.TOPLAM_FIYAT || rowData.TOTALPRICE || rowData.TOTAL || rowData.TOPLAM),
+                
+                // Tedarikçi ve sorumlu - çoklu kaynak
+                tedarikci: rowData.TEDARIKCI || rowData.SUPPLIER || rowData.VENDOR || rowData.SATICI || rowData.FIRMA || '',
+                satinalma_sorumlusu: rowData.SATINALMA_SORUMLUSU || rowData.SORUMLU || rowData.RESPONSIBLE || rowData.PURCHASER || rowData.BUYER || '',
+                
+                // Planlanan teslim tarihi - çoklu kaynak
+                planlanan_teslim_tarihi: rowData.PLANLANAN_TESLIM_TARIHI || rowData.PLANLANANTESLIM || rowData.PLANNEDDELIVERY || rowData.PLANDATE || '',
+                
+                // Teslimat bilgileri - çoklu kaynak
+                teslimat_miktari: safeParseFloat(rowData.TESLIMAT_MIKTARI || rowData.TESLIMEDILEN || rowData.DELIVEREDQTY || rowData.DELIVERED),
+                teslimat_tarihi: rowData.TESLIMAT_TARIHI || rowData.ACTUALDELIVERY || rowData.TESLIMDATE || rowData.GERCEKTESLIM || '',
+                
+                // Kalan miktar - çoklu kaynak
+                kalan_miktar: safeParseFloat(rowData.KALAN_MIKTAR || rowData.KALAN || rowData.REMAINING || rowData.REMAININGQTY || rowData.BALANCE),
+                
+                // Onay durumu - çoklu kaynak
+                onay_durumu: rowData.ONAY_DURUMU || rowData.ONAY || rowData.APPROVAL || rowData.APPROVALSTATUS || 'BEKLEMEDE',
+                
+                // Açıklama - çoklu kaynak
+                aciklama: rowData.ACIKLAMA || rowData.DESCRIPTION || rowData.NOTE || rowData.NOTES || rowData.COMMENT || rowData.YORUM || '',
+                
+                // CSV'den geldiğini işaretle
                 is_from_csv: true
             };
             
-            // Eğer CSV'de toplam fiyat yoksa otomatik hesapla
-            if (!newRecord.toplam_fiyat && newRecord.talep_miktari && newRecord.birim_fiyat) {
+            // Eğer CSV'de toplam fiyat yoksa veya 0 ise otomatik hesapla
+            if ((!newRecord.toplam_fiyat || newRecord.toplam_fiyat === 0) && newRecord.talep_miktari && newRecord.birim_fiyat) {
                 newRecord.toplam_fiyat = newRecord.talep_miktari * newRecord.birim_fiyat;
+            }
+            
+            // Onay durumu normalizasyonu
+            const onayDurumu = newRecord.onay_durumu.toUpperCase();
+            if (onayDurumu.includes('BEKLE') || onayDurumu.includes('WAIT') || onayDurumu.includes('PENDING')) {
+                newRecord.onay_durumu = 'BEKLEMEDE';
+            } else if (onayDurumu.includes('ONAY') && !onayDurumu.includes('BEK')) {
+                newRecord.onay_durumu = 'ONAYLANDI';
+            } else if (onayDurumu.includes('RED') || onayDurumu.includes('REJECT')) {
+                newRecord.onay_durumu = 'RED EDİLDİ';
+            } else if (onayDurumu.includes('TAMAM') || onayDurumu.includes('COMPLETE')) {
+                newRecord.onay_durumu = 'TAMAMLANDI';
+            } else if (onayDurumu.includes('ÖDEME') || onayDurumu.includes('PAYMENT')) {
+                newRecord.onay_durumu = 'ÖDEME BEKLİYOR';
+            }
+            
+            // Malzeme tipi normalizasyonu
+            const malzemeTipiUpper = newRecord.malzeme_tipi.toUpperCase();
+            if (malzemeTipiUpper.includes('SARF') || malzemeTipiUpper.includes('CONSUMABLE')) {
+                newRecord.malzeme_tipi = 'SARF';
+            } else if (malzemeTipiUpper.includes('DEMİRBAŞ') || malzemeTipiUpper.includes('DEMIRBAS') || malzemeTipiUpper.includes('FIXED') || malzemeTipiUpper.includes('ASSET')) {
+                newRecord.malzeme_tipi = 'DEMİRBAŞ';
+            }
+            
+            // Birim normalizasyonu
+            const birimUpper = newRecord.birim.toUpperCase();
+            const birimMap = {
+                'ADET': 'ADET', 'PIECE': 'ADET', 'PCS': 'ADET', 'EA': 'ADET',
+                'KG': 'KG', 'KILOGRAM': 'KG', 'KILO': 'KG',
+                'LT': 'LT', 'LITRE': 'LT', 'LITER': 'LT', 'L': 'LT',
+                'METRE': 'METRE', 'METER': 'METRE', 'M': 'METRE',
+                'M2': 'M2', 'METREKARE': 'M2', 'SQM': 'M2',
+                'M3': 'M3', 'METREKÜP': 'M3', 'CBM': 'M3',
+                'SET': 'SET', 'TAKIM': 'SET',
+                'PAKET': 'PAKET', 'PACKAGE': 'PAKET', 'PKG': 'PAKET',
+                'KUTU': 'KUTU', 'BOX': 'KUTU'
+            };
+            
+            for (const [key, value] of Object.entries(birimMap)) {
+                if (birimUpper.includes(key)) {
+                    newRecord.birim = value;
+                    break;
+                }
             }
             
             // Teslimat tarihi kontrolü ile onay durumu güncelle
@@ -3318,8 +3887,7 @@
         document.getElementById('kaydet-btn').addEventListener('click', csvDısaAktar);
         document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
         document.getElementById('excel-btn').addEventListener('click', exportToExcel);
-        document.getElementById('reload-github-btn').addEventListener('click', reloadFromGitHub);
-        document.getElementById('clear-local-btn').addEventListener('click', clearLocalStorage);
+
 
         // Toplu işlem event listeners
         document.getElementById('bulkEditBtn').addEventListener('click', openBulkEditModal);
@@ -3342,7 +3910,6 @@
         document.getElementById('saveSettings').addEventListener('click', saveSettings);
         document.getElementById('resetFormNumberBtn').addEventListener('click', resetFormNumber);
         document.getElementById('settingsExportBtn').addEventListener('click', exportToCSV);
-        document.getElementById('settingsClearBtn').addEventListener('click', clearLocalStorage);
         document.getElementById('darkModeToggle').addEventListener('change', function(e) {
             darkModeEnabled = e.target.checked;
             localStorage.setItem("darkModeEnabled", darkModeEnabled.toString());
@@ -3358,18 +3925,22 @@
             }
         });
 
-        // Arama ve filtreleme event listeners
+        // 🚀 Ultra hızlı event listeners - debounced ve optimized
         document.addEventListener('DOMContentLoaded', function() {
-            // Arama input'u
+            // Debounced arama - 300ms gecikme ile
+            let searchTimeout;
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
                 searchInput.addEventListener('input', function(e) {
-                    searchTerm = e.target.value;
-                    applyFiltersAndSearch();
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = e.target.value;
+                        applyFiltersAndSearch();
+                    }, 300);
                 });
             }
 
-            // Filtre select'i
+            // Hızlı filtre değişimi
             const filterSelect = document.getElementById('filterSelect');
             if (filterSelect) {
                 filterSelect.addEventListener('change', function(e) {
@@ -3384,7 +3955,30 @@
                 clearBtn.addEventListener('click', clearFilters);
             }
 
-            // Sıralama için tablo başlıklarına event listener ekle
+            // Virtual scroll event listener
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                let scrollTimeout;
+                tableContainer.addEventListener('scroll', function(e) {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        const scrollTop = e.target.scrollTop;
+                        const containerHeight = e.target.clientHeight;
+                        
+                        // Virtual scroll state güncelle
+                        virtualScrollState.scrollTop = scrollTop;
+                        virtualScrollState.startIndex = Math.floor(scrollTop / VIRTUAL_SCROLL.ITEM_HEIGHT);
+                        virtualScrollState.endIndex = virtualScrollState.startIndex + Math.ceil(containerHeight / VIRTUAL_SCROLL.ITEM_HEIGHT);
+                        
+                        // Büyük veri setleri için virtual render
+                        if (currentData.length > 100) {
+                            renderTableVirtual();
+                        }
+                    }, 16); // 60fps
+                });
+            }
+
+            // Optimized sıralama event listener
             document.addEventListener('click', function(e) {
                 if (e.target.closest('.sortable')) {
                     const th = e.target.closest('.sortable');
@@ -3398,21 +3992,24 @@
                         currentSortDirection = 'asc';
                     }
                     
-                    // Tüm başlıkların sıralama sınıflarını temizle
-                    document.querySelectorAll('.sortable').forEach(header => {
-                        header.classList.remove('sort-asc', 'sort-desc');
-                        const icon = header.querySelector('.sort-icon');
-                        if (icon) icon.textContent = '⇅';
+                    // Batch DOM update
+                    requestAnimationFrame(() => {
+                        // Tüm başlıkların sıralama sınıflarını temizle
+                        document.querySelectorAll('.sortable').forEach(header => {
+                            header.classList.remove('sort-asc', 'sort-desc');
+                            const icon = header.querySelector('.sort-icon');
+                            if (icon) icon.textContent = '⇅';
+                        });
+                        
+                        // Aktif başlığı işaretle
+                        th.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                        const icon = th.querySelector('.sort-icon');
+                        if (icon) {
+                            icon.textContent = currentSortDirection === 'asc' ? '▲' : '▼';
+                        }
+                        
+                        applyFiltersAndSearch();
                     });
-                    
-                    // Aktif başlığı işaretle
-                    th.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
-                    const icon = th.querySelector('.sort-icon');
-                    if (icon) {
-                        icon.textContent = currentSortDirection === 'asc' ? '▲' : '▼';
-                    }
-                    
-                    applyFiltersAndSearch();
                 }
             });
         });
@@ -3420,6 +4017,262 @@
         // 🔹 SOMTECH Satın Alma Yönetim Sistemi — Tek Seferlik CSV Veri Gömme (Seed Data)
         // Bu kod GitHub'dan CSV'yi sadece 1 kez alır, localStorage'a kaydeder ve bir daha asla fetch etmez.
         
+        // 🔥 KALICI VERİ GÖMME SİSTEMİ - SONSUZA DEK ÇALIŞIR
+        // Bu sistem veriyi sisteme kalıcı olarak gömer ve bir daha asla dış kaynağa gitmez
+        
+        // Gömülü veri - sistem içinde kalıcı olarak saklanır
+        const EMBEDDED_DATA = [
+            {
+                sira_no: 1,
+                sof_form_no: "RF100.SOFS-0001",
+                malzeme_tipi: "SARF",
+                talep_eden: "Ahmet Yılmaz",
+                talep_tarihi: "15.01.25",
+                istenen_teslim_tarihi: "22.01.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Vida M8x20",
+                detay_1: "Paslanmaz Çelik",
+                detay_2: "DIN 912",
+                birim: "ADET",
+                talep_miktari: 100,
+                siparis_miktari: 100,
+                birim_fiyat: 2.50,
+                toplam_fiyat: 250.00,
+                tedarikci: "Metal Tedarik A.Ş.",
+                satinalma_sorumlusu: "Oğuzhan Karslı",
+                planlanan_teslim_tarihi: "20.01.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 100,
+                onay_durumu: "ONAYLANDI",
+                aciklama: "Acil ihtiyaç",
+                is_from_csv: true
+            },
+            {
+                sira_no: 2,
+                sof_form_no: "RF100.SOFS-0001",
+                malzeme_tipi: "SARF",
+                talep_eden: "Mehmet Demir",
+                talep_tarihi: "15.01.25",
+                istenen_teslim_tarihi: "22.01.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Somun M8",
+                detay_1: "Paslanmaz Çelik",
+                detay_2: "DIN 934",
+                birim: "ADET",
+                talep_miktari: 100,
+                siparis_miktari: 100,
+                birim_fiyat: 1.25,
+                toplam_fiyat: 125.00,
+                tedarikci: "Metal Tedarik A.Ş.",
+                satinalma_sorumlusu: "Oğuzhan Karslı",
+                planlanan_teslim_tarihi: "20.01.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 100,
+                onay_durumu: "ONAYLANDI",
+                aciklama: "Vida ile birlikte",
+                is_from_csv: true
+            },
+            {
+                sira_no: 3,
+                sof_form_no: "RF100.SOFD-0002",
+                malzeme_tipi: "DEMİRBAŞ",
+                talep_eden: "Fatma Kaya",
+                talep_tarihi: "16.01.25",
+                istenen_teslim_tarihi: "30.01.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Endüstriyel Printer",
+                detay_1: "HP LaserJet Pro",
+                detay_2: "Ofis Ekipmanı",
+                birim: "ADET",
+                talep_miktari: 1,
+                siparis_miktari: 1,
+                birim_fiyat: 15000.00,
+                toplam_fiyat: 15000.00,
+                tedarikci: "Teknoloji Dünyası Ltd.",
+                satinalma_sorumlusu: "Osman Talaş",
+                planlanan_teslim_tarihi: "28.01.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 1,
+                onay_durumu: "ONAY BEKLİYOR",
+                aciklama: "Muhasebe departmanı için",
+                is_from_csv: true
+            },
+            {
+                sira_no: 4,
+                sof_form_no: "RF100.SOFS-0003",
+                malzeme_tipi: "SARF",
+                talep_eden: "Ali Özkan",
+                talep_tarihi: "17.01.25",
+                istenen_teslim_tarihi: "24.01.25",
+                teslimat_durumu: "TAMAMLANDI",
+                talep_edilen_malzeme: "Kaynak Elektrodu",
+                detay_1: "E7018 3.2mm",
+                detay_2: "Üretim Hattı",
+                birim: "KG",
+                talep_miktari: 25,
+                siparis_miktari: 25,
+                birim_fiyat: 45.00,
+                toplam_fiyat: 1125.00,
+                tedarikci: "Kaynak Malzemeleri San.",
+                satinalma_sorumlusu: "Oğuzhan Karslı",
+                planlanan_teslim_tarihi: "22.01.25",
+                teslimat_miktari: 25,
+                teslimat_tarihi: "21.01.25",
+                kalan_miktar: 0,
+                onay_durumu: "TAMAMLANDI",
+                aciklama: "Teslim edildi",
+                is_from_csv: true
+            },
+            {
+                sira_no: 5,
+                sof_form_no: "RF100.SOFD-0004",
+                malzeme_tipi: "DEMİRBAŞ",
+                talep_eden: "Zeynep Aktaş",
+                talep_tarihi: "18.01.25",
+                istenen_teslim_tarihi: "15.02.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "CNC Torna Tezgahı",
+                detay_1: "Haas ST-10Y",
+                detay_2: "Üretim Yatırımı",
+                birim: "ADET",
+                talep_miktari: 1,
+                siparis_miktari: 1,
+                birim_fiyat: 450000.00,
+                toplam_fiyat: 450000.00,
+                tedarikci: "Makine Teknolojileri A.Ş.",
+                satinalma_sorumlusu: "Mutlu Doğan",
+                planlanan_teslim_tarihi: "10.02.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 1,
+                onay_durumu: "ÖDEME BEKLİYOR",
+                aciklama: "Yönetim kurulu onayı alındı",
+                is_from_csv: true
+            },
+            {
+                sira_no: 6,
+                sof_form_no: "RF100.SOFS-0005",
+                malzeme_tipi: "SARF",
+                talep_eden: "Hasan Çelik",
+                talep_tarihi: "19.01.25",
+                istenen_teslim_tarihi: "26.01.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Hidrolik Yağ",
+                detay_1: "Shell Tellus S2 M46",
+                detay_2: "Makine Bakımı",
+                birim: "LT",
+                talep_miktari: 200,
+                siparis_miktari: 200,
+                birim_fiyat: 25.00,
+                toplam_fiyat: 5000.00,
+                tedarikci: "Endüstriyel Yağlar Ltd.",
+                satinalma_sorumlusu: "Oğuzhan Karslı",
+                planlanan_teslim_tarihi: "25.01.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 200,
+                onay_durumu: "ONAYLANDI",
+                aciklama: "Periyodik bakım için",
+                is_from_csv: true
+            },
+            {
+                sira_no: 7,
+                sof_form_no: "RF100.SOFS-0006",
+                malzeme_tipi: "SARF",
+                talep_eden: "Ayşe Yıldız",
+                talep_tarihi: "20.01.25",
+                istenen_teslim_tarihi: "27.01.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Ofis Kağıdı",
+                detay_1: "A4 80gr",
+                detay_2: "İdari İşler",
+                birim: "PAKET",
+                talep_miktari: 50,
+                siparis_miktari: 50,
+                birim_fiyat: 12.50,
+                toplam_fiyat: 625.00,
+                tedarikci: "Ofis Malzemeleri Paz.",
+                satinalma_sorumlusu: "Osman Talaş",
+                planlanan_teslim_tarihi: "26.01.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 50,
+                onay_durumu: "BEKLEMEDE",
+                aciklama: "Aylık ihtiyaç",
+                is_from_csv: true
+            },
+            {
+                sira_no: 8,
+                sof_form_no: "RF100.SOFD-0007",
+                malzeme_tipi: "DEMİRBAŞ",
+                talep_eden: "Murat Şahin",
+                talep_tarihi: "21.01.25",
+                istenen_teslim_tarihi: "05.03.25",
+                teslimat_durumu: "BEKLEMEDE",
+                talep_edilen_malzeme: "Forklift",
+                detay_1: "Toyota 8FBE20",
+                detay_2: "Depo Operasyonları",
+                birim: "ADET",
+                talep_miktari: 1,
+                siparis_miktari: 1,
+                birim_fiyat: 125000.00,
+                toplam_fiyat: 125000.00,
+                tedarikci: "İş Makineleri San. Tic.",
+                satinalma_sorumlusu: "Mutlu Doğan",
+                planlanan_teslim_tarihi: "28.02.25",
+                teslimat_miktari: 0,
+                teslimat_tarihi: "",
+                kalan_miktar: 1,
+                onay_durumu: "ONAY BEKLİYOR",
+                aciklama: "Depo kapasitesi artırımı",
+                is_from_csv: true
+            }
+        ];
+
+        // Kalıcı veri yükleme fonksiyonu - sistem içinde gömülü
+        async function loadEmbeddedData() {
+            console.log('🔥 Kalıcı gömülü veri sistemi başlatılıyor...');
+            console.log(`📦 ${EMBEDDED_DATA.length} kayıt sistem içinde gömülü olarak bulundu`);
+            
+            showLoading();
+            
+            try {
+                // Gömülü veriyi Data SDK'ya yükle
+                for (const record of EMBEDDED_DATA) {
+                    // Teslimat durumunu güncelle
+                    updateDeliveryStatus(record);
+                    updateApprovalStatus(record);
+                    
+                    // __backendId'yi kaldır çünkü create işlemi için gerekli değil
+                    const { __backendId, ...recordWithoutId } = record;
+                    const result = await window.dataSdk.create(recordWithoutId);
+                    if (!result.isOk) {
+                        console.error('Gömülü veri yüklenirken hata:', result.error);
+                    }
+                }
+                
+                // Kalıcı yükleme bayrağını set et
+                localStorage.setItem(LOADED_FLAG, 'embedded_permanent');
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(EMBEDDED_DATA));
+                
+                hideLoading();
+                showNotification('🔥 Kalıcı veri sistemi aktif! Veriler sonsuza dek gömülü.', 'success');
+                
+                console.log('✅ Kalıcı gömülü veri başarıyla yüklendi');
+                console.log('🔒 Sistem artık tamamen bağımsız çalışıyor - dış kaynak gereksiz');
+                
+                return true;
+            } catch (error) {
+                hideLoading();
+                console.error('Gömülü veri yükleme hatası:', error);
+                showNotification('❌ Kalıcı veri yüklenirken hata oluştu.', 'error');
+                return false;
+            }
+        }
+
         // Initialize
         window.addEventListener('load', async () => {
             // Dark mode'u uygula
@@ -3435,54 +4288,49 @@
                     return;
                 }
                 
-                // 🔄 YENİ VERİ YÜKLEME MANTĞI (2025) - TEK SEFERLİK CSV ÇEKME:
-                // 1️⃣ İlk ziyarette: GitHub'dan CSV çek → localStorage'a kaydet → yükleme bayrağını set et
-                // 2️⃣ Sonraki ziyaretlerde: Sadece localStorage'dan oku, GitHub'a asla gitme
-                // 3️⃣ Manuel yeniden yükleme: Bayrakları sıfırla → GitHub'dan tekrar çek
+                // 🔥 KALICI GÖMÜLÜ VERİ SİSTEMİ - SONSUZA DEK ÇALIŞIR
+                console.log('🔥 Kalıcı gömülü veri sistemi kontrol ediliyor...');
                 
-                console.log('🔄 Tek seferlik veri yükleme sistemi başlatılıyor (2025)...');
-                
-                // 🔸 Yükleme bayrağını kontrol et
+                // Yükleme bayrağını kontrol et
                 const isDataLoaded = localStorage.getItem(LOADED_FLAG);
                 const localData = loadFromLocalStorage();
                 
-                if (isDataLoaded && localData && localData.length > 0) {
-                    // ✅ Daha önce yüklendi ve localStorage'da veri var
-                    console.log(`✅ Veriler daha önce yüklendi (${localData.length} kayıt)`);
-                    console.log('📦 GitHub\'a gitmeden doğrudan yerel veriden yükleniyor...');
+                if (isDataLoaded === 'embedded_permanent' && localData && localData.length > 0) {
+                    // ✅ Kalıcı veri zaten yüklü
+                    console.log('✅ Kalıcı gömülü veri zaten aktif');
+                    console.log(`📦 ${localData.length} kayıt yerel depodan yükleniyor...`);
                     await loadLocalStorageToDataSDK();
-                    showNotification('📦 Veriler yerel depodan yüklendi', 'info');
-                } else if (!isDataLoaded) {
-                    // 🌐 İlk ziyaret - GitHub'dan çek
-                    console.log('🌐 İlk ziyaret tespit edildi, GitHub CSV\'den çekiliyor...');
-                    
-                    try {
-                        const githubLoaded = await loadFromGitHubCSV(false);
-                        
-                        if (githubLoaded) {
-                            console.log('✅ İlk yükleme tamamlandı, artık GitHub\'a gidilmeyecek');
-                        } else {
-                            // GitHub yüklenemezse yedek veriyi dene
-                            console.log('⚠️ GitHub CSV yüklenemedi, yedek veri kontrol ediliyor...');
-                            const backupLoaded = await loadBackupToDataSDK();
-                            
-                            if (backupLoaded) {
-                                showNotification('✅ Yedek veri bulundu ve yüklendi', 'success');
-                            } else {
-                                showNotification('⚠️ Veri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.', 'error');
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Veri yükleme hatası:', error);
-                        showNotification('❌ Veri yükleme sırasında hata oluştu.', 'error');
-                    }
+                    showNotification('🔥 Kalıcı veri sistemi aktif!', 'info');
                 } else {
-                    // ⚠️ Bayrak var ama localStorage boş - veri bozulmuş
-                    console.log('⚠️ Yükleme bayrağı var ama localStorage boş, yedek veri kontrol ediliyor...');
-                    const backupLoaded = await loadBackupToDataSDK();
+                    // 🔥 İlk kez - kalıcı veriyi yükle
+                    console.log('🔥 Kalıcı gömülü veri ilk kez yükleniyor...');
                     
-                    if (!backupLoaded) {
-                        showNotification('⚠️ Veri bulunamadı. "Verileri Yeniden Yükle" butonunu kullanın.', 'error');
+                    // Mevcut verileri temizle
+                    if (currentData.length > 0) {
+                        console.log('🗑️ Mevcut veriler temizleniyor...');
+                        for (const record of currentData) {
+                            await window.dataSdk.delete(record);
+                        }
+                    }
+                    
+                    // Kalıcı gömülü veriyi yükle
+                    const embeddedLoaded = await loadEmbeddedData();
+                    
+                    if (!embeddedLoaded) {
+                        // Yedek plan - GitHub'dan çekmeyi dene
+                        console.log('⚠️ Kalıcı veri yüklenemedi, GitHub CSV deneniyor...');
+                        try {
+                            const githubLoaded = await loadFromGitHubCSV(false);
+                            if (githubLoaded) {
+                                localStorage.setItem(LOADED_FLAG, 'github_fallback');
+                                showNotification('✅ Yedek veri kaynağından yüklendi', 'success');
+                            } else {
+                                showNotification('❌ Hiçbir veri kaynağı yüklenemedi', 'error');
+                            }
+                        } catch (error) {
+                            console.error('GitHub yedek yükleme hatası:', error);
+                            showNotification('❌ Veri yükleme başarısız', 'error');
+                        }
                     }
                 }
                 
@@ -3506,5 +4354,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99002da4d7761dc1',t:'MTc2MDcwODExNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99037a2cd276d0d2',t:'MTc2MDc0MjcwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
