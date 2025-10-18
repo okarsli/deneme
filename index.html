@@ -84,7 +84,7 @@
             color: var(--text-primary);
             min-height: 100%;
             overflow-x: hidden;
-            transition: all 0.4s ease;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         html, body {
@@ -290,14 +290,20 @@
             height: 60px;
             border-radius: 12px;
             object-fit: contain;
-            margin-bottom: 1rem;
+            margin: 0 auto 10px auto;
+            display: block;
+            background: rgba(15, 17, 21, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 8px;
         }
 
         .sidebar-title {
             font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #E5E7EB;
             margin: 0;
+            text-align: center;
         }
 
         .sidebar-menu {
@@ -407,20 +413,32 @@
         }
 
         .top-logo {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
             object-fit: contain;
+            background: rgba(15, 17, 21, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 6px;
         }
 
         .system-title {
             font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            color: #22D3EE;
+            position: relative;
+        }
+
+        .system-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #22D3EE, transparent);
+            border-radius: 1px;
         }
 
         .page-title-center {
@@ -656,18 +674,20 @@
 
         .filter-input, .filter-select {
             background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
+            border: 2px solid #22D3EE;
             color: var(--text-primary);
             padding: 0.75rem;
             border-radius: 8px;
             font-size: 0.875rem;
             transition: all 0.4s ease;
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.2);
         }
 
         .filter-input:focus, .filter-select:focus {
             outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--border-primary);
+            border-color: #22D3EE;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+            background: rgba(34, 211, 238, 0.05);
         }
 
         /* Corporate Data Table */
@@ -694,26 +714,38 @@
             border-collapse: separate;
             border-spacing: 0;
             min-width: 1400px;
+            table-layout: fixed;
         }
 
         .table-header {
             position: sticky;
             top: 0;
             z-index: 10;
-            background: var(--bg-secondary);
+            background: rgba(15, 17, 21, 0.95);
+            backdrop-filter: blur(12px);
         }
 
         .table-header th {
-            background: var(--bg-secondary);
+            background: rgba(15, 17, 21, 0.95);
+            backdrop-filter: blur(12px);
             color: var(--text-primary);
             padding: 1.2rem 1rem;
             text-align: left;
             font-weight: 600;
             font-size: 0.9rem;
-            border-bottom: 3px solid var(--accent-primary);
+            border-bottom: 3px solid #22D3EE;
             border-right: 1px solid var(--border-secondary);
             white-space: nowrap;
             position: relative;
+            min-width: auto;
+        }
+
+        .table-header th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: rgba(15, 17, 21, 0.98);
+            backdrop-filter: blur(16px);
         }
 
         .table-header th:last-child {
@@ -727,15 +759,23 @@
             border-bottom: 1px solid var(--border-secondary);
         }
 
+        .table-body tr:nth-child(even) {
+            background: rgba(28, 31, 38, 0.3);
+        }
+
+        .table-body tr:nth-child(odd) {
+            background: rgba(33, 36, 43, 0.3);
+        }
+
         .table-body tr:hover {
-            background: rgba(34, 211, 238, 0.1);
+            background: rgba(34, 211, 238, 0.1) !important;
             box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
         }
 
         .table-body tr.selected {
-            background: rgba(34, 211, 238, 0.15);
+            background: rgba(34, 211, 238, 0.15) !important;
             box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
-            border-left: 4px solid var(--accent-primary);
+            border-left: 4px solid #22D3EE;
         }
 
         .table-body td {
@@ -744,11 +784,22 @@
             border-right: 1px solid var(--border-secondary);
             color: var(--text-primary);
             vertical-align: middle;
+            white-space: nowrap;
+            min-width: auto;
+        }
+
+        .table-body td:first-child {
+            position: sticky;
+            left: 0;
+            background: inherit;
+            backdrop-filter: blur(8px);
+            z-index: 5;
         }
 
         .table-body td:last-child {
             text-align: center;
             padding: 0.8rem;
+            white-space: normal;
         }
 
         /* Status Colors */
@@ -1121,6 +1172,8 @@
             .sidebar {
                 transform: translateX(-100%);
                 z-index: 200;
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .sidebar.mobile-open {
@@ -1134,10 +1187,14 @@
             .smart-panel {
                 left: 0;
                 right: 0;
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .activity-panel {
                 width: 100%;
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .activity-toggle {
@@ -1148,6 +1205,9 @@
                 padding: 1rem;
                 flex-direction: column;
                 gap: 1rem;
+                text-align: center;
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .top-left {
@@ -1156,10 +1216,12 @@
 
             .system-title {
                 font-size: 1.1rem;
+                text-align: center;
             }
 
             .page-title-center {
                 font-size: 1rem;
+                text-align: center;
             }
 
             .content-area {
@@ -1175,8 +1237,18 @@
                 align-items: stretch;
             }
 
+            .filters-section {
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
+            }
+
             .filters-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .data-table {
@@ -1187,11 +1259,14 @@
                 width: 95%;
                 height: 90%;
                 margin: 1rem;
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
             }
 
             .panel-content {
                 flex-direction: column;
                 gap: 1rem;
+                text-align: center;
             }
 
             .panel-actions {
@@ -1203,6 +1278,28 @@
             .top-logo {
                 width: 40px;
                 height: 40px;
+            }
+
+            .login-container {
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
+                text-align: center;
+            }
+
+            .modal-content {
+                background: rgba(15, 17, 21, 0.95);
+                backdrop-filter: blur(12px);
+            }
+
+            .bottom-language-selector {
+                bottom: 80px;
+                right: 15px;
+            }
+
+            .language-globe-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
             }
         }
 
@@ -1400,24 +1497,153 @@
             font-weight: 600;
         }
 
-        /* Custom Scrollbar */
+        /* Bottom Right Language Selector */
+        .bottom-language-selector {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .language-globe-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(15, 17, 21, 0.9);
+            backdrop-filter: blur(12px);
+            border: 2px solid #22D3EE;
+            color: #22D3EE;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+        }
+
+        .language-globe-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 6px 25px rgba(34, 211, 238, 0.5);
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: rgba(15, 17, 21, 0.95);
+            backdrop-filter: blur(16px);
+            border: 2px solid #22D3EE;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 180px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.9);
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+
+        .language-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .language-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .language-dropdown::-webkit-scrollbar-track {
+            background: rgba(34, 211, 238, 0.1);
+            border-radius: 3px;
+        }
+
+        .language-dropdown::-webkit-scrollbar-thumb {
+            background: #22D3EE;
+            border-radius: 3px;
+        }
+
+        .language-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .language-dropdown .dropdown-item:hover {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22D3EE;
+            transform: translateX(4px);
+        }
+
+        .language-dropdown .dropdown-item.active {
+            background: #22D3EE;
+            color: white;
+        }
+
+        /* Optimized Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
             background: var(--bg-secondary);
-            border-radius: 4px;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--accent-primary);
-            border-radius: 4px;
+            background: linear-gradient(135deg, #22D3EE, #38BDF8);
+            border-radius: 3px;
+            transition: all 0.2s ease;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-secondary);
+            background: linear-gradient(135deg, #38BDF8, #22D3EE);
+            transform: scale(1.1);
+        }
+
+        /* Performance Optimizations */
+        * {
+            will-change: auto;
+        }
+
+        .table-wrapper {
+            contain: layout style paint;
+        }
+
+        .sidebar, .main-content, .activity-panel {
+            contain: layout;
+        }
+
+        /* Smooth Animations */
+        @media (prefers-reduced-motion: no-preference) {
+            .menu-item, .control-btn, .action-btn, .panel-btn {
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .table-body tr {
+                transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         /* Loading Screen */
@@ -2010,15 +2236,7 @@
      <div class="page-title-center" id="pageTitleCenter">
       Talepler
      </div>
-     <div class="top-controls"><button class="control-btn" id="languageBtn" onclick="toggleLanguageDropdown()"> <span>🌐</span>
-       <div class="dropdown" id="languageDropdown">
-        <div class="dropdown-item active" data-lang="tr" onclick="changeLanguage('tr')"><span>🇹🇷</span> <span>Türkçe</span>
-        </div>
-        <div class="dropdown-item" data-lang="en" onclick="changeLanguage('en')"><span>🇬🇧</span> <span>English</span>
-        </div>
-        <div class="dropdown-item" data-lang="ru" onclick="changeLanguage('ru')"><span>🇷🇺</span> <span>Русский</span>
-        </div>
-       </div></button> <button class="control-btn" id="themeBtn" onclick="toggleTheme()"> <span id="themeIcon">🌙</span> </button> <button class="control-btn user-menu-btn" id="userMenuBtn" onclick="toggleUserMenu()"> <span>👤</span> <span id="userMenuText">Kullanıcı</span>
+     <div class="top-controls"><button class="control-btn" id="themeBtn" onclick="toggleTheme()"> <span id="themeIcon">🌙</span> </button> <button class="control-btn user-menu-btn" id="userMenuBtn" onclick="toggleUserMenu()"> <span>👤</span> <span id="userMenuText">Kullanıcı</span>
        <div class="dropdown" id="userDropdown">
         <div class="dropdown-item" onclick="openProfile()"><span>👤</span> <span id="profileText">Profil</span>
         </div>
@@ -2027,6 +2245,16 @@
         <div class="dropdown-item" onclick="logout()"><span>🚪</span> <span id="logoutMenuText">Çıkış</span>
         </div>
        </div></button>
+     </div><!-- Bottom Right Language Selector -->
+     <div class="bottom-language-selector"><button class="language-globe-btn" id="bottomLanguageBtn" onclick="toggleBottomLanguageDropdown()"> <span class="globe-icon">🌐</span> </button>
+      <div class="language-dropdown" id="bottomLanguageDropdown">
+       <div class="dropdown-item active" data-lang="tr" onclick="changeLanguage('tr')"><span>🇹🇷</span> <span>Türkçe</span>
+       </div>
+       <div class="dropdown-item" data-lang="en" onclick="changeLanguage('en')"><span>🇬🇧</span> <span>English</span>
+       </div>
+       <div class="dropdown-item" data-lang="ru" onclick="changeLanguage('ru')"><span>🇷🇺</span> <span>Русский</span>
+       </div>
+      </div>
      </div>
     </div><!-- Content Area -->
     <div class="content-area">
@@ -2069,7 +2297,7 @@
            <td>15.01.2024</td>
            <td>Ahmet Yılmaz</td>
            <td>Ofis malzemeleri satın alımı - Kırtasiye, dosya, kalem vb.</td>
-           <td>2,500.00 ₺</td>
+           <td>125 000 ₽</td>
            <td><span class="status-badge">Bekliyor</span></td>
            <td class="action-buttons"><button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button> <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button> <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button> <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button></td>
           </tr>
@@ -2078,7 +2306,7 @@
            <td>14.01.2024</td>
            <td>Mehmet Demir</td>
            <td>Bilgisayar donanımı - Laptop, monitör, klavye</td>
-           <td>15,000.00 ₺</td>
+           <td>750 000 ₽</td>
            <td><span class="status-badge">Onaylandı</span></td>
            <td class="action-buttons"><button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button> <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button> <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button> <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button></td>
           </tr>
@@ -2087,7 +2315,7 @@
            <td>13.01.2024</td>
            <td>Fatma Özkan</td>
            <td>Yazılım lisansları - Office 365, Adobe Creative Suite</td>
-           <td>8,750.00 ₺</td>
+           <td>437 500 ₽</td>
            <td><span class="status-badge">Fiyatlandı</span></td>
            <td class="action-buttons"><button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button> <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button> <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button> <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button></td>
           </tr>
@@ -2096,7 +2324,7 @@
            <td>12.01.2024</td>
            <td>Ali Kaya</td>
            <td>Temizlik malzemeleri - Deterjan, kağıt havlu, çöp poşeti</td>
-           <td>1,200.00 ₺</td>
+           <td>60 000 ₽</td>
            <td><span class="status-badge">Ödendi</span></td>
            <td class="action-buttons"><button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button> <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button> <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button> <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button></td>
           </tr>
@@ -2105,7 +2333,7 @@
            <td>11.01.2024</td>
            <td>Zeynep Kara</td>
            <td>Mobilya alımı - Ofis masası, sandalye, dolap</td>
-           <td>25,000.00 ₺</td>
+           <td>1 250 000 ₽</td>
            <td><span class="status-badge">Reddedildi</span></td>
            <td class="action-buttons"><button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button> <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button> <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button> <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button></td>
           </tr>
@@ -2194,7 +2422,7 @@
      <form id="newRequestForm">
       <div class="form-group"><label class="form-label" id="descriptionLabel">Açıklama</label> <textarea class="form-textarea" id="descriptionInput" placeholder="Talep açıklamasını girin..." required></textarea>
       </div>
-      <div class="form-group"><label class="form-label" id="amountLabel">Tahmini Tutar (₺)</label> <input type="number" class="form-input" id="amountInput" placeholder="0.00" step="0.01" min="0" required>
+      <div class="form-group"><label class="form-label" id="amountLabel">Tahmini Tutar (₽)</label> <input type="number" class="form-input" id="amountInput" placeholder="0" step="1" min="0" required>
       </div>
       <div class="form-group"><label class="form-label" id="categoryLabel">Kategori</label> <select class="form-select" id="categoryInput" required> <option value="">Seçiniz</option> <option value="office">Ofis Malzemeleri</option> <option value="it">Bilgi İşlem</option> <option value="cleaning">Temizlik</option> <option value="furniture">Mobilya</option> <option value="other">Diğer</option> </select>
       </div>
@@ -2238,7 +2466,7 @@
             version_number: "v9.2.0"
         };
 
-        // Global Variables
+        // Optimized Global Variables with Performance Enhancements
         let currentUser = null;
         let currentLanguage = 'tr';
         let selectedRow = null;
@@ -2246,6 +2474,33 @@
         let currentModule = 'requests';
         let logEntries = [];
         let reportCounter = 6;
+        
+        // Performance optimization variables
+        let debounceTimer = null;
+        let animationFrameId = null;
+        let isTransitioning = false;
+        
+        // Cache DOM elements for better performance
+        const domCache = {
+            loginScreen: null,
+            appContainer: null,
+            sidebar: null,
+            tableBody: null,
+            activityPanel: null,
+            smartPanel: null,
+            toast: null
+        };
+        
+        // Initialize DOM cache
+        function initDOMCache() {
+            domCache.loginScreen = document.getElementById('loginScreen');
+            domCache.appContainer = document.getElementById('appContainer');
+            domCache.sidebar = document.getElementById('sidebar');
+            domCache.tableBody = document.getElementById('tableBody');
+            domCache.activityPanel = document.getElementById('activityPanel');
+            domCache.smartPanel = document.getElementById('smartPanel');
+            domCache.toast = document.getElementById('toast');
+        }
 
         // User Database
         const users = {
@@ -2304,7 +2559,7 @@
                 // Form
                 new_request_title: "Yeni Talep Oluştur",
                 description_label: "Açıklama",
-                amount_label: "Tahmini Tutar (₺)",
+                amount_label: "Tahmini Tutar (₽)",
                 category_label: "Kategori",
                 cancel: "İptal",
                 submit: "Talep Oluştur",
@@ -2393,7 +2648,7 @@
                 // Form
                 new_request_title: "Create New Request",
                 description_label: "Description",
-                amount_label: "Estimated Amount (₺)",
+                amount_label: "Estimated Amount (₽)",
                 category_label: "Category",
                 cancel: "Cancel",
                 submit: "Create Request",
@@ -2470,7 +2725,7 @@
                 // Form
                 new_request_title: "Создать новую заявку",
                 description_label: "Описание",
-                amount_label: "Предполагаемая сумма (₺)",
+                amount_label: "Предполагаемая сумма (₽)",
                 category_label: "Категория",
                 cancel: "Отмена",
                 submit: "Создать заявку",
@@ -3022,6 +3277,23 @@
             });
         }
 
+        function toggleBottomLanguageDropdown() {
+            const dropdown = document.getElementById('bottomLanguageDropdown');
+            dropdown.classList.toggle('active');
+            
+            // Close other dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d !== dropdown) d.classList.remove('active');
+            });
+            
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('#bottomLanguageBtn') && !e.target.closest('#bottomLanguageDropdown')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
         function toggleLoginLanguageDropdown() {
             const dropdown = document.getElementById('loginLanguageDropdown');
             dropdown.classList.toggle('active');
@@ -3270,10 +3542,16 @@
             confirmBtn.onclick = function() {
                 const price = parseFloat(priceInput.value);
                 if (price && price > 0) {
-                    row.cells[4].textContent = price.toFixed(2) + ' ₺';
+                    const formattedPrice = new Intl.NumberFormat('ru-RU', { 
+                        style: 'currency', 
+                        currency: 'RUB',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(price);
+                    row.cells[4].textContent = formattedPrice;
                     updateRowStatus(row, 'priced');
-                    showToast(`💰 ${requestNo} için fiyat belirlendi: ${price.toFixed(2)} ₺`, 'success');
-                    addLogEntry(`${currentUser.name}, ${requestNo} için ${price.toFixed(2)} ₺ fiyat belirledi`);
+                    showToast(`💰 ${requestNo} için fiyat belirlendi: ${formattedPrice}`, 'success');
+                    addLogEntry(`${currentUser.name}, ${requestNo} için ${formattedPrice} fiyat belirledi`);
                     generateAutoReport(requestNo, 'Fiyat Onay Belgesi');
                     
                     // Add highlight animation
@@ -3403,15 +3681,26 @@
             newRow.setAttribute('data-id', tableBody.children.length + 1);
             newRow.setAttribute('onclick', 'selectRow(this)');
             
+            const formattedAmount = new Intl.NumberFormat('ru-RU', { 
+                style: 'currency', 
+                currency: 'RUB',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(parseFloat(amount));
+            
             newRow.innerHTML = `
                 <td>${requestNo}</td>
                 <td>${today}</td>
                 <td>${currentUser.name}</td>
                 <td>${description}</td>
-                <td>${parseFloat(amount).toFixed(2)} ₺</td>
+                <td>${formattedAmount}</td>
                 <td><span class="status-badge">${t('pending')}</span></td>
-                <td>📎 <a href="#" onclick="openPdfViewer('${requestNo}.pdf')">PDF</a></td>
-                <td>-</td>
+                <td class="action-buttons">
+                    <button class="action-btn approve" onclick="approveRequestInline(this)" style="display: none;">✅ Onayla</button>
+                    <button class="action-btn reject" onclick="rejectRequestInline(this)" style="display: none;">❌ Reddet</button>
+                    <button class="action-btn price" onclick="setPriceInline(this)" style="display: none;">💰 Fiyat Gir</button>
+                    <button class="action-btn payment" onclick="markAsPaidInline(this)" style="display: none;">💳 Ödeme Yapıldı</button>
+                </td>
             `;
             
             tableBody.appendChild(newRow);
@@ -3452,8 +3741,11 @@
         }
 
         // Utility Functions
+        // Optimized Toast with DOM Cache
         function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
+            const toast = domCache.toast || document.getElementById('toast');
+            if (!toast) return;
+            
             toast.textContent = message;
             toast.className = `toast ${type}`;
             toast.classList.add('active');
@@ -3462,6 +3754,121 @@
                 toast.classList.remove('active');
             }, 3000);
         }
+        
+        // Debounced Search Function for Performance
+        function debounceSearch(func, delay = 300) {
+            return function(...args) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+        
+        // Optimized Table Filtering with Virtual Scrolling Concept
+        const debouncedTableFilter = debounceSearch(function(searchTerm, statusFilter, dateFilter) {
+            if (isTransitioning) return;
+            
+            const rows = (domCache.tableBody || document.getElementById('tableBody')).querySelectorAll('tr');
+            let visibleCount = 0;
+            
+            // Use requestAnimationFrame for smooth filtering
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            
+            animationFrameId = requestAnimationFrame(() => {
+                rows.forEach((row, index) => {
+                    const cells = row.cells;
+                    if (!cells || cells.length === 0) return;
+                    
+                    let shouldShow = true;
+                    
+                    // Role-based filtering
+                    const status = getRowStatus(row);
+                    const requester = cells[2]?.textContent || '';
+                    
+                    switch (currentUser?.role) {
+                        case 'user':
+                            shouldShow = requester === currentUser.name;
+                            break;
+                        case 'procurement':
+                            shouldShow = ['approved', 'priced'].includes(status);
+                            break;
+                        case 'accounting':
+                            shouldShow = ['priced', 'paid'].includes(status);
+                            break;
+                        default:
+                            shouldShow = true;
+                    }
+                    
+                    // Search term filtering
+                    if (shouldShow && searchTerm) {
+                        const searchableText = Array.from(cells).slice(0, -1)
+                            .map(cell => cell.textContent.toLowerCase())
+                            .join(' ');
+                        shouldShow = searchableText.includes(searchTerm.toLowerCase());
+                    }
+                    
+                    // Status filtering
+                    if (shouldShow && statusFilter) {
+                        shouldShow = status === statusFilter;
+                    }
+                    
+                    // Date filtering
+                    if (shouldShow && dateFilter) {
+                        const rowDate = cells[1]?.textContent || '';
+                        shouldShow = rowDate.includes(dateFilter);
+                    }
+                    
+                    // Apply visibility with performance optimization
+                    const display = shouldShow ? '' : 'none';
+                    if (row.style.display !== display) {
+                        row.style.display = display;
+                        if (shouldShow) visibleCount++;
+                    }
+                });
+                
+                // Update UI feedback
+                updateFilterResults(visibleCount);
+            });
+        }, 150);
+
+        // Update Filter Results UI
+        function updateFilterResults(visibleCount) {
+            const totalRows = (domCache.tableBody || document.getElementById('tableBody')).querySelectorAll('tr').length;
+            
+            // Create or update results indicator
+            let resultsIndicator = document.getElementById('filterResults');
+            if (!resultsIndicator) {
+                resultsIndicator = document.createElement('div');
+                resultsIndicator.id = 'filterResults';
+                resultsIndicator.style.cssText = `
+                    position: absolute;
+                    top: -2rem;
+                    right: 0;
+                    background: rgba(34, 211, 238, 0.1);
+                    border: 1px solid #22D3EE;
+                    border-radius: 6px;
+                    padding: 0.25rem 0.75rem;
+                    font-size: 0.75rem;
+                    color: #22D3EE;
+                    font-weight: 500;
+                    z-index: 10;
+                `;
+                
+                const filtersSection = document.querySelector('.filters-section');
+                if (filtersSection) {
+                    filtersSection.style.position = 'relative';
+                    filtersSection.appendChild(resultsIndicator);
+                }
+            }
+            
+            if (visibleCount === totalRows) {
+                resultsIndicator.style.display = 'none';
+            } else {
+                resultsIndicator.style.display = 'block';
+                resultsIndicator.textContent = `${visibleCount} / ${totalRows} kayıt gösteriliyor`;
+            }
+        }
 
         function exportData() {
             showToast('Veriler dışa aktarılıyor...', 'success');
@@ -3469,12 +3876,26 @@
         }
 
         function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('statusFilter').value = '';
-            document.getElementById('dateFilter').value = '';
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const dateFilter = document.getElementById('dateFilter');
             
-            // Show all rows based on role
-            filterTableByRole();
+            if (searchInput) searchInput.value = '';
+            if (statusFilter) statusFilter.value = '';
+            if (dateFilter) dateFilter.value = '';
+            
+            // Clear filter results indicator
+            const resultsIndicator = document.getElementById('filterResults');
+            if (resultsIndicator) {
+                resultsIndicator.style.display = 'none';
+            }
+            
+            // Show all rows based on role with animation
+            isTransitioning = true;
+            setTimeout(() => {
+                filterTableByRole();
+                isTransitioning = false;
+            }, 50);
             
             showToast('Filtreler sıfırlandı', 'success');
         }
@@ -3690,8 +4111,12 @@
             }
         });
 
-        // Initialize Application
+        // Optimized Application Initialization
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize DOM cache first for performance
+            initDOMCache();
+            
+            // Initialize core systems
             initializeTheme();
             initializeLanguage();
             
@@ -3699,56 +4124,200 @@
                 showLoginScreen();
             }
             
-            // Setup login form
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            // Setup optimized event listeners
+            setupEventListeners();
             
-            // Setup menu navigation
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const module = this.dataset.module;
-                    if (module) {
-                        switchModule(module);
+            // Initialize with some log entries
+            addLogEntry('Sistem başlatıldı - Optimized v9.2.0');
+        });
+        
+        // Optimized Event Listener Setup
+        function setupEventListeners() {
+            // Login form with error handling
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            // Menu navigation with delegation for better performance
+            const sidebar = domCache.sidebar || document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('click', function(e) {
+                    const menuItem = e.target.closest('.menu-item');
+                    if (menuItem && menuItem.dataset.module) {
+                        switchModule(menuItem.dataset.module);
                     }
                 });
-            });
+            }
             
-            // Setup filter functionality
+            // Optimized filter functionality with debouncing
             const searchInput = document.getElementById('searchInput');
             const statusFilter = document.getElementById('statusFilter');
             const dateFilter = document.getElementById('dateFilter');
             
-            [searchInput, statusFilter, dateFilter].forEach(input => {
-                input.addEventListener('input', function() {
-                    // Filter functionality would go here
-                    // For demo, we'll just show a message
-                });
-            });
-            
-            // Setup report search
-            const reportSearchInput = document.getElementById('reportSearchInput');
-            if (reportSearchInput) {
-                reportSearchInput.addEventListener('input', function() {
-                    // Report search functionality would go here
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value;
+                    const status = statusFilter?.value || '';
+                    const date = dateFilter?.value || '';
+                    debouncedTableFilter(searchTerm, status, date);
                 });
             }
             
-            // Initialize with some log entries
-            addLogEntry('Sistem başlatıldı');
-        });
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function() {
+                    const searchTerm = searchInput?.value || '';
+                    const status = this.value;
+                    const date = dateFilter?.value || '';
+                    debouncedTableFilter(searchTerm, status, date);
+                });
+            }
+            
+            if (dateFilter) {
+                dateFilter.addEventListener('change', function() {
+                    const searchTerm = searchInput?.value || '';
+                    const status = statusFilter?.value || '';
+                    const date = this.value;
+                    debouncedTableFilter(searchTerm, status, date);
+                });
+            }
+            
+            // Report search with debouncing
+            const reportSearchInput = document.getElementById('reportSearchInput');
+            if (reportSearchInput) {
+                const debouncedReportSearch = debounceSearch(function(searchTerm) {
+                    filterReports(searchTerm);
+                }, 200);
+                
+                reportSearchInput.addEventListener('input', function() {
+                    debouncedReportSearch(this.value);
+                });
+            }
+            
+            // Keyboard shortcuts for power users
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + K for search focus
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                }
+                
+                // Escape to close modals and panels
+                if (e.key === 'Escape') {
+                    closeAllModals();
+                    hideSmartPanel();
+                }
+            });
+            
+            // Optimized scroll performance for tables
+            const tableWrapper = document.querySelector('.table-wrapper');
+            if (tableWrapper) {
+                let scrollTimeout;
+                tableWrapper.addEventListener('scroll', function() {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        // Lazy load or update visible rows if needed
+                        optimizeTableRendering();
+                    }, 100);
+                });
+            }
+        }
+        
+        // Helper Functions for Optimization
+        function filterReports(searchTerm) {
+            const reportRows = document.querySelectorAll('#reportTableBody tr');
+            let visibleCount = 0;
+            
+            reportRows.forEach(row => {
+                const cells = row.cells;
+                if (!cells) return;
+                
+                const searchableText = Array.from(cells).slice(0, -1)
+                    .map(cell => cell.textContent.toLowerCase())
+                    .join(' ');
+                
+                const shouldShow = !searchTerm || searchableText.includes(searchTerm.toLowerCase());
+                row.style.display = shouldShow ? '' : 'none';
+                if (shouldShow) visibleCount++;
+            });
+        }
+        
+        function closeAllModals() {
+            document.querySelectorAll('.form-modal, .pdf-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+        
+        function optimizeTableRendering() {
+            // Implement virtual scrolling or row recycling if needed for large datasets
+            // For now, just ensure smooth scrolling
+            const tableWrapper = document.querySelector('.table-wrapper');
+            if (tableWrapper) {
+                tableWrapper.style.scrollBehavior = 'smooth';
+            }
+        }
 
-        // Element SDK Implementation
+        // Memory Management and Cleanup
+        function cleanupResources() {
+            // Clear timers
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+                debounceTimer = null;
+            }
+            
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            
+            // Clear DOM cache
+            Object.keys(domCache).forEach(key => {
+                domCache[key] = null;
+            });
+            
+            // Clear log entries if too many
+            if (logEntries.length > 100) {
+                logEntries = logEntries.slice(0, 50);
+            }
+        }
+        
+        // Performance Monitoring
+        function logPerformance(operation, startTime) {
+            const endTime = performance.now();
+            const duration = endTime - startTime;
+            
+            if (duration > 100) { // Log operations taking more than 100ms
+                console.warn(`Performance: ${operation} took ${duration.toFixed(2)}ms`);
+            }
+        }
+        
+        // Optimized Element SDK Implementation
         const element = {
             defaultConfig: defaultConfig,
             
             render: async function(config) {
-                const systemName = config.system_name || defaultConfig.system_name;
-                const companyName = config.company_name || defaultConfig.company_name;
-                const versionNumber = config.version_number || defaultConfig.version_number;
+                const startTime = performance.now();
                 
-                // Update system title
-                const systemTitle = document.getElementById('systemTitle');
-                if (systemTitle) {
-                    systemTitle.textContent = systemName;
+                try {
+                    const systemName = config.system_name || defaultConfig.system_name;
+                    const companyName = config.company_name || defaultConfig.company_name;
+                    const versionNumber = config.version_number || defaultConfig.version_number;
+                    
+                    // Update system title with DOM cache
+                    const systemTitle = domCache.systemTitle || document.getElementById('systemTitle');
+                    if (systemTitle) {
+                        systemTitle.textContent = systemName;
+                        // Cache for future use
+                        domCache.systemTitle = systemTitle;
+                    }
+                    
+                    logPerformance('Element SDK Render', startTime);
+                } catch (error) {
+                    console.error('Element SDK Render Error:', error);
                 }
             },
             
@@ -3770,10 +4339,20 @@
             }
         };
 
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            window.elementSdk.init(element);
+        // Initialize Element SDK with error handling
+        try {
+            if (window.elementSdk) {
+                window.elementSdk.init(element);
+            }
+        } catch (error) {
+            console.error('Element SDK Initialization Error:', error);
         }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', cleanupResources);
+        
+        // Periodic cleanup every 5 minutes
+        setInterval(cleanupResources, 300000);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99085b29a6b9e1e2',t:'MTc2MDc5Mzg2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9908a42d20d5e1e2',t:'MTc2MDc5Njg1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
