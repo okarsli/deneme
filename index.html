@@ -3,63 +3,31 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOMTECH SOF ERP v9.0</title>
+  <title>SOMTECH SOF Yönetim Paneli</title>
   <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
         :root {
-            /* Dark Theme (Default) */
             --bg-primary: #0F1115;
-            --bg-secondary: #151922;
-            --bg-tertiary: #1E293B;
+            --bg-secondary: #1B1D23;
             --text-primary: #E5E7EB;
             --text-secondary: #9CA3AF;
-            --text-tertiary: #6B7280;
-            --accent-primary: #22D3EE;
-            --accent-secondary: #38BDF8;
-            --accent-gradient: linear-gradient(135deg, #22D3EE, #38BDF8);
-            --border-primary: rgba(34, 211, 238, 0.3);
-            --border-secondary: #374151;
-            --glass-bg: rgba(15, 17, 21, 0.8);
+            --neon-blue: #22D3EE;
+            --accent-cyan: #00FFFF;
+            --glass-bg: rgba(27, 29, 35, 0.8);
             --glass-border: rgba(34, 211, 238, 0.3);
-            --success-color: #22C55E;
-            --error-color: #EF4444;
-            --warning-color: #F59E0B;
-            --info-color: #3B82F6;
             --sidebar-width: 280px;
-        }
-
-        [data-theme="light"] {
-            /* Light Theme */
-            --bg-primary: #F9FAFB;
-            --bg-secondary: #FFFFFF;
-            --bg-tertiary: #E5E7EB;
-            --text-primary: #111827;
-            --text-secondary: #4B5563;
-            --text-tertiary: #6B7280;
-            --accent-primary: #2563EB;
-            --accent-secondary: #3B82F6;
-            --accent-gradient: linear-gradient(135deg, #2563EB, #3B82F6);
-            --border-primary: rgba(37, 99, 235, 0.3);
-            --border-secondary: #D1D5DB;
-            --glass-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: rgba(37, 99, 235, 0.3);
-            --success-color: #059669;
-            --error-color: #DC2626;
-            --warning-color: #D97706;
-            --info-color: #2563EB;
         }
 
         body {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100%;
             overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         html, body {
@@ -70,348 +38,10 @@
             box-sizing: border-box;
         }
 
-        /* Login Screen */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
+        /* Layout Container */
+        .dashboard-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            transition: all 0.4s ease;
-        }
-
-        .login-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 3rem;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(34, 211, 238, 0.3);
-            transition: all 0.4s ease;
-        }
-
-        .login-logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 16px;
-            object-fit: contain;
-            margin: 0 auto 16px auto;
-            display: block;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
-        }
-
-        .login-logo:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.8));
-        }
-
-        .login-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0 0 8px 0;
-            text-align: center;
-        }
-
-        .login-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-            font-weight: 400;
-            line-height: 1.5;
-            text-align: center;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .login-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            text-align: left;
-        }
-
-        .login-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .login-input {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
-            color: var(--text-primary);
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
-            transition: all 0.4s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--border-primary);
-        }
-
-        .login-button {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.4s ease;
-            box-shadow: 0 6px 20px rgba(34, 211, 238, 0.4);
-            font-family: 'Inter', sans-serif;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(34, 211, 238, 0.5);
-            filter: brightness(1.1);
-        }
-
-        .login-controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 0;
-        }
-
-        .login-control-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
-            color: var(--accent-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .login-control-btn:hover {
-            background: var(--border-primary);
-            border-color: var(--accent-primary);
-            transform: scale(1.05);
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            transition: all 0.5s ease;
-            flex-direction: column;
-        }
-
-        .loading-screen.active {
-            display: flex;
-        }
-
-        .loading-container {
-            text-align: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 8px 32px rgba(34, 211, 238, 0.3);
-            position: relative;
-        }
-
-        .loading-logo-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 2rem;
-        }
-
-        .loading-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 16px;
-            object-fit: contain;
-            position: relative;
-            filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4));
-            animation: logo-glow 1.5s ease-out 1s forwards;
-        }
-
-        .loading-ring {
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 160px;
-            height: 160px;
-            border: 3px solid transparent;
-            border-top: 3px solid #22D3EE;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            opacity: 0.8;
-        }
-
-        .loading-text {
-            font-size: 1.1rem;
-            color: #22D3EE;
-            font-weight: 500;
-            animation: fade-pulse 1.5s ease-in-out infinite;
-            margin-bottom: 2rem;
-        }
-
-        .corporate-signature {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            opacity: 0;
-            animation: signature-appear 1s ease-out 1.8s forwards;
-        }
-
-        .signature-text {
-            font-family: 'Inter', 'Roboto Mono', monospace;
-            font-style: italic;
-            font-size: 0.9rem;
-            color: #22D3EE;
-            letter-spacing: 1.2px;
-            margin: 0;
-            position: relative;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .signature-text::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
-            animation: signature-draw 1s ease-out 1.8s forwards;
-        }
-
-        .bilingual-slogan {
-            margin-top: 16px;
-            position: relative;
-            height: 3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .slogan-container {
-            position: relative;
-            height: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .slogan-text {
-            font-family: 'Inter', sans-serif;
-            font-weight: 300;
-            font-style: italic;
-            font-size: 0.75rem;
-            color: #A1A1AA;
-            letter-spacing: 0.8px;
-            position: absolute;
-            opacity: 0;
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        .slogan-english {
-            animation: slogan-fade-english 2s ease-in-out 3.5s forwards;
-        }
-
-        .slogan-turkish {
-            animation: slogan-fade-turkish 2s ease-in-out 5.5s forwards;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes logo-glow {
-            0% { filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4)); }
-            50% { filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.8)) drop-shadow(0 0 50px rgba(34, 211, 238, 0.6)); }
-            100% { filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.5)); }
-        }
-
-        @keyframes fade-pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes signature-appear {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        @keyframes signature-draw {
-            0% { right: 0; }
-            100% { right: 100%; }
-        }
-
-        @keyframes slogan-fade-english {
-            0% { opacity: 0; transform: translateY(10px); }
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
-        }
-
-        @keyframes slogan-fade-turkish {
-            0% { opacity: 0; transform: translateY(10px); }
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
-        }
-
-        /* Main Application */
-        .app-container {
-            display: none;
             height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container.active {
-            display: flex;
         }
 
         /* Sidebar */
@@ -419,7 +49,7 @@
             width: var(--sidebar-width);
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            border-right: 2px solid var(--border-primary);
+            border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -427,47 +57,33 @@
             top: 0;
             height: 100vh;
             z-index: 100;
-            transition: all 0.4s ease;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 0 16px 16px 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar-header {
             padding: 2rem 1.5rem;
-            border-bottom: 2px solid var(--border-primary);
+            border-bottom: 1px solid var(--glass-border);
             text-align: center;
         }
 
-        .sidebar-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
-            object-fit: contain;
-            margin: 0 auto 16px auto;
-            display: block;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
-        }
-
-        .sidebar-logo:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6));
-        }
-
-        .sidebar-title {
-            font-size: 1.2rem;
+        .logo {
+            font-size: 1.5rem;
             font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-primary);
-            margin: 0;
-            text-align: center;
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.4;
         }
 
         .sidebar-menu {
             flex: 1;
             padding: 1rem 0;
-            overflow-y: auto;
         }
 
         .menu-item {
@@ -480,19 +96,21 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border-left: 3px solid transparent;
-            margin: 0.25rem 0;
+            font-weight: 500;
         }
 
         .menu-item:hover {
-            background: var(--border-primary);
-            color: var(--accent-primary);
-            border-left-color: var(--accent-primary);
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--neon-blue);
+            border-left-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
         }
 
         .menu-item.active {
-            background: var(--border-primary);
-            color: var(--accent-primary);
-            border-left-color: var(--accent-primary);
+            background: rgba(34, 211, 238, 0.15);
+            color: var(--neon-blue);
+            border-left-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
         }
 
         .menu-icon {
@@ -501,147 +119,92 @@
             text-align: center;
         }
 
-        .menu-text {
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
         /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
-            height: 100vh;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            transition: all 0.4s ease;
+            height: 100vh;
         }
 
         /* Top Bar */
-        .top-bar {
+        .topbar {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            border-bottom: 3px solid var(--accent-primary);
+            border-bottom: 1px solid var(--glass-border);
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 15px rgba(34, 211, 238, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 50;
-            position: relative;
         }
 
-        .top-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .top-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            object-fit: contain;
-            cursor: pointer;
-        }
-
-        .page-title-center {
-            font-size: 1.4rem;
+        .page-title {
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-primary);
             text-align: center;
             flex: 1;
         }
 
-        .top-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .control-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
-            color: var(--accent-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            transition: all 0.4s ease;
+        .language-selector {
             position: relative;
         }
 
-        .control-btn:hover {
-            background: var(--border-primary);
-            border-color: var(--accent-primary);
-            transform: scale(1.05);
+        .language-btn {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        /* Dropdowns */
-        .dropdown {
+        .language-btn:hover {
+            background: rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+        }
+
+        .language-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
             margin-top: 8px;
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
-            border: 2px solid var(--accent-primary);
-            border-radius: 12px;
-            padding: 8px;
-            min-width: 200px;
-            max-height: 120px;
-            overflow-y: auto;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            min-width: 120px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            z-index: 9999;
+            z-index: 1000;
         }
 
-        .dropdown.active {
+        .language-dropdown.active {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
 
-        .dropdown::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .dropdown::-webkit-scrollbar-track {
-            background: rgba(34, 211, 238, 0.1);
-            border-radius: 3px;
-        }
-
-        .dropdown::-webkit-scrollbar-thumb {
-            background: #22D3EE;
-            border-radius: 3px;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
+        .language-option {
+            padding: 0.5rem;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: var(--text-primary);
             font-weight: 500;
-            font-size: 0.9rem;
         }
 
-        .dropdown-item:hover {
-            background: var(--border-primary);
-            color: var(--accent-primary);
-        }
-
-        .dropdown-item.active {
-            background: var(--accent-primary);
-            color: white;
+        .language-option:hover {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--neon-blue);
         }
 
         /* Content Area */
@@ -651,148 +214,22 @@
             overflow: auto;
             display: flex;
             flex-direction: column;
-            position: relative;
+            gap: 2rem;
         }
 
-        /* Dashboard Cards */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-card {
+        /* Filter Bar */
+        .filter-bar {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            border: 2px solid var(--glass-border);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-gradient);
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.2);
-        }
-
-        .card-title {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .card-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-        }
-
-        /* Data Table */
-        .table-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 8px 32px rgba(34, 211, 238, 0.1);
-            flex: 1;
-        }
-
-        .table-header-section {
-            padding: 1rem 1.5rem;
-            border-bottom: 2px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .table-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .primary-btn {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
-            filter: brightness(1.1);
-        }
-
-        .secondary-btn {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
-            color: var(--text-primary);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.4s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .secondary-btn:hover {
-            background: var(--border-primary);
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        /* Filter Section */
-        .filter-section {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-secondary);
-            background: rgba(34, 211, 238, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .filter-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            grid-template-columns: 2fr 1fr 1fr auto auto;
             gap: 1rem;
             align-items: end;
         }
@@ -804,47 +241,98 @@
         }
 
         .filter-label {
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
         .filter-input, .filter-select {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-secondary);
+            background: rgba(15, 17, 21, 0.8);
+            border: 1px solid var(--glass-border);
             color: var(--text-primary);
-            padding: 0.5rem;
+            padding: 0.75rem;
             border-radius: 8px;
             font-size: 0.875rem;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
 
         .filter-input:focus, .filter-select:focus {
             outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 10px var(--border-primary);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
         }
 
-        /* Virtual Table */
-        .virtual-table-wrapper {
+        .filter-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--accent-cyan));
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.6);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-wrapper {
             overflow: auto;
-            position: relative;
+            flex: 1;
         }
 
         .data-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            min-width: 2500px;
+            min-width: 1200px;
         }
 
         .table-header {
             position: sticky;
             top: 0;
             z-index: 10;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
         }
 
         .table-header th {
@@ -852,277 +340,128 @@
             backdrop-filter: blur(12px);
             color: var(--text-primary);
             padding: 1rem 0.75rem;
-            text-align: left;
+            text-align: center;
             font-weight: 600;
-            font-size: 0.75rem;
-            border-bottom: 2px solid var(--accent-primary);
-            border-right: 1px solid var(--border-secondary);
+            font-size: 0.875rem;
+            border-bottom: 2px solid var(--neon-blue);
+            border-right: 1px solid var(--glass-border);
             white-space: nowrap;
-            position: relative;
-            min-width: 100px;
+            text-shadow: 0 0 5px rgba(34, 211, 238, 0.3);
         }
 
-        .table-header th:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 11;
-            min-width: 80px;
-        }
-
-        .table-header th:nth-child(2) {
-            position: sticky;
-            left: 80px;
-            z-index: 11;
-            min-width: 120px;
+        .table-header th:last-child {
+            border-right: none;
         }
 
         .table-body tr {
             transition: all 0.3s ease;
             cursor: pointer;
-            border-bottom: 1px solid var(--border-secondary);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .table-body tr:nth-child(even) {
+            background: rgba(27, 29, 35, 0.3);
         }
 
         .table-body tr:hover {
-            box-shadow: 0 0 0 1px var(--accent-primary);
+            background: rgba(34, 211, 238, 0.1);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+            transform: translateY(-1px);
         }
 
         .table-body td {
-            padding: 0.75rem;
-            font-size: 0.75rem;
-            border-right: 1px solid var(--border-secondary);
+            padding: 1rem 0.75rem;
+            font-size: 0.875rem;
+            border-right: 1px solid rgba(34, 211, 238, 0.1);
             color: var(--text-primary);
-            vertical-align: middle;
+            text-align: center;
             white-space: nowrap;
-            min-width: 100px;
         }
 
-        .table-body td:first-child {
-            position: sticky;
-            left: 0;
-            background: inherit;
-            backdrop-filter: blur(8px);
-            z-index: 5;
-            min-width: 80px;
+        .table-body td:last-child {
+            border-right: none;
         }
 
-        .table-body td:nth-child(2) {
-            position: sticky;
-            left: 80px;
-            background: inherit;
-            backdrop-filter: blur(8px);
-            z-index: 5;
-            min-width: 120px;
-        }
-
-        /* Status Colors */
-        .status-completed { background-color: rgba(34, 197, 94, 0.15) !important; }
-        .status-approved { background-color: rgba(234, 179, 8, 0.15) !important; }
-        .status-paid { background-color: rgba(59, 130, 246, 0.15) !important; }
-        .status-pending { background-color: rgba(156, 163, 175, 0.15) !important; }
-        .status-procurement { background-color: rgba(139, 92, 246, 0.15) !important; }
-        .status-rejected { background-color: rgba(239, 68, 68, 0.15) !important; }
-
-        .action-btn {
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.7rem;
-            transition: all 0.3s ease;
-            margin: 0 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .action-btn.approve {
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #FBB024;
+            border: 1px solid #FBB024;
+        }
+
+        .status-approved {
             background: rgba(34, 197, 94, 0.2);
             color: #22C55E;
             border: 1px solid #22C55E;
         }
 
-        .action-btn.reject {
+        .status-rejected {
             background: rgba(239, 68, 68, 0.2);
             color: #EF4444;
             border: 1px solid #EF4444;
         }
 
-        .action-btn.price {
-            background: rgba(245, 158, 11, 0.2);
-            color: #F59E0B;
-            border: 1px solid #F59E0B;
-        }
-
-        .action-btn.payment {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3B82F6;
-            border: 1px solid #3B82F6;
-        }
-
-        .action-btn.view {
+        .status-delivered {
             background: rgba(34, 211, 238, 0.2);
-            color: #22D3EE;
-            border: 1px solid #22D3EE;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
         }
 
-        .action-btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.1);
-        }
-
-        /* Smart Action Bar */
-        .smart-action-bar {
+        /* Stats Cards */
+        .stats-container {
             position: fixed;
-            bottom: 0;
-            left: var(--sidebar-width);
-            right: 0;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-top: 3px solid var(--accent-primary);
-            padding: 1rem 2rem;
-            transform: translateY(100%);
-            transition: all 0.4s ease;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             z-index: 50;
-            box-shadow: 0 -8px 32px rgba(34, 211, 238, 0.2);
         }
 
-        .smart-action-bar.active {
-            transform: translateY(0);
-        }
-
-        .action-bar-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .action-bar-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .action-bar-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 2rem;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
+        .stat-card {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 2px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid #EF4444;
-            color: #EF4444;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
 
-        .modal-close:hover {
-            background: rgba(239, 68, 68, 0.3);
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(34, 211, 238, 0.2);
         }
 
-        .modal-body {
-            padding: 1.5rem;
-            flex: 1;
+        .stat-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
         }
 
-        .pdf-viewer {
-            width: 100%;
-            height: 500px;
-            border: none;
-            border-radius: 8px;
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
         }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 2px solid var(--border-primary);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            color: var(--text-primary);
-            font-weight: 600;
-            z-index: 3000;
-            transform: translateX(400px);
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-        }
-
-        .toast.active {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            border-color: #22C55E;
-            color: #22C55E;
-        }
-
-        .toast.error {
-            border-color: #EF4444;
-            color: #EF4444;
-        }
-
-        /* Responsive */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                z-index: 200;
+                transition: transform 0.3s ease;
             }
 
             .sidebar.mobile-open {
@@ -1133,21 +472,101 @@
                 margin-left: 0;
             }
 
-            .smart-action-bar {
-                left: 0;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
             .filter-grid {
                 grid-template-columns: 1fr;
-                gap: 0.5rem;
+                gap: 1rem;
             }
 
             .data-table {
-                min-width: 1500px;
+                display: none;
+            }
+
+            .mobile-cards {
+                display: block;
+            }
+
+            .stats-container {
+                position: static;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-top: 2rem;
+            }
+
+            .stat-card {
+                min-width: auto;
+                flex: 1;
+            }
+        }
+
+        .mobile-cards {
+            display: none;
+        }
+
+        .mobile-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .mobile-card-title {
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+
+        .mobile-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .mobile-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .mobile-field-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .mobile-field-value {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        /* Menu Toggle for Mobile */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -1155,924 +574,485 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body><!-- Login Screen -->
-  <div class="login-screen" id="loginScreen">
-   <div class="login-container"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="login-logo" onclick="window.open('https://www.somtech.ru', '_blank')" onerror="this.src=''; this.alt='Logo failed to load'; this.style.display='none';">
-    <h1 class="login-title" id="loginTitle">SOMTECH Satın Alma Sistemine Hoş Geldiniz</h1>
-    <p class="login-subtitle" id="loginSubtitle">Lütfen kullanıcı bilgilerinizi girerek sisteme giriş yapınız.</p>
-    <form class="login-form" id="loginForm">
-     <div class="login-input-group"><label class="login-label" id="usernameLabel">Kullanıcı Adı</label> <input type="text" class="login-input" id="usernameInput" placeholder="Kullanıcı adınızı girin">
-     </div>
-     <div class="login-input-group"><label class="login-label" id="passwordLabel">Şifre</label> <input type="password" class="login-input" id="passwordInput" placeholder="Şifrenizi girin">
-     </div><button type="submit" class="login-button" id="loginButton">Giriş Yap</button>
-    </form>
-    <div class="login-controls"><button class="login-control-btn" id="loginThemeBtn" onclick="toggleTheme()"> <span id="loginThemeIcon">🌙</span> </button> <button class="login-control-btn" id="loginLanguageBtn" onclick="toggleLoginLanguageDropdown()"> <span id="currentLanguageFlag">🇹🇷</span>
-      <div class="dropdown" id="loginLanguageDropdown">
-       <div class="dropdown-item active" data-lang="tr" onclick="changeLanguage('tr')"><span>🇹🇷</span> <span>Türkçe</span>
-       </div>
-       <div class="dropdown-item" data-lang="en" onclick="changeLanguage('en')"><span>🇬🇧</span> <span>English</span>
-       </div>
-       <div class="dropdown-item" data-lang="ru" onclick="changeLanguage('ru')"><span>🇷🇺</span> <span>Русский</span>
-       </div>
-      </div></button>
-    </div>
-   </div>
-  </div><!-- Loading Screen -->
-  <div class="loading-screen" id="loadingScreen">
-   <div class="loading-container">
-    <div class="loading-logo-wrapper"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="loading-logo" onerror="this.src=''; this.alt='Logo failed to load'; this.style.display='none';">
-     <div class="loading-ring"></div>
-    </div>
-    <div class="loading-text">
-     Sisteme bağlanıyor...
-    </div>
-   </div>
-  </div><!-- Main Application -->
-  <div class="app-container" id="appContainer"><!-- Sidebar -->
+ <body>
+  <div class="dashboard-container"><!-- Sidebar -->
    <div class="sidebar" id="sidebar">
-    <div class="sidebar-header"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="sidebar-logo" onclick="window.open('https://www.somtech.ru', '_blank')" onerror="this.src=''; this.alt='Logo failed to load'; this.style.display='none';">
-     <h2 class="sidebar-title">SOMTECH ERP</h2>
+    <div class="sidebar-header">
+     <div class="logo">
+      SOMTECH ⚙️
+     </div>
+     <div class="logo-subtitle">
+      System engineered with precision by Karslio
+     </div>
     </div>
     <div class="sidebar-menu">
-     <div class="menu-item active" data-module="records"><span class="menu-icon">📄</span> <span class="menu-text" id="menuRecords">Kayıt Tablosu</span>
+     <div class="menu-item active" data-page="dashboard"><span class="menu-icon">🏠</span> <span id="menuDashboard">Ana Sayfa</span>
+     </div>
+     <div class="menu-item" data-page="requests"><span class="menu-icon">📋</span> <span id="menuRequests">Talepler</span>
+     </div>
+     <div class="menu-item" data-page="approvals"><span class="menu-icon">⚙️</span> <span id="menuApprovals">Onaylar</span>
+     </div>
+     <div class="menu-item" data-page="reports"><span class="menu-icon">🧾</span> <span id="menuReports">Raporlar</span>
+     </div>
+     <div class="menu-item" data-page="suppliers"><span class="menu-icon">🔗</span> <span id="menuSuppliers">Tedarikçiler</span>
+     </div>
+     <div class="menu-item" onclick="toggleTheme()"><span class="menu-icon">🌙</span> <span id="menuTheme">Tema Değiştir</span>
+     </div>
+     <div class="menu-item" onclick="toggleUserMenu()"><span class="menu-icon">👤</span> <span id="menuUser">Kullanıcı Menüsü</span>
      </div>
     </div>
    </div><!-- Main Content -->
    <div class="main-content"><!-- Top Bar -->
-    <div class="top-bar">
-     <div class="top-left"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="top-logo" onclick="window.open('https://www.somtech.ru', '_blank')" onerror="this.src=''; this.alt='Logo failed to load'; this.style.display='none';">
+    <div class="topbar"><button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+     <div class="page-title" id="pageTitle">
+      SOF Yönetim Paneli
      </div>
-     <div class="page-title-center" id="pageTitleCenter">
-      Kayıt Tablosu
-     </div>
-     <div class="top-controls"><button class="control-btn" id="languageBtn" onclick="toggleLanguageDropdown()"> <span>🌐</span>
-       <div class="dropdown" id="languageDropdown">
-        <div class="dropdown-item active" data-lang="tr" onclick="changeLanguage('tr')"><span>🇹🇷</span> <span>Türkçe</span>
-        </div>
-        <div class="dropdown-item" data-lang="en" onclick="changeLanguage('en')"><span>🇬🇧</span> <span>English</span>
-        </div>
-        <div class="dropdown-item" data-lang="ru" onclick="changeLanguage('ru')"><span>🇷🇺</span> <span>Русский</span>
-        </div>
-       </div></button> <button class="control-btn" id="themeBtn" onclick="toggleTheme()"> <span id="themeIcon">🌙</span> </button> <button class="control-btn" id="userMenuBtn" onclick="toggleUserMenu()"> <span>👤</span>
-       <div class="dropdown" id="userDropdown">
-        <div class="dropdown-item" onclick="openProfile()"><span>👤</span> <span id="profileText">Profil</span>
-        </div>
-        <div class="dropdown-item" onclick="logout()"><span>🚪</span> <span id="logoutText">Çıkış</span>
-        </div>
-       </div></button>
+     <div class="language-selector"><button class="language-btn" onclick="toggleLanguageDropdown()" id="languageBtn">TR</button>
+      <div class="language-dropdown" id="languageDropdown">
+       <div class="language-option" onclick="changeLanguage('tr')">
+        TR
+       </div>
+       <div class="language-option" onclick="changeLanguage('en')">
+        EN
+       </div>
+       <div class="language-option" onclick="changeLanguage('ru')">
+        RU
+       </div>
+      </div>
      </div>
     </div><!-- Content Area -->
-    <div class="content-area"><!-- Records Table Content -->
-     <div id="recordsContent" class="module-content">
-      <div class="table-container">
-       <div class="table-header-section">
-        <div class="table-title">
-         Kayıt Tablosu
-        </div>
-        <div class="table-actions"><button class="secondary-btn" onclick="exportData()"> <span>📤</span> <span>Dışa Aktar</span> </button>
-        </div>
+    <div class="content-area"><!-- Filter Bar -->
+     <div class="filter-bar">
+      <div class="filter-grid">
+       <div class="filter-group"><label class="filter-label" id="searchLabel">Genel Arama</label> <input type="text" class="filter-input" id="searchInput" placeholder="Malzeme, Proje Kodu, Tedarikçi...">
        </div>
-       <div class="filter-section">
-        <div class="filter-grid">
-         <div class="filter-group"><label class="filter-label">Genel Arama</label> <input type="text" class="filter-input" id="generalSearch" placeholder="Arama yapın...">
-         </div>
-         <div class="filter-group"><label class="filter-label">Malzeme Tipi</label> <select class="filter-select" id="materialTypeFilter"> <option value="">Tümü</option> <option value="demirbas">Demirbaş</option> <option value="sarf">Sarf</option> </select>
-         </div>
-         <div class="filter-group"><label class="filter-label">Durum</label> <select class="filter-select" id="statusFilter" multiple> <option value="completed">Tamamlandı</option> <option value="approved">Onaylandı</option> <option value="paid">Ödeme Yapıldı</option> <option value="pending">Onay Bekliyor</option> <option value="procurement">Tedarik Bekliyor</option> <option value="rejected">Red Edildi</option> </select>
-         </div>
-         <div class="filter-group"><label class="filter-label">Teslimat Tarihi</label> <input type="date" class="filter-input" id="deliveryDateFilter">
-         </div>
-         <div class="filter-group"><button class="secondary-btn" onclick="resetFilters()"> <span>🔄</span> <span>Sıfırla</span> </button>
-         </div>
-        </div>
+       <div class="filter-group"><label class="filter-label" id="dateFromLabel">Başlangıç Tarihi</label> <input type="date" class="filter-input" id="dateFrom">
        </div>
-       <div class="virtual-table-wrapper">
-        <table class="data-table">
-         <thead class="table-header">
-          <tr>
-           <th>SIRA NO</th>
-           <th>SOF TALEP NO</th>
-           <th>PROJE KODU</th>
-           <th>STF TALEP NO</th>
-           <th>MALZEME TİPİ</th>
-           <th>TALEBİ YAPAN</th>
-           <th>TALEP TARİHİ</th>
-           <th>İSTENEN TESLİM TARİHİ</th>
-           <th>TALEP EDİLEN MALZEME</th>
-           <th>Detay 1 (Marka/Model)</th>
-           <th>Detay 2 (Proje/Standart Kod)</th>
-           <th>TALEP MİKTARI</th>
-           <th>ANA DEPO MİKTARI</th>
-           <th>ŞANTİYE DEPO MİKTARI</th>
-           <th>BİRİM FİYAT (RUB)</th>
-           <th>TOPLAM FİYAT (RUB)</th>
-           <th>SİPARİŞ ONAYI</th>
-           <th>SİPARİŞ MİKTARI</th>
-           <th>TEDARİKÇİ</th>
-           <th>SATINALMA SORUMLUSU</th>
-           <th>PLANLANAN TEDARİK TARİHİ</th>
-           <th>TESLİMAT MİKTARI</th>
-           <th>TESLİMAT TARİHİ</th>
-           <th>KALAN MİKTAR</th>
-           <th>DURUM</th>
-           <th>📎 BELGE</th>
-          </tr>
-         </thead>
-         <tbody class="table-body" id="recordsTableBody"><!-- Sample data will be populated here -->
-         </tbody>
-        </table>
+       <div class="filter-group"><label class="filter-label" id="dateToLabel">Bitiş Tarihi</label> <input type="date" class="filter-input" id="dateTo">
        </div>
+       <div class="filter-group"><button class="btn btn-secondary" onclick="resetFilters()" id="resetBtn"> 🔄 <span id="resetText">Sıfırla</span> </button>
+       </div>
+       <div class="filter-group"><button class="btn btn-primary" onclick="addNewRequest()" id="addBtn"> ➕ <span id="addText">Yeni Talep</span> </button>
+       </div>
+      </div>
+     </div><!-- Table Container -->
+     <div class="table-container">
+      <div class="table-wrapper">
+       <table class="data-table">
+        <thead class="table-header">
+         <tr>
+          <th id="colRequestNo">Talep No</th>
+          <th id="colMaterialType">Malzeme Tipi</th>
+          <th id="colMaterialName">Malzeme Adı</th>
+          <th id="colUnit">Birim</th>
+          <th id="colRequestQty">Talep Miktarı</th>
+          <th id="colApprovalQty">Müdür Onay Miktarı</th>
+          <th id="colStatus">Durum</th>
+          <th id="colLink">Link</th>
+          <th id="colSupplier">Tedarikçi</th>
+          <th id="colPrice">Fiyat</th>
+          <th id="colDeadline">Termin Tarihi</th>
+          <th id="colDelivery">Teslim Tarihi</th>
+         </tr>
+        </thead>
+        <tbody class="table-body" id="tableBody"><!-- Data will be populated here -->
+        </tbody>
+       </table>
+      </div><!-- Mobile Cards -->
+      <div class="mobile-cards" id="mobileCards"><!-- Mobile cards will be populated here -->
       </div>
      </div>
     </div>
-   </div><!-- Smart Action Bar -->
-   <div class="smart-action-bar" id="smartActionBar">
-    <div class="action-bar-content">
-     <div class="action-bar-info"><span>Seçili Kayıt:</span> <span id="selectedRecordInfo">-</span>
+   </div><!-- Stats Cards -->
+   <div class="stats-container">
+    <div class="stat-card">
+     <div class="stat-title" id="statTotalTitle">
+      Toplam Talepler
      </div>
-     <div class="action-bar-actions" id="actionBarActions"><!-- Actions will be populated based on role and status -->
+     <div class="stat-value" id="statTotalValue">
+      247
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-title" id="statPendingTitle">
+      Bekleyen Onaylar
+     </div>
+     <div class="stat-value" id="statPendingValue">
+      18
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-title" id="statExpenseTitle">
+      Aylık Harcama (₽)
+     </div>
+     <div class="stat-value" id="statExpenseValue">
+      2.8M
      </div>
     </div>
    </div>
-  </div><!-- PDF Modal -->
-  <div class="modal" id="pdfModal">
-   <div class="modal-content">
-    <div class="modal-header">
-     <h3 class="modal-title" id="pdfModalTitle">PDF Görüntüleyici</h3><button class="modal-close" onclick="closePdfModal()">✕</button>
-    </div>
-    <div class="modal-body"><iframe class="pdf-viewer" id="pdfViewer" src=""></iframe>
-    </div>
-   </div>
-  </div><!-- Upload Modal -->
-  <div class="modal" id="uploadModal">
-   <div class="modal-content">
-    <div class="modal-header">
-     <h3 class="modal-title">➕ Yeni Rapor Ekle</h3><button class="modal-close" onclick="closeUploadModal()">✕</button>
-    </div>
-    <div class="modal-body">
-     <form id="uploadForm">
-      <div style="margin-bottom: 1rem;"><label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Rapor Adı</label> <input type="text" id="reportName" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-secondary); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" placeholder="Rapor adını girin...">
-      </div>
-      <div style="margin-bottom: 1rem;"><label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">İlgili Talep No</label> <select id="relatedRequest" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-secondary); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);"> <option value="">Talep seçiniz</option> <option value="SOF-2024-001">SOF-2024-001</option> <option value="SOF-2024-002">SOF-2024-002</option> <option value="SOF-2024-003">SOF-2024-003</option> </select>
-      </div>
-      <div style="margin-bottom: 1rem;"><label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">PDF Dosyası</label> <input type="file" id="pdfFile" accept=".pdf" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-secondary); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-      </div>
-      <div style="display: flex; gap: 1rem; justify-content: flex-end;"><button type="button" class="secondary-btn" onclick="closeUploadModal()">İptal</button> <button type="submit" class="primary-btn">Rapor Yükle</button>
-      </div>
-     </form>
-    </div>
-   </div>
-  </div><!-- Toast -->
-  <div class="toast" id="toast"></div>
+  </div>
   <script>
         // Configuration
         const defaultConfig = {
-            system_name: "SOMTECH SOF ERP v9.0",
-            company_name: "SOMTECH",
-            version_number: "v9.0"
+            primary_color: "#22D3EE",
+            accent_color: "#00FFFF",
+            company_name: "SOMTECH"
         };
 
         // Global Variables
-        let currentUser = null;
         let currentLanguage = 'tr';
-        let currentModule = 'records';
-        let selectedRecord = null;
+        let currentTheme = 'dark';
 
         // Language Translations
         const translations = {
             tr: {
-                // Login
-                login_title: "SOMTECH Satın Alma Sistemine Hoş Geldiniz",
-                login_subtitle: "Lütfen kullanıcı bilgilerinizi girerek sisteme giriş yapınız.",
-                username: "Kullanıcı Adı",
-                password: "Şifre",
-                login_button: "Giriş Yap",
-                
-                // Menu
-                records: "Kayıt Tablosu",
-                
-                // Common
-                profile: "Profil",
-                logout: "Çıkış"
+                pageTitle: "SOF Yönetim Paneli",
+                menuDashboard: "Ana Sayfa",
+                menuRequests: "Talepler",
+                menuApprovals: "Onaylar",
+                menuReports: "Raporlar",
+                menuSuppliers: "Tedarikçiler",
+                menuTheme: "Tema Değiştir",
+                menuUser: "Kullanıcı Menüsü",
+                searchLabel: "Genel Arama",
+                searchPlaceholder: "Malzeme, Proje Kodu, Tedarikçi...",
+                dateFromLabel: "Başlangıç Tarihi",
+                dateToLabel: "Bitiş Tarihi",
+                resetText: "Sıfırla",
+                addText: "Yeni Talep",
+                colRequestNo: "Talep No",
+                colMaterialType: "Malzeme Tipi",
+                colMaterialName: "Malzeme Adı",
+                colUnit: "Birim",
+                colRequestQty: "Talep Miktarı",
+                colApprovalQty: "Müdür Onay Miktarı",
+                colStatus: "Durum",
+                colLink: "Link",
+                colSupplier: "Tedarikçi",
+                colPrice: "Fiyat",
+                colDeadline: "Termin Tarihi",
+                colDelivery: "Teslim Tarihi",
+                statTotalTitle: "Toplam Talepler",
+                statPendingTitle: "Bekleyen Onaylar",
+                statExpenseTitle: "Aylık Harcama (₽)",
+                statusPending: "Bekliyor",
+                statusApproved: "Onaylandı",
+                statusRejected: "Reddedildi",
+                statusDelivered: "Teslim Edildi"
             },
-            
             en: {
-                // Login
-                login_title: "Welcome to SOMTECH Procurement System",
-                login_subtitle: "Please enter your credentials to access the system.",
-                username: "Username",
-                password: "Password",
-                login_button: "Login",
-                
-                // Menu
-                records: "Records Table",
-                
-                // Common
-                profile: "Profile",
-                logout: "Logout"
+                pageTitle: "SOF Management Panel",
+                menuDashboard: "Dashboard",
+                menuRequests: "Requests",
+                menuApprovals: "Approvals",
+                menuReports: "Reports",
+                menuSuppliers: "Suppliers",
+                menuTheme: "Change Theme",
+                menuUser: "User Menu",
+                searchLabel: "General Search",
+                searchPlaceholder: "Material, Project Code, Supplier...",
+                dateFromLabel: "Start Date",
+                dateToLabel: "End Date",
+                resetText: "Reset",
+                addText: "New Request",
+                colRequestNo: "Request No",
+                colMaterialType: "Material Type",
+                colMaterialName: "Material Name",
+                colUnit: "Unit",
+                colRequestQty: "Request Qty",
+                colApprovalQty: "Manager Approval Qty",
+                colStatus: "Status",
+                colLink: "Link",
+                colSupplier: "Supplier",
+                colPrice: "Price",
+                colDeadline: "Deadline",
+                colDelivery: "Delivery Date",
+                statTotalTitle: "Total Requests",
+                statPendingTitle: "Pending Approvals",
+                statExpenseTitle: "Monthly Expense (₽)",
+                statusPending: "Pending",
+                statusApproved: "Approved",
+                statusRejected: "Rejected",
+                statusDelivered: "Delivered"
             },
-            
             ru: {
-                // Login
-                login_title: "Добро пожаловать в систему закупок SOMTECH",
-                login_subtitle: "Пожалуйста, введите свои учетные данные для входа в систему.",
-                username: "Имя пользователя",
-                password: "Пароль",
-                login_button: "Войти",
-                
-                // Menu
-                records: "Таблица записей",
-                
-                // Common
-                profile: "Профиль",
-                logout: "Выйти"
+                pageTitle: "Панель управления SOF",
+                menuDashboard: "Главная",
+                menuRequests: "Заявки",
+                menuApprovals: "Утверждения",
+                menuReports: "Отчеты",
+                menuSuppliers: "Поставщики",
+                menuTheme: "Сменить тему",
+                menuUser: "Меню пользователя",
+                searchLabel: "Общий поиск",
+                searchPlaceholder: "Материал, код проекта, поставщик...",
+                dateFromLabel: "Дата начала",
+                dateToLabel: "Дата окончания",
+                resetText: "Сброс",
+                addText: "Новая заявка",
+                colRequestNo: "№ заявки",
+                colMaterialType: "Тип материала",
+                colMaterialName: "Название материала",
+                colUnit: "Единица",
+                colRequestQty: "Кол-во заявки",
+                colApprovalQty: "Кол-во утверждения",
+                colStatus: "Статус",
+                colLink: "Ссылка",
+                colSupplier: "Поставщик",
+                colPrice: "Цена",
+                colDeadline: "Срок",
+                colDelivery: "Дата доставки",
+                statTotalTitle: "Всего заявок",
+                statPendingTitle: "Ожидающие утверждения",
+                statExpenseTitle: "Месячные расходы (₽)",
+                statusPending: "Ожидание",
+                statusApproved: "Утверждено",
+                statusRejected: "Отклонено",
+                statusDelivered: "Доставлено"
             }
         };
+
+        // Sample Data
+        const sampleData = [
+            {
+                requestNo: "SOF-2024-001",
+                materialType: "Demirbaş",
+                materialName: "Laptop Dell Latitude 5520",
+                unit: "Adet",
+                requestQty: 5,
+                approvalQty: 3,
+                status: "approved",
+                link: "📄",
+                supplier: "Tech Solutions Ltd.",
+                price: "₽ 85,000",
+                deadline: "2024-02-15",
+                delivery: "2024-02-10"
+            },
+            {
+                requestNo: "SOF-2024-002",
+                materialType: "Sarf",
+                materialName: "A4 Kağıt Paketi",
+                unit: "Paket",
+                requestQty: 50,
+                approvalQty: 50,
+                status: "delivered",
+                link: "📄",
+                supplier: "Office Supplies Co.",
+                price: "₽ 12,500",
+                deadline: "2024-02-20",
+                delivery: "2024-02-18"
+            },
+            {
+                requestNo: "SOF-2024-003",
+                materialType: "Demirbaş",
+                materialName: "Projeksiyon Cihazı",
+                unit: "Adet",
+                requestQty: 2,
+                approvalQty: 1,
+                status: "pending",
+                link: "📄",
+                supplier: "AV Equipment Ltd.",
+                price: "₽ 45,000",
+                deadline: "2024-03-01",
+                delivery: "-"
+            },
+            {
+                requestNo: "SOF-2024-004",
+                materialType: "Sarf",
+                materialName: "Yazıcı Kartuşu HP",
+                unit: "Adet",
+                requestQty: 10,
+                approvalQty: 8,
+                status: "approved",
+                link: "📄",
+                supplier: "Print Solutions",
+                price: "₽ 18,000",
+                deadline: "2024-02-25",
+                delivery: "-"
+            },
+            {
+                requestNo: "SOF-2024-005",
+                materialType: "Demirbaş",
+                materialName: "Ergonomik Ofis Koltuğu",
+                unit: "Adet",
+                requestQty: 8,
+                approvalQty: 0,
+                status: "rejected",
+                link: "📄",
+                supplier: "Furniture Plus",
+                price: "₽ 32,000",
+                deadline: "2024-03-10",
+                delivery: "-"
+            }
+        ];
 
         // Utility Functions
         function t(key) {
             return translations[currentLanguage]?.[key] || translations['tr'][key] || key;
         }
 
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('ru-RU', {
-                style: 'currency',
-                currency: 'RUB',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
+        // Language Functions
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('languageBtn').textContent = lang.toUpperCase();
+            translatePage();
+            closeLanguageDropdown();
+        }
+
+        function translatePage() {
+            // Update all translatable elements
+            Object.keys(translations[currentLanguage]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (element.tagName === 'INPUT' && element.type === 'text') {
+                        element.placeholder = t(key);
+                    } else {
+                        element.textContent = t(key);
+                    }
+                }
+            });
+
+            // Update search placeholder
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.placeholder = t('searchPlaceholder');
+            }
+
+            // Update table data
+            populateTable();
+            populateMobileCards();
         }
 
         // Theme Functions
         function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            updateThemeIcons();
-        }
-
-        function updateThemeIcons() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const themeIcon = document.getElementById('themeIcon');
-            const loginThemeIcon = document.getElementById('loginThemeIcon');
-            
-            const icon = currentTheme === 'light' ? '☀️' : '🌙';
-            if (themeIcon) themeIcon.textContent = icon;
-            if (loginThemeIcon) loginThemeIcon.textContent = icon;
-        }
-
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcons();
-        }
-
-        // Language Functions
-        function changeLanguage(lang) {
-            if (lang === currentLanguage) return;
-            
-            currentLanguage = lang;
-            localStorage.setItem('lang', lang);
-            
-            updateLanguageUI();
-            translatePage();
-            updateLanguageFlag();
-            
-            // Close dropdowns
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                dropdown.classList.remove('active');
-            });
-        }
-
-        function updateLanguageFlag() {
-            const flagElement = document.getElementById('currentLanguageFlag');
-            const flags = {
-                'tr': '🇹🇷',
-                'en': '🇬🇧', 
-                'ru': '🇷🇺'
-            };
-            
-            if (flagElement && flags[currentLanguage]) {
-                flagElement.textContent = flags[currentLanguage];
-            }
-        }
-
-        function updateLanguageUI() {
-            document.querySelectorAll('.dropdown-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.lang === currentLanguage) {
-                    item.classList.add('active');
-                }
-            });
-        }
-
-        function translatePage() {
-            // Login elements
-            const loginTitle = document.getElementById('loginTitle');
-            const loginSubtitle = document.getElementById('loginSubtitle');
-            const usernameLabel = document.getElementById('usernameLabel');
-            const passwordLabel = document.getElementById('passwordLabel');
-            const loginButton = document.getElementById('loginButton');
-            
-            if (loginTitle) loginTitle.textContent = t('login_title');
-            if (loginSubtitle) loginSubtitle.textContent = t('login_subtitle');
-            if (usernameLabel) usernameLabel.textContent = t('username');
-            if (passwordLabel) passwordLabel.textContent = t('password');
-            if (loginButton) loginButton.textContent = t('login_button');
-            
-            // Menu items
-            const menuRecords = document.getElementById('menuRecords');
-            
-            if (menuRecords) menuRecords.textContent = t('records');
-            
-            // Other elements
-            const profileText = document.getElementById('profileText');
-            const logoutText = document.getElementById('logoutText');
-            
-            if (profileText) profileText.textContent = t('profile');
-            if (logoutText) logoutText.textContent = t('logout');
-        }
-
-        function initializeLanguage() {
-            const savedLanguage = localStorage.getItem('lang') || 'tr';
-            currentLanguage = savedLanguage;
-            updateLanguageUI();
-            translatePage();
-            updateLanguageFlag();
-        }
-
-        // Authentication Functions
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            // Show loading screen
-            showLoadingScreen();
-            
-            // Simulate login process
-            setTimeout(() => {
-                currentUser = {
-                    username: 'demo',
-                    name: 'Demo Kullanıcı',
-                    role: 'manager'
-                };
-                
-                localStorage.setItem('user', JSON.stringify(currentUser));
-                
-                // Hide loading and show app after animation
-                setTimeout(() => {
-                    hideLoadingScreen();
-                    showMainApplication();
-                }, 7000); // Total animation time
-                
-            }, 100);
-        }
-
-        function showLoadingScreen() {
-            const loginScreen = document.getElementById('loginScreen');
-            const loadingScreen = document.getElementById('loadingScreen');
-            
-            loginScreen.style.display = 'none';
-            loadingScreen.classList.add('active');
-        }
-
-        function hideLoadingScreen() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            loadingScreen.classList.remove('active');
-        }
-
-        function showMainApplication() {
-            const appContainer = document.getElementById('appContainer');
-            appContainer.classList.add('active');
-            
-            // Initialize dashboard data
-            initializeDashboard();
-            initializeRecordsTable();
-        }
-
-        function logout() {
-            localStorage.removeItem('user');
-            currentUser = null;
-            document.getElementById('loginForm').reset();
-            document.getElementById('appContainer').classList.remove('active');
-            document.getElementById('loginScreen').style.display = 'flex';
-            
-            // Close dropdowns
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                dropdown.classList.remove('active');
-            });
-        }
-
-        // Module Functions
-        function switchModule(module) {
-            currentModule = module;
-            
-            // Update menu active state
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.module === module) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Update page title
-            const pageTitleCenter = document.getElementById('pageTitleCenter');
-            const moduleNames = {
-                'dashboard': t('dashboard'),
-                'records': t('records'),
-                'reports': t('reports'),
-                'analytics': t('analytics'),
-                'settings': t('settings')
-            };
-            
-            if (pageTitleCenter && moduleNames[module]) {
-                pageTitleCenter.textContent = moduleNames[module];
-            }
-            
-            // Show/hide content
-            document.querySelectorAll('.module-content').forEach(content => {
-                content.style.display = 'none';
-            });
-            
-            const targetContent = document.getElementById(module + 'Content');
-            if (targetContent) {
-                targetContent.style.display = 'block';
-            }
-            
-            // Hide smart action bar when switching modules
-            hideSmartActionBar();
-        }
-
-        // Dashboard Functions
-        function initializeDashboard() {
-            // Sample data
-            const totalAssetValue = 15750000;
-            const totalConsumableValue = 3250000;
-            const totalDeliveryCount = 1247;
-            const pendingRequestsCount = 23;
-            const completedRequestsCount = 156;
-            const monthlyExpense = 2850000;
-            const yearlyExpense = 18750000;
-            const avgProcessTime = 7;
-            const supplierCount = 42;
-            
-            // Update dashboard cards
-            document.getElementById('totalAssetValue').textContent = formatCurrency(totalAssetValue);
-            document.getElementById('totalConsumableValue').textContent = formatCurrency(totalConsumableValue);
-            document.getElementById('totalDeliveryCount').textContent = totalDeliveryCount.toLocaleString();
-            document.getElementById('pendingRequestsCount').textContent = pendingRequestsCount;
-            document.getElementById('completedRequestsCount').textContent = completedRequestsCount;
-            document.getElementById('monthlyExpense').textContent = formatCurrency(monthlyExpense);
-            document.getElementById('yearlyExpense').textContent = formatCurrency(yearlyExpense);
-            document.getElementById('avgProcessTime').textContent = avgProcessTime + ' gün';
-            document.getElementById('supplierCount').textContent = supplierCount;
-        }
-
-        // Records Table Functions
-        function initializeRecordsTable() {
-            const tableBody = document.getElementById('recordsTableBody');
-            const sampleData = generateSampleData();
-            
-            tableBody.innerHTML = '';
-            sampleData.forEach((record, index) => {
-                const row = createTableRow(record, index + 1);
-                tableBody.appendChild(row);
-            });
-        }
-
-        function generateSampleData() {
-            const statuses = ['completed', 'approved', 'paid', 'pending', 'procurement', 'rejected'];
-            const materialTypes = ['Demirbaş', 'Sarf'];
-            const suppliers = ['ABC Tedarik Ltd.', 'XYZ Malzeme A.Ş.', 'DEF İnşaat Ltd.', 'GHI Teknoloji A.Ş.'];
-            const requesters = ['Ahmet Yılmaz', 'Mehmet Demir', 'Fatma Özkan', 'Ali Kaya', 'Zeynep Kara'];
-            
-            const data = [];
-            for (let i = 1; i <= 50; i++) {
-                const unitPrice = Math.floor(Math.random() * 10000) + 100;
-                const quantity = Math.floor(Math.random() * 100) + 1;
-                const totalPrice = unitPrice * quantity;
-                
-                data.push({
-                    id: i,
-                    sofRequestNo: `SOF-2024-${String(i).padStart(3, '0')}`,
-                    projectCode: `PRJ-${String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')}`,
-                    stfRequestNo: `STF-2024-${String(i).padStart(3, '0')}`,
-                    materialType: materialTypes[Math.floor(Math.random() * materialTypes.length)],
-                    requester: requesters[Math.floor(Math.random() * requesters.length)],
-                    requestDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('tr-TR'),
-                    desiredDeliveryDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('tr-TR'),
-                    requestedMaterial: `Malzeme ${i}`,
-                    detail1: `Marka/Model ${i}`,
-                    detail2: `Kod-${i}`,
-                    requestQuantity: quantity,
-                    mainWarehouseQuantity: Math.floor(Math.random() * 50),
-                    siteWarehouseQuantity: Math.floor(Math.random() * 30),
-                    unitPrice: unitPrice,
-                    totalPrice: totalPrice,
-                    orderApproval: Math.random() > 0.5 ? 'Onaylandı' : 'Bekliyor',
-                    orderQuantity: quantity,
-                    supplier: suppliers[Math.floor(Math.random() * suppliers.length)],
-                    procurementResponsible: requesters[Math.floor(Math.random() * requesters.length)],
-                    plannedProcurementDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('tr-TR'),
-                    deliveryQuantity: Math.floor(Math.random() * quantity),
-                    deliveryDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('tr-TR'),
-                    remainingQuantity: Math.floor(Math.random() * 20),
-                    status: statuses[Math.floor(Math.random() * statuses.length)]
-                });
-            }
-            
-            return data;
-        }
-
-        function createTableRow(record, index) {
-            const row = document.createElement('tr');
-            row.className = `status-${record.status}`;
-            row.dataset.recordId = record.id;
-            row.onclick = () => selectRecord(row, record);
-            
-            const statusNames = {
-                'completed': 'Tamamlandı',
-                'approved': 'Onaylandı',
-                'paid': 'Ödeme Yapıldı',
-                'pending': 'Onay Bekliyor',
-                'procurement': 'Tedarik Bekliyor',
-                'rejected': 'Red Edildi'
-            };
-            
-            row.innerHTML = `
-                <td>${index}</td>
-                <td>${record.sofRequestNo}</td>
-                <td>${record.projectCode}</td>
-                <td>${record.stfRequestNo}</td>
-                <td>${record.materialType}</td>
-                <td>${record.requester}</td>
-                <td>${record.requestDate}</td>
-                <td>${record.desiredDeliveryDate}</td>
-                <td>${record.requestedMaterial}</td>
-                <td>${record.detail1}</td>
-                <td>${record.detail2}</td>
-                <td>${record.requestQuantity}</td>
-                <td>${record.mainWarehouseQuantity}</td>
-                <td>${record.siteWarehouseQuantity}</td>
-                <td>${formatCurrency(record.unitPrice)}</td>
-                <td>${formatCurrency(record.totalPrice)}</td>
-                <td>${record.orderApproval}</td>
-                <td>${record.orderQuantity}</td>
-                <td>${record.supplier}</td>
-                <td>${record.procurementResponsible}</td>
-                <td>${record.plannedProcurementDate}</td>
-                <td>${record.deliveryQuantity}</td>
-                <td>${record.deliveryDate}</td>
-                <td>${record.remainingQuantity}</td>
-                <td>${statusNames[record.status]}</td>
-                <td><button class="action-btn view" onclick="viewDocument('${record.sofRequestNo}')">📄 Görüntüle</button></td>
-            `;
-            
-            return row;
-        }
-
-        function selectRecord(row, record) {
-            // Remove previous selection
-            document.querySelectorAll('.table-body tr').forEach(r => {
-                r.classList.remove('selected');
-            });
-            
-            // Select new row
-            row.classList.add('selected');
-            selectedRecord = record;
-            
-            // Show smart action bar
-            showSmartActionBar(record);
-        }
-
-        function showSmartActionBar(record) {
-            const actionBar = document.getElementById('smartActionBar');
-            const recordInfo = document.getElementById('selectedRecordInfo');
-            const actions = document.getElementById('actionBarActions');
-            
-            recordInfo.textContent = `${record.sofRequestNo} - ${record.requestedMaterial}`;
-            
-            // Generate actions based on status and role
-            actions.innerHTML = generateActionButtons(record);
-            
-            actionBar.classList.add('active');
-        }
-
-        function generateActionButtons(record) {
-            let buttons = '';
-            
-            // Role-based actions
-            if (currentUser && currentUser.role === 'manager') {
-                if (record.status === 'pending') {
-                    buttons += '<button class="action-btn approve" onclick="approveRecord()">✅ Onayla</button>';
-                    buttons += '<button class="action-btn reject" onclick="rejectRecord()">❌ Reddet</button>';
-                }
-            }
-            
-            if (currentUser && currentUser.role === 'procurement') {
-                if (record.status === 'approved') {
-                    buttons += '<button class="action-btn price" onclick="setPriceRecord()">💰 Fiyat Gir</button>';
-                    buttons += '<button class="action-btn" onclick="sendRecord()">📤 Gönder</button>';
-                }
-            }
-            
-            if (currentUser && currentUser.role === 'accounting') {
-                if (record.status === 'paid') {
-                    buttons += '<button class="action-btn payment" onclick="markAsPaid()">💳 Ödeme Yapıldı</button>';
-                }
-            }
-            
-            // Common actions
-            buttons += '<button class="action-btn" onclick="exportRecord()">📤 Dışa Aktar</button>';
-            buttons += '<button class="action-btn" onclick="showRecordLog()">🧾 Log</button>';
-            
-            return buttons;
-        }
-
-        function hideSmartActionBar() {
-            const actionBar = document.getElementById('smartActionBar');
-            actionBar.classList.remove('active');
-            selectedRecord = null;
-            
-            // Remove selection
-            document.querySelectorAll('.table-body tr').forEach(r => {
-                r.classList.remove('selected');
-            });
-        }
-
-        // Action Functions
-        function approveRecord() {
-            if (selectedRecord) {
-                showToast(`✅ ${selectedRecord.sofRequestNo} onaylandı`, 'success');
-                generateAutoReport(selectedRecord.sofRequestNo, 'Onay Belgesi');
-                hideSmartActionBar();
-            }
-        }
-
-        function rejectRecord() {
-            if (selectedRecord) {
-                showToast(`❌ ${selectedRecord.sofRequestNo} reddedildi`, 'error');
-                hideSmartActionBar();
-            }
-        }
-
-        function setPriceRecord() {
-            if (selectedRecord) {
-                showToast(`💰 ${selectedRecord.sofRequestNo} için fiyat belirlendi`, 'success');
-                generateAutoReport(selectedRecord.sofRequestNo, 'Fiyat Onay Belgesi');
-                hideSmartActionBar();
-            }
-        }
-
-        function sendRecord() {
-            if (selectedRecord) {
-                showToast(`📤 ${selectedRecord.sofRequestNo} gönderildi`, 'success');
-                hideSmartActionBar();
-            }
-        }
-
-        function markAsPaid() {
-            if (selectedRecord) {
-                showToast(`💳 ${selectedRecord.sofRequestNo} ödeme yapıldı`, 'success');
-                generateAutoReport(selectedRecord.sofRequestNo, 'Ödeme Onay Belgesi');
-                hideSmartActionBar();
-            }
-        }
-
-        function exportRecord() {
-            if (selectedRecord) {
-                showToast(`📤 ${selectedRecord.sofRequestNo} dışa aktarılıyor`, 'success');
-            }
-        }
-
-        function showRecordLog() {
-            if (selectedRecord) {
-                showToast(`🧾 ${selectedRecord.sofRequestNo} işlem geçmişi`, 'success');
-            }
-        }
-
-        function exportData() {
-            showToast('📤 Veriler dışa aktarılıyor...', 'success');
-        }
-
-        function resetFilters() {
-            document.getElementById('generalSearch').value = '';
-            document.getElementById('materialTypeFilter').value = '';
-            document.getElementById('statusFilter').selectedIndex = -1;
-            document.getElementById('deliveryDateFilter').value = '';
-            
-            showToast('🔄 Filtreler sıfırlandı', 'success');
-        }
-
-        // Document Functions
-        function viewDocument(requestNo) {
-            const modal = document.getElementById('pdfModal');
-            const title = document.getElementById('pdfModalTitle');
-            const viewer = document.getElementById('pdfViewer');
-            
-            title.textContent = `📄 ${requestNo} - Belge Görüntüleyici`;
-            
-            // Generate sample PDF content
-            const pdfContent = `
-                <div style="padding: 2rem; font-family: Arial, sans-serif; background: white; color: black;">
-                    <div style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid #22D3EE; padding-bottom: 1rem;">
-                        <h1 style="color: #22D3EE; margin: 0;">SOMTECH SOF ERP v9.0</h1>
-                        <h2 style="color: #333; margin: 0.5rem 0;">Satın Alma Belgesi</h2>
-                    </div>
-                    
-                    <div style="margin-bottom: 2rem;">
-                        <h3 style="color: #22D3EE;">Talep Bilgileri</h3>
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr><td style="padding: 0.5rem; border: 1px solid #ddd; font-weight: bold;">Talep No:</td><td style="padding: 0.5rem; border: 1px solid #ddd;">${requestNo}</td></tr>
-                            <tr><td style="padding: 0.5rem; border: 1px solid #ddd; font-weight: bold;">Tarih:</td><td style="padding: 0.5rem; border: 1px solid #ddd;">${new Date().toLocaleDateString('tr-TR')}</td></tr>
-                            <tr><td style="padding: 0.5rem; border: 1px solid #ddd; font-weight: bold;">Durum:</td><td style="padding: 0.5rem; border: 1px solid #ddd;">Aktif</td></tr>
-                        </table>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 3rem;">
-                        <p style="color: #22D3EE; font-weight: bold;">Bu belge SOMTECH SOF ERP v9.0 sistemi tarafından oluşturulmuştur.</p>
-                        <p style="font-size: 0.9rem; color: #666;">Oluşturulma: ${new Date().toLocaleString('tr-TR')}</p>
-                    </div>
-                </div>
-            `;
-            
-            viewer.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(pdfContent);
-            modal.classList.add('active');
-        }
-
-        function closePdfModal() {
-            document.getElementById('pdfModal').classList.remove('active');
-        }
-
-        // Report Functions
-        function generateAutoReport(requestNo, reportType) {
-            const reportName = `${reportType} – ${requestNo}`;
-            const today = new Date().toLocaleDateString('tr-TR');
-            
-            // Add to reports table
-            const reportsTableBody = document.getElementById('reportsTableBody');
-            const newRow = document.createElement('tr');
-            
-            newRow.innerHTML = `
-                <td>${reportName}</td>
-                <td>${requestNo}</td>
-                <td>Sistem</td>
-                <td>${today}</td>
-                <td>
-                    <button class="action-btn view" onclick="viewDocument('${requestNo}')">📄 Görüntüle</button>
-                    <button class="action-btn" onclick="downloadReport('${requestNo}')">📥 İndir</button>
-                </td>
-            `;
-            
-            reportsTableBody.insertBefore(newRow, reportsTableBody.firstChild);
-            
-            // Show notification
-            setTimeout(() => {
-                showToast(`✅ ${requestNo} için otomatik SOF raporu oluşturuldu`, 'success');
-            }, 500);
-        }
-
-        function openUploadModal() {
-            document.getElementById('uploadModal').classList.add('active');
-        }
-
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.remove('active');
-            document.getElementById('uploadForm').reset();
-        }
-
-        function downloadReport(requestNo) {
-            showToast(`📥 ${requestNo} raporu indiriliyor...`, 'success');
+            // This is a placeholder for theme switching
+            // In a real implementation, you would switch between light and dark themes
+            console.log('Theme toggle clicked');
         }
 
         // UI Functions
         function toggleLanguageDropdown() {
             const dropdown = document.getElementById('languageDropdown');
             dropdown.classList.toggle('active');
-            
-            // Close other dropdowns
-            document.getElementById('userDropdown').classList.remove('active');
-            
-            document.addEventListener('click', function closeDropdown(e) {
-                if (!e.target.closest('#languageBtn') && !e.target.closest('#languageDropdown')) {
-                    dropdown.classList.remove('active');
-                    document.removeEventListener('click', closeDropdown);
-                }
-            });
         }
 
-        function toggleLoginLanguageDropdown() {
-            const dropdown = document.getElementById('loginLanguageDropdown');
-            dropdown.classList.toggle('active');
-            
-            document.addEventListener('click', function closeDropdown(e) {
-                if (!e.target.closest('#loginLanguageBtn') && !e.target.closest('#loginLanguageDropdown')) {
-                    dropdown.classList.remove('active');
-                    document.removeEventListener('click', closeDropdown);
-                }
-            });
+        function closeLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.remove('active');
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
         }
 
         function toggleUserMenu() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('active');
-            
-            // Close other dropdowns
-            document.getElementById('languageDropdown').classList.remove('active');
-            
-            document.addEventListener('click', function closeDropdown(e) {
-                if (!e.target.closest('#userMenuBtn') && !e.target.closest('#userDropdown')) {
-                    dropdown.classList.remove('active');
-                    document.removeEventListener('click', closeDropdown);
-                }
+            console.log('User menu clicked');
+        }
+
+        // Filter Functions
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            populateTable();
+            populateMobileCards();
+        }
+
+        function addNewRequest() {
+            console.log('Add new request clicked');
+        }
+
+        // Table Functions
+        function populateTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            sampleData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.requestNo}</td>
+                    <td>${row.materialType}</td>
+                    <td>${row.materialName}</td>
+                    <td>${row.unit}</td>
+                    <td>${row.requestQty}</td>
+                    <td>${row.approvalQty}</td>
+                    <td><span class="status-badge status-${row.status}">${t('status' + row.status.charAt(0).toUpperCase() + row.status.slice(1))}</span></td>
+                    <td>${row.link}</td>
+                    <td>${row.supplier}</td>
+                    <td>${row.price}</td>
+                    <td>${row.deadline}</td>
+                    <td>${row.delivery}</td>
+                `;
+                tableBody.appendChild(tr);
             });
         }
 
-        function openProfile() {
-            document.getElementById('userDropdown').classList.remove('active');
-            showToast('👤 Profil sayfası açılıyor...', 'success');
-        }
+        function populateMobileCards() {
+            const mobileCards = document.getElementById('mobileCards');
+            mobileCards.innerHTML = '';
 
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.classList.add('active');
-            
-            setTimeout(() => {
-                toast.classList.remove('active');
-            }, 3000);
+            sampleData.forEach(row => {
+                const card = document.createElement('div');
+                card.className = 'mobile-card';
+                card.innerHTML = `
+                    <div class="mobile-card-header">
+                        <div class="mobile-card-title">${row.requestNo}</div>
+                        <span class="status-badge status-${row.status}">${t('status' + row.status.charAt(0).toUpperCase() + row.status.slice(1))}</span>
+                    </div>
+                    <div class="mobile-card-body">
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colMaterialName')}</div>
+                            <div class="mobile-field-value">${row.materialName}</div>
+                        </div>
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colSupplier')}</div>
+                            <div class="mobile-field-value">${row.supplier}</div>
+                        </div>
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colRequestQty')}</div>
+                            <div class="mobile-field-value">${row.requestQty} ${row.unit}</div>
+                        </div>
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colPrice')}</div>
+                            <div class="mobile-field-value">${row.price}</div>
+                        </div>
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colDeadline')}</div>
+                            <div class="mobile-field-value">${row.deadline}</div>
+                        </div>
+                        <div class="mobile-field">
+                            <div class="mobile-field-label">${t('colDelivery')}</div>
+                            <div class="mobile-field-value">${row.delivery}</div>
+                        </div>
+                    </div>
+                `;
+                mobileCards.appendChild(card);
+            });
         }
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            initializeTheme();
-            initializeLanguage();
-            
-            // Check for saved user
-            const savedUser = localStorage.getItem('user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    showMainApplication();
-                } catch (e) {
-                    localStorage.removeItem('user');
-                }
-            }
-            
-            // Login form
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            
-            // Menu navigation
-            document.getElementById('sidebar').addEventListener('click', function(e) {
-                const menuItem = e.target.closest('.menu-item');
-                if (menuItem && menuItem.dataset.module) {
-                    switchModule(menuItem.dataset.module);
-                }
-            });
-            
-            // Upload form
-            document.getElementById('uploadForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const reportName = document.getElementById('reportName').value;
-                const relatedRequest = document.getElementById('relatedRequest').value;
-                const pdfFile = document.getElementById('pdfFile').files[0];
-                
-                if (!reportName || !relatedRequest || !pdfFile) {
-                    showToast('Lütfen tüm alanları doldurun', 'error');
-                    return;
-                }
-                
-                // Add to reports table
-                const reportsTableBody = document.getElementById('reportsTableBody');
-                const newRow = document.createElement('tr');
-                const today = new Date().toLocaleDateString('tr-TR');
-                
-                newRow.innerHTML = `
-                    <td>${reportName}</td>
-                    <td>${relatedRequest}</td>
-                    <td>${currentUser ? currentUser.name : 'Kullanıcı'}</td>
-                    <td>${today}</td>
-                    <td>
-                        <button class="action-btn view" onclick="viewDocument('${relatedRequest}')">📄 Görüntüle</button>
-                        <button class="action-btn" onclick="downloadReport('${relatedRequest}')">📥 İndir</button>
-                    </td>
-                `;
-                
-                reportsTableBody.insertBefore(newRow, reportsTableBody.firstChild);
-                
-                closeUploadModal();
-                showToast(`✅ ${reportName} başarıyla yüklendi`, 'success');
-            });
-            
-            // Click outside to close action bar
+            translatePage();
+            populateTable();
+            populateMobileCards();
+
+            // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
-                if (!e.target.closest('.smart-action-bar') && !e.target.closest('.table-body')) {
-                    hideSmartActionBar();
+                if (!e.target.closest('.language-selector')) {
+                    closeLanguageDropdown();
                 }
+                if (!e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+                    document.getElementById('sidebar').classList.remove('mobile-open');
+                }
+            });
+
+            // Menu item clicks
+            document.querySelectorAll('.menu-item[data-page]').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
         });
 
@@ -2081,20 +1061,39 @@
             defaultConfig: defaultConfig,
             
             render: async function(config) {
-                const systemName = config.system_name || defaultConfig.system_name;
+                const primaryColor = config.primary_color || defaultConfig.primary_color;
+                const accentColor = config.accent_color || defaultConfig.accent_color;
                 const companyName = config.company_name || defaultConfig.company_name;
-                const versionNumber = config.version_number || defaultConfig.version_number;
                 
-                // Update system title if element exists
-                const systemTitle = document.querySelector('.sidebar-title');
-                if (systemTitle) {
-                    systemTitle.textContent = `${companyName} ERP`;
+                // Update CSS custom properties
+                document.documentElement.style.setProperty('--neon-blue', primaryColor);
+                document.documentElement.style.setProperty('--accent-cyan', accentColor);
+                
+                // Update company name in logo
+                const logoElement = document.querySelector('.logo');
+                if (logoElement) {
+                    logoElement.textContent = `${companyName} ⚙️`;
                 }
             },
             
             mapToCapabilities: function(config) {
                 return {
-                    recolorables: [],
+                    recolorables: [
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        }
+                    ],
                     borderables: [],
                     fontEditable: undefined,
                     fontSizeable: undefined
@@ -2103,9 +1102,7 @@
             
             mapToEditPanelValues: function(config) {
                 return new Map([
-                    ["system_name", config.system_name || defaultConfig.system_name],
-                    ["company_name", config.company_name || defaultConfig.company_name],
-                    ["version_number", config.version_number || defaultConfig.version_number]
+                    ["company_name", config.company_name || defaultConfig.company_name]
                 ]);
             }
         };
@@ -2115,5 +1112,5 @@
             window.elementSdk.init(element);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991277cf26cde1e2',t:'MTc2MDg5OTg5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99127f77d193e1e2',t:'MTc2MDkwMDIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
