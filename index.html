@@ -1,1116 +1,585 @@
-<!doctype html>
-<html lang="tr">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOMTECH SOF Yönetim Paneli</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOMTECH — SOF Sistemi (LocalStorage) v1.6.0</title>
   <style>
-        :root {
-            --bg-primary: #0F1115;
-            --bg-secondary: #1B1D23;
-            --text-primary: #E5E7EB;
-            --text-secondary: #9CA3AF;
-            --neon-blue: #22D3EE;
-            --accent-cyan: #00FFFF;
-            --glass-bg: rgba(27, 29, 35, 0.8);
-            --glass-border: rgba(34, 211, 238, 0.3);
-            --sidebar-width: 280px;
-        }
-
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100%;
-            overflow-x: hidden;
-        }
-
-        html, body {
-            height: 100%;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        /* Layout Container */
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            z-index: 100;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid var(--glass-border);
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--neon-blue);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
-        }
-
-        .logo-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            line-height: 1.4;
-        }
-
-        .sidebar-menu {
-            flex: 1;
-            padding: 1rem 0;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-left: 3px solid transparent;
-            font-weight: 500;
-        }
-
-        .menu-item:hover {
-            background: rgba(34, 211, 238, 0.1);
-            color: var(--neon-blue);
-            border-left-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
-        }
-
-        .menu-item.active {
-            background: rgba(34, 211, 238, 0.15);
-            color: var(--neon-blue);
-            border-left-color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
-        }
-
-        .menu-icon {
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        /* Top Bar */
-        .topbar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 50;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            flex: 1;
-        }
-
-        .language-selector {
-            position: relative;
-        }
-
-        .language-btn {
-            background: rgba(34, 211, 238, 0.1);
-            border: 1px solid var(--glass-border);
-            color: var(--neon-blue);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .language-btn:hover {
-            background: rgba(34, 211, 238, 0.2);
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
-        }
-
-        .language-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 8px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            padding: 0.5rem;
-            min-width: 120px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .language-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .language-option {
-            padding: 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .language-option:hover {
-            background: rgba(34, 211, 238, 0.1);
-            color: var(--neon-blue);
-        }
-
-        /* Content Area */
-        .content-area {
-            flex: 1;
-            padding: 2rem;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* Filter Bar */
-        .filter-bar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        .filter-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto auto;
-            gap: 1rem;
-            align-items: end;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .filter-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .filter-input, .filter-select {
-            background: rgba(15, 17, 21, 0.8);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .filter-input:focus, .filter-select:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
-        }
-
-        .filter-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--neon-blue), var(--accent-cyan));
-            color: white;
-            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.6);
-            filter: brightness(1.1);
-        }
-
-        .btn-secondary {
-            background: rgba(34, 211, 238, 0.1);
-            border: 1px solid var(--glass-border);
-            color: var(--neon-blue);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(34, 211, 238, 0.2);
-            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
-        }
-
-        /* Table Container */
-        .table-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-wrapper {
-            overflow: auto;
-            flex: 1;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 1200px;
-        }
-
-        .table-header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .table-header th {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            color: var(--text-primary);
-            padding: 1rem 0.75rem;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            border-bottom: 2px solid var(--neon-blue);
-            border-right: 1px solid var(--glass-border);
-            white-space: nowrap;
-            text-shadow: 0 0 5px rgba(34, 211, 238, 0.3);
-        }
-
-        .table-header th:last-child {
-            border-right: none;
-        }
-
-        .table-body tr {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
-        }
-
-        .table-body tr:nth-child(even) {
-            background: rgba(27, 29, 35, 0.3);
-        }
-
-        .table-body tr:hover {
-            background: rgba(34, 211, 238, 0.1);
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .table-body td {
-            padding: 1rem 0.75rem;
-            font-size: 0.875rem;
-            border-right: 1px solid rgba(34, 211, 238, 0.1);
-            color: var(--text-primary);
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        .table-body td:last-child {
-            border-right: none;
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-pending {
-            background: rgba(251, 191, 36, 0.2);
-            color: #FBB024;
-            border: 1px solid #FBB024;
-        }
-
-        .status-approved {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22C55E;
-            border: 1px solid #22C55E;
-        }
-
-        .status-rejected {
-            background: rgba(239, 68, 68, 0.2);
-            color: #EF4444;
-            border: 1px solid #EF4444;
-        }
-
-        .status-delivered {
-            background: rgba(34, 211, 238, 0.2);
-            color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
-        }
-
-        /* Stats Cards */
-        .stats-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 50;
-        }
-
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1rem;
-            min-width: 200px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(34, 211, 238, 0.2);
-        }
-
-        .stat-title {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .filter-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .data-table {
-                display: none;
-            }
-
-            .mobile-cards {
-                display: block;
-            }
-
-            .stats-container {
-                position: static;
-                flex-direction: row;
-                justify-content: space-between;
-                margin-top: 2rem;
-            }
-
-            .stat-card {
-                min-width: auto;
-                flex: 1;
-            }
-        }
-
-        .mobile-cards {
-            display: none;
-        }
-
-        .mobile-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .mobile-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .mobile-card-title {
-            font-weight: 600;
-            color: var(--neon-blue);
-        }
-
-        .mobile-card-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .mobile-field {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .mobile-field-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .mobile-field-value {
-            font-size: 0.875rem;
-            color: var(--text-primary);
-        }
-
-        /* Menu Toggle for Mobile */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--neon-blue);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .page-title {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body>
-  <div class="dashboard-container"><!-- Sidebar -->
-   <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-     <div class="logo">
-      SOMTECH ⚙️
-     </div>
-     <div class="logo-subtitle">
-      System engineered with precision by Karslio
-     </div>
+    :root{
+      --bg:#0F1115;--panel:#141822;--muted:#1A1F2B;--text:#E5E7EB;--sub:#A5B4FC;--acc:#22D3EE;--ok:#10B981;--warn:#F59E0B;--err:#EF4444;--chip:#2A3142;--glass:12px;
+      --shadow:0 8px 30px rgba(0,0,0,.35)
+    }
+    [data-theme="light"]{--bg:#F8FAFC;--panel:#FFFFFF;--muted:#E5E7EB;--text:#0F172A;--sub:#4F46E5;--acc:#06B6D4;--ok:#10B981;--warn:#D97706;--err:#DC2626;--chip:#E9EEF8}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial}
+    .shell{display:grid;grid-template-columns:260px 1fr;height:100dvh}
+    aside{backdrop-filter:blur(var(--glass));background:linear-gradient(180deg,rgba(34,211,238,.06),rgba(34,211,238,0)) , var(--panel);border-right:1px solid var(--muted);padding:18px;position:sticky;top:0}
+    .logo{display:grid;place-items:center;height:84px;margin-bottom:12px}
+    .logo a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+    .logo img{width:56px;height:56px;border-radius:14px;box-shadow:var(--shadow)}
+    nav{display:flex;flex-direction:column;gap:8px}
+    .nav-btn{padding:10px 12px;border-radius:12px;background:transparent;border:1px solid transparent;color:var(--text);text-align:left;cursor:pointer}
+    .nav-btn.active,.nav-btn:hover{background:var(--muted);border-color:#2b3243}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--muted);background:var(--panel);position:sticky;top:0;z-index:3}
+    .title{font-weight:700}
+    .controls{display:flex;align-items:center;gap:10px}
+    .chip{background:var(--chip);padding:6px 10px;border-radius:999px;font-size:12px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid #2b3243;background:var(--panel);color:var(--text);cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--acc),#60A5FA);border:0;color:#06202a}
+    .btn.ghost{background:transparent;border:1px dashed #2b3243}
+    main{padding:16px;overflow:auto}
+    .card{background:var(--panel);border:1px solid var(--muted);border-radius:16px;box-shadow:var(--shadow)}
+    .grid{display:grid;gap:12px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .kpi{padding:14px}
+    .kpi .label{opacity:.75}
+    .kpi .value{font-size:24px;font-weight:700;margin-top:6px}
+    .searchbar{display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--muted)}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,rgba(34,211,238,.06),rgba(34,211,238,0)),var(--panel);border-bottom:1px solid var(--muted);padding:10px 8px;text-align:left}
+    tbody td{border-bottom:1px solid var(--muted);padding:10px 8px;vertical-align:top}
+    tr:hover{background:rgba(34,211,238,.05)}
+    .status{padding:4px 8px;border-radius:999px;font-size:12px;display:inline-flex;align-items:center;gap:6px}
+    .s-draft{background:#374151}
+    .s-onay{background:#1f4937}
+    .s-teklif{background:#3b2f18}
+    .s-odeme{background:#2d3647}
+    .s-termin{background:#2a2b18}
+    .s-geldi{background:#1e2a3a}
+    .stack{display:flex;flex-wrap:wrap;gap:6px}
+    .hidden{display:none !important}
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:50}
+    .modal.active{display:grid}
+    .modal .content{width:min(900px,92vw);max-height:84vh;overflow:auto;padding:16px}
+    .row-actions{display:flex;gap:6px}
+    .role-tag{font-weight:600}
+    .hint{opacity:.7;font-size:12px}
+    .loader{height:88px;display:grid;place-items:center}
+    .ring{width:54px;height:54px;border-radius:999px;border:3px solid rgba(34,211,238,.35);border-top-color:var(--acc);animation:spin 1s linear infinite;box-shadow:0 0 20px rgba(34,211,238,.3)}
+    #banner{position:fixed;top:-60px;left:0;right:0;z-index:1000;padding:14px;text-align:center;font-weight:600;transition:top .4s}
+    #banner.show{top:0}
+    #banner.ok{background:#14532d;color:#bbf7d0}
+    #banner.err{background:#450a0a;color:#fecaca}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media (max-width:960px){.shell{grid-template-columns:1fr}aside{position:fixed;inset:0 40% 0 0;transform:translateX(-100%);transition:.25s}aside.open{transform:none}header .title{font-size:14px}}
+  </style>
+</head>
+<body>
+<div id="banner"></div>
+<audio id="sound-ok" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+<audio id="sound-err" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+
+<div class="shell">
+  <aside id="sidebar">
+    <div class="logo">
+      <a href="https://somtech.ru" target="_blank" rel="noopener">
+        <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH"/>
+        <strong>SOMTECH — SOF</strong>
+      </a>
     </div>
-    <div class="sidebar-menu">
-     <div class="menu-item active" data-page="dashboard"><span class="menu-icon">🏠</span> <span id="menuDashboard">Ana Sayfa</span>
-     </div>
-     <div class="menu-item" data-page="requests"><span class="menu-icon">📋</span> <span id="menuRequests">Talepler</span>
-     </div>
-     <div class="menu-item" data-page="approvals"><span class="menu-icon">⚙️</span> <span id="menuApprovals">Onaylar</span>
-     </div>
-     <div class="menu-item" data-page="reports"><span class="menu-icon">🧾</span> <span id="menuReports">Raporlar</span>
-     </div>
-     <div class="menu-item" data-page="suppliers"><span class="menu-icon">🔗</span> <span id="menuSuppliers">Tedarikçiler</span>
-     </div>
-     <div class="menu-item" onclick="toggleTheme()"><span class="menu-icon">🌙</span> <span id="menuTheme">Tema Değiştir</span>
-     </div>
-     <div class="menu-item" onclick="toggleUserMenu()"><span class="menu-icon">👤</span> <span id="menuUser">Kullanıcı Menüsü</span>
-     </div>
-    </div>
-   </div><!-- Main Content -->
-   <div class="main-content"><!-- Top Bar -->
-    <div class="topbar"><button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-     <div class="page-title" id="pageTitle">
-      SOF Yönetim Paneli
-     </div>
-     <div class="language-selector"><button class="language-btn" onclick="toggleLanguageDropdown()" id="languageBtn">TR</button>
-      <div class="language-dropdown" id="languageDropdown">
-       <div class="language-option" onclick="changeLanguage('tr')">
-        TR
-       </div>
-       <div class="language-option" onclick="changeLanguage('en')">
-        EN
-       </div>
-       <div class="language-option" onclick="changeLanguage('ru')">
-        RU
-       </div>
+    <nav>
+      <button class="nav-btn active" data-page="dashboard">🏠 Özet</button>
+      <button class="nav-btn" data-page="list">📄 Kayıt Tablosu</button>
+      <button class="nav-btn" data-page="form">📎 Talep Formu</button>
+      <button class="nav-btn" data-page="reports">📊 Raporlar</button>
+      <button class="nav-btn" data-page="logs" id="logsMenu" style="display:none">🧾 İşlem Geçmişi</button>
+      <button class="nav-btn" data-page="settings">⚙️ Ayarlar</button>
+    </nav>
+  </aside>
+  <section class="right">
+    <header>
+      <div class="title">SOF Sistemi</div>
+      <div class="controls">
+        <span class="chip" id="roleChip">Rol: <span class="role-tag" id="roleName">-</span></span>
+        <button class="btn" id="langBtn" title="Dil">🌐 TR</button>
+        <button class="btn" id="themeBtn" title="Tema">🌙</button>
+        <button class="btn" id="loginBtn" title="Giriş">👤 Giriş</button>
       </div>
-     </div>
-    </div><!-- Content Area -->
-    <div class="content-area"><!-- Filter Bar -->
-     <div class="filter-bar">
-      <div class="filter-grid">
-       <div class="filter-group"><label class="filter-label" id="searchLabel">Genel Arama</label> <input type="text" class="filter-input" id="searchInput" placeholder="Malzeme, Proje Kodu, Tedarikçi...">
-       </div>
-       <div class="filter-group"><label class="filter-label" id="dateFromLabel">Başlangıç Tarihi</label> <input type="date" class="filter-input" id="dateFrom">
-       </div>
-       <div class="filter-group"><label class="filter-label" id="dateToLabel">Bitiş Tarihi</label> <input type="date" class="filter-input" id="dateTo">
-       </div>
-       <div class="filter-group"><button class="btn btn-secondary" onclick="resetFilters()" id="resetBtn"> 🔄 <span id="resetText">Sıfırla</span> </button>
-       </div>
-       <div class="filter-group"><button class="btn btn-primary" onclick="addNewRequest()" id="addBtn"> ➕ <span id="addText">Yeni Talep</span> </button>
-       </div>
+    </header>
+    <main id="main">
+      <div class="card loader" id="loader">
+        <div>
+          <div class="ring" style="margin:auto"></div>
+          <div style="text-align:center;margin-top:8px">Sisteme bağlanıyor…</div>
+          <div style="text-align:center;margin-top:6px;font-style:italic;opacity:.7">System engineered with precision by Karslio ⚙️</div>
+        </div>
       </div>
-     </div><!-- Table Container -->
-     <div class="table-container">
-      <div class="table-wrapper">
-       <table class="data-table">
-        <thead class="table-header">
-         <tr>
-          <th id="colRequestNo">Talep No</th>
-          <th id="colMaterialType">Malzeme Tipi</th>
-          <th id="colMaterialName">Malzeme Adı</th>
-          <th id="colUnit">Birim</th>
-          <th id="colRequestQty">Talep Miktarı</th>
-          <th id="colApprovalQty">Müdür Onay Miktarı</th>
-          <th id="colStatus">Durum</th>
-          <th id="colLink">Link</th>
-          <th id="colSupplier">Tedarikçi</th>
-          <th id="colPrice">Fiyat</th>
-          <th id="colDeadline">Termin Tarihi</th>
-          <th id="colDelivery">Teslim Tarihi</th>
-         </tr>
-        </thead>
-        <tbody class="table-body" id="tableBody"><!-- Data will be populated here -->
-        </tbody>
-       </table>
-      </div><!-- Mobile Cards -->
-      <div class="mobile-cards" id="mobileCards"><!-- Mobile cards will be populated here -->
-      </div>
-     </div>
+
+      <section id="dashboard" class="page hidden">
+        <div class="grid cols-3">
+          <div class="card kpi"><div class="label">Sarf Toplamı</div><div class="value" id="kpiSarf">0</div></div>
+          <div class="card kpi"><div class="label">Demirbaş Toplamı</div><div class="value" id="kpiDemirbas">0</div></div>
+          <div class="card kpi"><div class="label">Genel Toplam</div><div class="value" id="kpiGenel">0</div></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="searchbar">
+            <input id="qDash" class="btn" style="flex:1" placeholder="Hızlı arama (SOF No, isim, tedarikçi)"/>
+            <button class="btn" id="newFromDash">+ Yeni Talep</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SOF No</th>
+                  <th>Talep Eden</th>
+                  <th>Tip</th>
+                  <th>Malzeme</th>
+                  <th>Miktar</th>
+                  <th class="col-fiyat">Fiyat/Toplam</th>
+                  <th>Durum</th>
+                  <th>Termin</th>
+                  <th>Tedarikçi</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="sofTableBody"></tbody>
+            </table>
+          </div>
+          <div class="hint" style="padding:10px">İpucu: Satıra çift tıkla → <strong>Talep Süreç Takip</strong> penceresi açılır.</div>
+        </div>
+      </section>
+
+      <section id="list" class="page hidden">
+        <div class="card">
+          <div class="searchbar">
+            <input id="q" class="btn" style="flex:1" placeholder="Ara…"/>
+            <select id="fTip" class="btn"><option value="">Tip (Hepsi)</option><option>Sarf</option><option>Demirbaş</option><option>Genel</option></select>
+            <select id="fDurum" class="btn"><option value="">Durum (Hepsi)</option><option>Taslak</option><option>Müdür Onayı</option><option>Fiyat Teklifi</option><option>Ödeme</option><option>Termin</option><option>Geldi</option></select>
+            <button class="btn" id="exportJson">JSON Dışa Aktar</button>
+            <button class="btn ghost" id="importJson">JSON İçe Aktar</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SOF No</th><th>Talep Eden</th><th>Tip</th><th>Malzeme</th><th>Miktar</th><th class="col-fiyat">Fiyat/Toplam</th><th>Durum</th><th>Termin</th><th>Tedarikçi</th><th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="sofTableBody2"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="form" class="page hidden">
+        <div class="card" style="padding:16px">
+          <h3>Yeni Talep</h3>
+          <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+            <label>Talep Eden Birim<input id="fBirim" class="btn" placeholder="Birim adı"></label>
+            <label>Malzeme Tipi<select id="fTip2" class="btn"><option>Sarf</option><option>Demirbaş</option><option>Genel</option></select></label>
+            <label>Malzeme Adı<input id="fAd" class="btn" placeholder="Örn. Ethernet kablo"></label>
+            <label>Miktar<input id="fMiktar" type="number" class="btn" value="1"></label>
+            <label>Birim<input id="fBirim2" class="btn" placeholder="adet, m, kg"></label>
+            <label>Tedarikçi<input id="fTedarikci" class="btn" placeholder="(isteğe bağlı)"></label>
+            <label>Termin Tarihi<input id="fTermin" type="date" class="btn"></label>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn primary" id="saveTalep">Kaydet</button>
+            <button class="btn" id="resetForm">Sıfırla</button>
+          </div>
+        </div>
+        <div class="card" style="padding:16px;margin-top:12px">
+          <h3>Toplu Veri Göm (Opsiyonel)</h3>
+          <div class="hint">CSV/TSV yapıştır → Alan sırası: SOF No (isteğe bağlı), Birim, Tip, Malzeme, Miktar, Birim, Fiyat (ops), Tedarikçi (ops), Termin (YYYY-MM-DD)</div>
+          <textarea id="bulkBox" class="btn" style="width:100%;height:140px"></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" id="parseBulk">Yükle</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" class="page hidden">
+        <div class="card" style="padding:16px">
+          <h3>Raporlar</h3>
+          <div class="grid cols-3">
+            <div class="kpi"><div class="label">Bekleyen Müdür Onayı</div><div class="value" id="rOnay">0</div></div>
+            <div class="kpi"><div class="label">Ödeme Bekleyen</div><div class="value" id="rOdeme">0</div></div>
+            <div class="kpi"><div class="label">Termin Aşımı</div><div class="value" id="rOverdue">0</div></div>
+          </div>
+          <div style="margin-top:12px" class="hint">İleri raporlar için dışa aktarım planlandı.</div>
+        </div>
+      </section>
+
+      <section id="logs" class="page hidden">
+        <div class="card" style="padding:16px">
+          <h3>🧾 İşlem Geçmişi</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
+              <tbody id="logTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="page hidden">
+        <div class="card" style="padding:16px">
+          <h3>Ayarlar</h3>
+          <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+            <div>
+              <div class="label">Rol Seç</div>
+              <select id="roleSelect" class="btn">
+                <option value="Birim">Birim Kullanıcısı (fiyat gizli)</option>
+                <option value="Müdür">Müdür</option>
+                <option value="Muhasebe">Muhasebe</option>
+                <option value="SatınAlma">Satın Alma</option>
+                <option value="Admin">Admin (hepsi)</option>
+              </select>
+            </div>
+            <div>
+              <div class="label">Dil</div>
+              <select id="langSelect" class="btn"><option value="tr">Türkçe</option><option value="en">English</option><option value="ru">Русский</option></select>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn" id="clearLS">LocalStorage Temizle</button>
+            <button class="btn ghost" id="dumpLS">Veriyi Göster (JSON)</button>
+          </div>
+          <div class="hint" style="margin-top:10px">Giriş ekranı ileride eklenecek. Şimdilik rolü buradan seç.</div>
+        </div>
+      </section>
+    </main>
+  </section>
+</div>
+
+<!-- Timeline Modal -->
+<div class="modal" id="timelineModal">
+  <div class="card content">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>Talep Süreç Takip — <span id="tlSof"></span></h3>
+      <button class="btn" onclick="closeModal('timelineModal')">✖</button>
     </div>
-   </div><!-- Stats Cards -->
-   <div class="stats-container">
-    <div class="stat-card">
-     <div class="stat-title" id="statTotalTitle">
-      Toplam Talepler
-     </div>
-     <div class="stat-value" id="statTotalValue">
-      247
-     </div>
-    </div>
-    <div class="stat-card">
-     <div class="stat-title" id="statPendingTitle">
-      Bekleyen Onaylar
-     </div>
-     <div class="stat-value" id="statPendingValue">
-      18
-     </div>
-    </div>
-    <div class="stat-card">
-     <div class="stat-title" id="statExpenseTitle">
-      Aylık Harcama (₽)
-     </div>
-     <div class="stat-value" id="statExpenseValue">
-      2.8M
-     </div>
-    </div>
-   </div>
+    <div id="timelineWrap" style="margin-top:8px"></div>
   </div>
-  <script>
-        // Configuration
-        const defaultConfig = {
-            primary_color: "#22D3EE",
-            accent_color: "#00FFFF",
-            company_name: "SOMTECH"
-        };
+</div>
 
-        // Global Variables
-        let currentLanguage = 'tr';
-        let currentTheme = 'dark';
+<!-- JSON Import Modal -->
+<div class="modal" id="jsonModal">
+  <div class="card content">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>JSON İçe Aktar</h3>
+      <button class="btn" onclick="closeModal('jsonModal')">✖</button>
+    </div>
+    <textarea id="jsonBox" class="btn" style="width:100%;height:260px"></textarea>
+    <div style="margin-top:8px"><button class="btn primary" id="confirmImport">İçe Aktar</button></div>
+  </div>
+</div>
 
-        // Language Translations
-        const translations = {
-            tr: {
-                pageTitle: "SOF Yönetim Paneli",
-                menuDashboard: "Ana Sayfa",
-                menuRequests: "Talepler",
-                menuApprovals: "Onaylar",
-                menuReports: "Raporlar",
-                menuSuppliers: "Tedarikçiler",
-                menuTheme: "Tema Değiştir",
-                menuUser: "Kullanıcı Menüsü",
-                searchLabel: "Genel Arama",
-                searchPlaceholder: "Malzeme, Proje Kodu, Tedarikçi...",
-                dateFromLabel: "Başlangıç Tarihi",
-                dateToLabel: "Bitiş Tarihi",
-                resetText: "Sıfırla",
-                addText: "Yeni Talep",
-                colRequestNo: "Talep No",
-                colMaterialType: "Malzeme Tipi",
-                colMaterialName: "Malzeme Adı",
-                colUnit: "Birim",
-                colRequestQty: "Talep Miktarı",
-                colApprovalQty: "Müdür Onay Miktarı",
-                colStatus: "Durum",
-                colLink: "Link",
-                colSupplier: "Tedarikçi",
-                colPrice: "Fiyat",
-                colDeadline: "Termin Tarihi",
-                colDelivery: "Teslim Tarihi",
-                statTotalTitle: "Toplam Talepler",
-                statPendingTitle: "Bekleyen Onaylar",
-                statExpenseTitle: "Aylık Harcama (₽)",
-                statusPending: "Bekliyor",
-                statusApproved: "Onaylandı",
-                statusRejected: "Reddedildi",
-                statusDelivered: "Teslim Edildi"
-            },
-            en: {
-                pageTitle: "SOF Management Panel",
-                menuDashboard: "Dashboard",
-                menuRequests: "Requests",
-                menuApprovals: "Approvals",
-                menuReports: "Reports",
-                menuSuppliers: "Suppliers",
-                menuTheme: "Change Theme",
-                menuUser: "User Menu",
-                searchLabel: "General Search",
-                searchPlaceholder: "Material, Project Code, Supplier...",
-                dateFromLabel: "Start Date",
-                dateToLabel: "End Date",
-                resetText: "Reset",
-                addText: "New Request",
-                colRequestNo: "Request No",
-                colMaterialType: "Material Type",
-                colMaterialName: "Material Name",
-                colUnit: "Unit",
-                colRequestQty: "Request Qty",
-                colApprovalQty: "Manager Approval Qty",
-                colStatus: "Status",
-                colLink: "Link",
-                colSupplier: "Supplier",
-                colPrice: "Price",
-                colDeadline: "Deadline",
-                colDelivery: "Delivery Date",
-                statTotalTitle: "Total Requests",
-                statPendingTitle: "Pending Approvals",
-                statExpenseTitle: "Monthly Expense (₽)",
-                statusPending: "Pending",
-                statusApproved: "Approved",
-                statusRejected: "Rejected",
-                statusDelivered: "Delivered"
-            },
-            ru: {
-                pageTitle: "Панель управления SOF",
-                menuDashboard: "Главная",
-                menuRequests: "Заявки",
-                menuApprovals: "Утверждения",
-                menuReports: "Отчеты",
-                menuSuppliers: "Поставщики",
-                menuTheme: "Сменить тему",
-                menuUser: "Меню пользователя",
-                searchLabel: "Общий поиск",
-                searchPlaceholder: "Материал, код проекта, поставщик...",
-                dateFromLabel: "Дата начала",
-                dateToLabel: "Дата окончания",
-                resetText: "Сброс",
-                addText: "Новая заявка",
-                colRequestNo: "№ заявки",
-                colMaterialType: "Тип материала",
-                colMaterialName: "Название материала",
-                colUnit: "Единица",
-                colRequestQty: "Кол-во заявки",
-                colApprovalQty: "Кол-во утверждения",
-                colStatus: "Статус",
-                colLink: "Ссылка",
-                colSupplier: "Поставщик",
-                colPrice: "Цена",
-                colDeadline: "Срок",
-                colDelivery: "Дата доставки",
-                statTotalTitle: "Всего заявок",
-                statPendingTitle: "Ожидающие утверждения",
-                statExpenseTitle: "Месячные расходы (₽)",
-                statusPending: "Ожидание",
-                statusApproved: "Утверждено",
-                statusRejected: "Отклонено",
-                statusDelivered: "Доставлено"
-            }
-        };
+<script>
+const KEY = 'sof_records_v160';
+const KEY_SETTINGS = 'sof_settings';
+const LOG_KEY = 'sof_action_log';
 
-        // Sample Data
-        const sampleData = [
-            {
-                requestNo: "SOF-2024-001",
-                materialType: "Demirbaş",
-                materialName: "Laptop Dell Latitude 5520",
-                unit: "Adet",
-                requestQty: 5,
-                approvalQty: 3,
-                status: "approved",
-                link: "📄",
-                supplier: "Tech Solutions Ltd.",
-                price: "₽ 85,000",
-                deadline: "2024-02-15",
-                delivery: "2024-02-10"
-            },
-            {
-                requestNo: "SOF-2024-002",
-                materialType: "Sarf",
-                materialName: "A4 Kağıt Paketi",
-                unit: "Paket",
-                requestQty: 50,
-                approvalQty: 50,
-                status: "delivered",
-                link: "📄",
-                supplier: "Office Supplies Co.",
-                price: "₽ 12,500",
-                deadline: "2024-02-20",
-                delivery: "2024-02-18"
-            },
-            {
-                requestNo: "SOF-2024-003",
-                materialType: "Demirbaş",
-                materialName: "Projeksiyon Cihazı",
-                unit: "Adet",
-                requestQty: 2,
-                approvalQty: 1,
-                status: "pending",
-                link: "📄",
-                supplier: "AV Equipment Ltd.",
-                price: "₽ 45,000",
-                deadline: "2024-03-01",
-                delivery: "-"
-            },
-            {
-                requestNo: "SOF-2024-004",
-                materialType: "Sarf",
-                materialName: "Yazıcı Kartuşu HP",
-                unit: "Adet",
-                requestQty: 10,
-                approvalQty: 8,
-                status: "approved",
-                link: "📄",
-                supplier: "Print Solutions",
-                price: "₽ 18,000",
-                deadline: "2024-02-25",
-                delivery: "-"
-            },
-            {
-                requestNo: "SOF-2024-005",
-                materialType: "Demirbaş",
-                materialName: "Ergonomik Ofis Koltuğu",
-                unit: "Adet",
-                requestQty: 8,
-                approvalQty: 0,
-                status: "rejected",
-                link: "📄",
-                supplier: "Furniture Plus",
-                price: "₽ 32,000",
-                deadline: "2024-03-10",
-                delivery: "-"
-            }
-        ];
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-        // Utility Functions
-        function t(key) {
-            return translations[currentLanguage]?.[key] || translations['tr'][key] || key;
-        }
+const ROLES = {
+  Birim: {showPrice:false, canApprove:false, canPayment:false, canArrival:false},
+  Müdür: {showPrice:true, canApprove:true, canPayment:false, canArrival:false},
+  Muhasebe: {showPrice:true, canApprove:false, canPayment:true, canArrival:false},
+  SatınAlma: {showPrice:true, canApprove:false, canPayment:false, canArrival:true},
+  Admin: {showPrice:true, canApprove:true, canPayment:true, canArrival:true}
+};
 
-        // Language Functions
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            document.getElementById('languageBtn').textContent = lang.toUpperCase();
-            translatePage();
-            closeLanguageDropdown();
-        }
+const DURUMLAR = ['Taslak','Müdür Onayı','Fiyat Teklifi','Ödeme','Termin','Geldi'];
 
-        function translatePage() {
-            // Update all translatable elements
-            Object.keys(translations[currentLanguage]).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    if (element.tagName === 'INPUT' && element.type === 'text') {
-                        element.placeholder = t(key);
-                    } else {
-                        element.textContent = t(key);
-                    }
-                }
-            });
+function uid(){return Math.random().toString(36).slice(2,8)}
+function now(){return new Date().toISOString()}
+function load(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
+function save(arr){localStorage.setItem(KEY, JSON.stringify(arr))}
+function loadSettings(){return JSON.parse(localStorage.getItem(KEY_SETTINGS)||'{"role":"Birim","lang":"tr","theme":"dark"}')}
+function saveSettings(s){localStorage.setItem(KEY_SETTINGS, JSON.stringify(s))}
 
-            // Update search placeholder
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.placeholder = t('searchPlaceholder');
-            }
+let settings = loadSettings();
+applyTheme(settings.theme||'dark');
 
-            // Update table data
-            populateTable();
-            populateMobileCards();
-        }
+window.addEventListener('DOMContentLoaded', ()=>{
+  setTimeout(()=>{
+    $('#loader').classList.add('hidden');
+    $('#dashboard').classList.remove('hidden');
+    renderAll();
+  }, 500);
 
-        // Theme Functions
-        function toggleTheme() {
-            // This is a placeholder for theme switching
-            // In a real implementation, you would switch between light and dark themes
-            console.log('Theme toggle clicked');
-        }
+  // Nav
+  $$('#sidebar .nav-btn').forEach(b=>b.onclick=()=>switchPage(b.dataset.page,b));
+  $('#newFromDash').onclick=()=>switchPage('form');
 
-        // UI Functions
-        function toggleLanguageDropdown() {
-            const dropdown = document.getElementById('languageDropdown');
-            dropdown.classList.toggle('active');
-        }
+  // Search/Filters
+  ['q','qDash','fTip','fDurum'].forEach(id=>{ const el=$('#'+id); if(el){ el.addEventListener('input', renderAll); el.addEventListener('change', renderAll); } });
 
-        function closeLanguageDropdown() {
-            const dropdown = document.getElementById('languageDropdown');
-            dropdown.classList.remove('active');
-        }
+  // Form
+  $('#saveTalep').onclick=saveTalep;
+  $('#resetForm').onclick=()=>$$('#form input').forEach(i=>i.value='');
+  $('#parseBulk').onclick=parseBulk;
 
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('mobile-open');
-        }
+  // Export/Import
+  $('#exportJson').onclick=()=>{
+    const data = load();
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sof_localstorage_export.json';
+    a.click();
+  };
+  $('#importJson').onclick=()=>openModal('jsonModal');
+  $('#confirmImport').onclick=()=>{
+    try{
+      const obj = JSON.parse($('#jsonBox').value||'[]');
+      if(!Array.isArray(obj)) throw new Error('Array bekleniyor');
+      save(obj); closeModal('jsonModal'); renderAll(); showBanner('JSON içe aktarıldı ✅','ok');
+    }catch(e){ showBanner('Hata: '+e.message,'err'); }
+  };
 
-        function toggleUserMenu() {
-            console.log('User menu clicked');
-        }
+  // Settings / UI
+  $('#clearLS').onclick=()=>{ if(confirm('Tüm LocalStorage verisi silinsin mi?')){ localStorage.removeItem(KEY); renderAll(); showBanner('Veri temizlendi','ok'); } };
+  $('#dumpLS').onclick=()=>{ alert(localStorage.getItem(KEY)||'[]'); };
+  $('#roleSelect').value = settings.role||'Birim';
+  $('#langSelect').value = settings.lang||'tr';
+  $('#roleSelect').onchange = e=>{ settings.role=e.target.value; saveSettings(settings); applyRole(); renderAll(); };
+  $('#langSelect').onchange = e=>{ settings.lang=e.target.value; saveSettings(settings); $('#langBtn').textContent = settings.lang.toUpperCase(); };
+  $('#loginBtn').onclick=()=>switchPage('settings');
+  $('#themeBtn').onclick=toggleTheme;
+  $('#langBtn').onclick=()=>switchLang();
 
-        // Filter Functions
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('dateFrom').value = '';
-            document.getElementById('dateTo').value = '';
-            populateTable();
-            populateMobileCards();
-        }
+  applyRole();
+  $('#langBtn').textContent = (settings.lang||'tr').toUpperCase();
+});
 
-        function addNewRequest() {
-            console.log('Add new request clicked');
-        }
+// UI helpers
+function switchPage(page, btn){
+  $$('.page').forEach(p=>p.classList.add('hidden'));
+  $('#'+page).classList.remove('hidden');
+  if(btn){ $$('#sidebar .nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+}
+function switchLang(){
+  const seq = ['tr','en','ru'];
+  const i = seq.indexOf(settings.lang||'tr');
+  settings.lang = seq[(i+1)%seq.length];
+  saveSettings(settings);
+  $('#langBtn').textContent = settings.lang.toUpperCase();
+}
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme')||'dark';
+  applyTheme(cur==='dark'?'light':'dark');
+  settings.theme = document.documentElement.getAttribute('data-theme');
+  saveSettings(settings);
+}
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  $('#themeBtn').textContent = theme==='dark' ? '🌙' : '☀️';
+}
+function applyRole(){
+  $('#roleName').textContent = settings.role||'Birim';
+  const cfg = ROLES[settings.role||'Birim'];
+  // Fiyat kolonlarını göster/gizle
+  $$('.col-fiyat').forEach(th=> th.style.display = cfg.showPrice? 'table-cell' : 'none');
+  // Log menüsünü sadece SatınAlma/Admin görsün
+  $('#logsMenu').style.display = (settings.role==='SatınAlma' || settings.role==='Admin') ? 'block' : 'none';
+}
 
-        // Table Functions
-        function populateTable() {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
+// Banner + Ses
+function playSound(type){ const id = type==='err'?'sound-err':'sound-ok'; const el = $('#'+id); if(el){ el.currentTime=0; el.play().catch(()=>{}); } }
+function showBanner(msg,type='ok'){
+  const b = $('#banner'); b.textContent = msg; b.className='show '+type; playSound(type); setTimeout(()=>b.classList.remove('show'),2500);
+}
 
-            sampleData.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.requestNo}</td>
-                    <td>${row.materialType}</td>
-                    <td>${row.materialName}</td>
-                    <td>${row.unit}</td>
-                    <td>${row.requestQty}</td>
-                    <td>${row.approvalQty}</td>
-                    <td><span class="status-badge status-${row.status}">${t('status' + row.status.charAt(0).toUpperCase() + row.status.slice(1))}</span></td>
-                    <td>${row.link}</td>
-                    <td>${row.supplier}</td>
-                    <td>${row.price}</td>
-                    <td>${row.deadline}</td>
-                    <td>${row.delivery}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
+// Render
+function renderAll(){
+  applyRole();
+  const data = load();
+  // Filters
+  const q = ($('#q')?.value||'').toLowerCase();
+  const q2 = ($('#qDash')?.value||'').toLowerCase();
+  const tip = $('#fTip')?.value||''; const durum = $('#fDurum')?.value||'';
+  const filtered = data.filter(r=>{
+    const hay = [r.sofNo,r.birim,r.tip,r.ad,r.tedarikci].join(' ').toLowerCase();
+    const okQ = q? hay.includes(q) : true;
+    const okQ2 = q2? hay.includes(q2) : true;
+    const okTip = tip? r.tip===tip : true;
+    const okDur = durum? r.durum===durum : true;
+    return okQ && okQ2 && okTip && okDur;
+  });
 
-        function populateMobileCards() {
-            const mobileCards = document.getElementById('mobileCards');
-            mobileCards.innerHTML = '';
+  // KPIs
+  $('#kpiSarf').textContent = data.filter(r=>r.tip==='Sarf').length;
+  $('#kpiDemirbas').textContent = data.filter(r=>r.tip==='Demirbaş').length;
+  $('#kpiGenel').textContent = data.length;
 
-            sampleData.forEach(row => {
-                const card = document.createElement('div');
-                card.className = 'mobile-card';
-                card.innerHTML = `
-                    <div class="mobile-card-header">
-                        <div class="mobile-card-title">${row.requestNo}</div>
-                        <span class="status-badge status-${row.status}">${t('status' + row.status.charAt(0).toUpperCase() + row.status.slice(1))}</span>
-                    </div>
-                    <div class="mobile-card-body">
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colMaterialName')}</div>
-                            <div class="mobile-field-value">${row.materialName}</div>
-                        </div>
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colSupplier')}</div>
-                            <div class="mobile-field-value">${row.supplier}</div>
-                        </div>
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colRequestQty')}</div>
-                            <div class="mobile-field-value">${row.requestQty} ${row.unit}</div>
-                        </div>
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colPrice')}</div>
-                            <div class="mobile-field-value">${row.price}</div>
-                        </div>
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colDeadline')}</div>
-                            <div class="mobile-field-value">${row.deadline}</div>
-                        </div>
-                        <div class="mobile-field">
-                            <div class="mobile-field-label">${t('colDelivery')}</div>
-                            <div class="mobile-field-value">${row.delivery}</div>
-                        </div>
-                    </div>
-                `;
-                mobileCards.appendChild(card);
-            });
-        }
+  // Reports
+  $('#rOnay').textContent = data.filter(r=>r.durum==='Müdür Onayı').length;
+  $('#rOdeme').textContent = data.filter(r=>r.durum==='Ödeme').length;
+  const today = new Date().toISOString().slice(0,10);
+  $('#rOverdue').textContent = data.filter(r=>r.durum!=='Geldi' && r.termin && r.termin < today).length;
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            translatePage();
-            populateTable();
-            populateMobileCards();
+  // Tables
+  const cfg = ROLES[settings.role||'Birim'];
+  const renderRow = (r)=>{
+    const priceCell = cfg.showPrice ? ('<div>'+fmtMoney(r.fiyat||0)+' / <strong>'+fmtMoney(r.toplam||0)+'</strong></div>') : '';
+    const st = statusBadge(r.durum);
+    return '<tr data-id="'+r.id+'">'
+      + '<td>'+r.sofNo+'</td>'
+      + '<td>'+r.birim+'</td>'
+      + '<td>'+r.tip+'</td>'
+      + '<td>'+r.ad+'</td>'
+      + '<td>'+r.miktar+' '+(r.birim2||'')+'</td>'
+      + (cfg.showPrice?('<td>'+priceCell+'</td>'):'')
+      + '<td>'+st+'</td>'
+      + '<td>'+(r.termin||'-')+'</td>'
+      + '<td>'+(r.tedarikci||'-')+'</td>'
+      + '<td class="row-actions">'+rowActions(r)+'</td>'
+      + '</tr>';
+  };
 
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.language-selector')) {
-                    closeLanguageDropdown();
-                }
-                if (!e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
-                    document.getElementById('sidebar').classList.remove('mobile-open');
-                }
-            });
+  $('#sofTableBody').innerHTML = filtered.map(renderRow).join('');
+  $('#sofTableBody2').innerHTML = filtered.map(renderRow).join('');
 
-            // Menu item clicks
-            document.querySelectorAll('.menu-item[data-page]').forEach(item => {
-                item.addEventListener('click', function() {
-                    document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-        });
+  // dblclick → Timeline
+  $$('#sofTableBody tr, #sofTableBody2 tr').forEach(tr=>{
+    tr.ondblclick = ()=> openTimeline(tr.getAttribute('data-id'));
+  });
 
-        // Element SDK Implementation
-        const element = {
-            defaultConfig: defaultConfig,
-            
-            render: async function(config) {
-                const primaryColor = config.primary_color || defaultConfig.primary_color;
-                const accentColor = config.accent_color || defaultConfig.accent_color;
-                const companyName = config.company_name || defaultConfig.company_name;
-                
-                // Update CSS custom properties
-                document.documentElement.style.setProperty('--neon-blue', primaryColor);
-                document.documentElement.style.setProperty('--accent-cyan', accentColor);
-                
-                // Update company name in logo
-                const logoElement = document.querySelector('.logo');
-                if (logoElement) {
-                    logoElement.textContent = `${companyName} ⚙️`;
-                }
-            },
-            
-            mapToCapabilities: function(config) {
-                return {
-                    recolorables: [
-                        {
-                            get: () => config.primary_color || defaultConfig.primary_color,
-                            set: (value) => {
-                                config.primary_color = value;
-                                window.elementSdk.setConfig({ primary_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.accent_color || defaultConfig.accent_color,
-                            set: (value) => {
-                                config.accent_color = value;
-                                window.elementSdk.setConfig({ accent_color: value });
-                            }
-                        }
-                    ],
-                    borderables: [],
-                    fontEditable: undefined,
-                    fontSizeable: undefined
-                };
-            },
-            
-            mapToEditPanelValues: function(config) {
-                return new Map([
-                    ["company_name", config.company_name || defaultConfig.company_name]
-                ]);
-            }
-        };
+  // attach action buttons
+  $$('.btn-act').forEach(b=> b.onclick = ()=>handleAction(b.dataset.act, b.dataset.id));
+}
 
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            window.elementSdk.init(element);
-        }
-    </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99127f77d193e1e2',t:'MTc2MDkwMDIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+function statusBadge(d){
+  const m={'Taslak':'s-draft','Müdür Onayı':'s-onay','Fiyat Teklifi':'s-teklif','Ödeme':'s-odeme','Termin':'s-termin','Geldi':'s-geldi'};
+  return '<span class="status '+(m[d]||'s-draft')+'">'+d+'</span>';
+}
+function rowActions(r){
+  const cfg = ROLES[settings.role||'Birim'];
+  const arr = [];
+  if(cfg.canApprove && r.durum==='Taslak') arr.push(btn('Onayla','approve',r.id));
+  if(cfg.canApprove && r.durum==='Müdür Onayı') arr.push(btn('Teklife Gönder','offer',r.id));
+  if(cfg.canPayment && r.durum==='Fiyat Teklifi') arr.push(btn('Ödemeye Gönder','payment',r.id));
+  if(cfg.canPayment && r.durum==='Ödeme') arr.push(btn('Ödeme Yapıldı','paid',r.id));
+  if(cfg.canArrival && r.durum==='Termin') arr.push(btn('Geldi Onayı','arrived',r.id));
+  if(settings.role==='Admin') arr.push(btn('Sil','delete',r.id));
+  return arr.join('');
+}
+function btn(label, act, id){return '<button class="btn btn-act" data-act="'+act+'" data-id="'+id+'">'+label+'</button>'}
+
+function roleCheck(role, act){
+  const cfg = ROLES[role] || ROLES.Birim;
+  if(act==='approve' && !cfg.canApprove) return false;
+  if((act==='payment' || act==='paid') && !cfg.canPayment) return false;
+  if(act==='arrived' && !cfg.canArrival) return false;
+  if(act==='delete' && role!=='Admin') return false;
+  return true;
+}
+
+function handleAction(act,id){
+  const data = load();
+  const ix = data.findIndex(x=>x.id===id);
+  if(ix<0) return;
+  const r = data[ix];
+  if(!roleCheck(settings.role, act)){ showBanner('Bu işlemi yapma yetkiniz yok ❌','err'); return; }
+  const pushTL = (ev)=>{ (r.timeline ||= []).push({ts:now(), ev}); };
+
+  if(act==='approve'){ r.durum='Müdür Onayı'; pushTL('Müdür onayı verildi'); showBanner('Onay verildi ✅','ok'); }
+  if(act==='offer'){ r.durum='Fiyat Teklifi'; pushTL('Fiyat teklifi talep edildi'); showBanner('Fiyat teklifi aşamasında 🔄','ok'); }
+  if(act==='payment'){ r.durum='Ödeme'; pushTL('Ödeme sürecine aktarıldı'); showBanner('Ödeme aşamasına aktarıldı 💰','ok'); }
+  if(act==='paid'){ r.durum='Termin'; pushTL('Ödeme yapıldı, termin bekleniyor'); showBanner('Ödeme yapıldı ⏳','ok'); }
+  if(act==='arrived'){ r.durum='Geldi'; r.gelisOnayi=true; pushTL('Satın alma birimi ürünün geldiğini onayladı'); showBanner('Ürün geldi ✅','ok'); }
+  if(act==='delete'){ data.splice(ix,1); showBanner('Kayıt silindi 🗑️','ok'); }
+
+  data[ix]=r; save(data); renderAll();
+  pushLog(settings.role, act, r.sofNo);
+}
+
+// Timeline
+function openTimeline(id){
+  const r = load().find(x=>x.id===id);
+  if(!r) return;
+  $('#tlSof').textContent = r.sofNo;
+  const arr = (r.timeline||[]);
+  let html = '<div class="stack">';
+  for (const x of arr){ html += '<span class="chip">'+x.ts.slice(0,16).replace('T',' ')+' — '+x.ev+'</span>'; }
+  html += '</div>';
+  $('#timelineWrap').innerHTML = html || '<div class="hint">Henüz kayıt yok.</div>';
+  openModal('timelineModal');
+}
+function openModal(id){ $('#'+id).classList.add('active'); }
+function closeModal(id){ $('#'+id).classList.remove('active'); }
+
+// Money
+function fmtMoney(n){ try{ return new Intl.NumberFormat('tr-TR', {style:'currency', currency:'TRY', maximumFractionDigits:0}).format(n||0) }catch(e){ return (n||0)+' TL' } }
+function nextSofNo(){
+  const y = new Date().getFullYear();
+  let seq = (parseInt(localStorage.getItem('sof_seq')||'0',10) + 1);
+  localStorage.setItem('sof_seq', String(seq));
+  return 'SOF-'+y+'-'+String(seq).padStart(4,'0');
+}
+
+// Save & Bulk
+function saveTalep(){
+  const rec = {
+    id: uid(),
+    sofNo: nextSofNo(),
+    birim: $('#fBirim').value.trim()||'—',
+    tip: $('#fTip2').value,
+    ad: $('#fAd').value.trim(),
+    miktar: Number($('#fMiktar').value||1),
+    birim2: $('#fBirim2').value.trim(),
+    fiyat: 0, toplam: 0,
+    tedarikci: $('#fTedarikci').value.trim(),
+    termin: $('#fTermin').value||'',
+    durum: 'Taslak',
+    timeline: [{ts:now(), ev:'Talep oluşturuldu'}],
+    owner: $('#fBirim').value.trim()||'—',
+    bildirimler: []
+  };
+  const data = load(); data.unshift(rec); save(data);
+  showBanner('Talep kaydedildi: '+rec.sofNo,'ok');
+  switchPage('dashboard'); renderAll();
+}
+function parseBulk(){
+  const raw = $('#bulkBox').value.trim(); if(!raw) return showBanner('Veri yok','err');
+  const lines = raw.split(/\n+/).filter(Boolean);
+  const data = load();
+  lines.forEach(line=>{
+    const cols = line.split(/[\t,;]+/);
+    const rec = {
+      id: uid(), sofNo: cols[0] && cols[0].startsWith('SOF-')? cols[0] : nextSofNo(),
+      birim: cols[0] && cols[0].startsWith('SOF-')? (cols[1]||'—') : (cols[0]||'—'),
+      tip: cols[0] && cols[0].startsWith('SOF-')? (cols[2]||'Genel') : (cols[1]||'Genel'),
+      ad: cols[0] && cols[0].startsWith('SOF-')? (cols[3]||'') : (cols[2]||''),
+      miktar: Number(cols[0] && cols[0].startsWith('SOF-')? (cols[4]||1) : (cols[3]||1)),
+      birim2: cols[0] && cols[0].startsWith('SOF-')? (cols[5]||'') : (cols[4]||''),
+      fiyat: Number(cols[0] && cols[0].startsWith('SOF-')? (cols[6]||0) : (cols[5]||0)),
+      toplam: 0,
+      tedarikci: cols[0] && cols[0].startsWith('SOF-')? (cols[7]||'') : (cols[6]||''),
+      termin: (cols[0] && cols[0].startsWith('SOF-')? (cols[8]||'') : (cols[7]||'')).slice(0,10),
+      durum:'Taslak', timeline:[{ts:now(), ev:'Toplu yükleme'}], owner:'—', bildirimler:[]
+    };
+    rec.toplam = (rec.fiyat||0) * (rec.miktar||1);
+    data.push(rec);
+  });
+  save(data); renderAll(); showBanner(lines.length+' satır eklendi.','ok');
+}
+
+// Logs
+function pushLog(user,act,sofNo){
+  const arr = JSON.parse(localStorage.getItem(LOG_KEY)||'[]');
+  arr.unshift({ts:now(), user, act, sofNo});
+  localStorage.setItem(LOG_KEY, JSON.stringify(arr));
+  renderLog();
+}
+function renderLog(){
+  const logs = JSON.parse(localStorage.getItem(LOG_KEY)||'[]');
+  const tb = $('#logTable');
+  tb.innerHTML = logs.map(x=>{
+    return '<tr><td>'+x.ts.replace('T',' ').slice(0,16)+'</td><td>'+x.user+'</td><td>'+(x.act+(x.sofNo?(' • '+x.sofNo):''))+'</td></tr>';
+  }).join('');
+}
+
+// Banner audio
+function playAudio(url){ const a=new Audio(url); a.play().catch(()=>{}); }
+
+// Modal
+function openModal(id){ $('#'+id).classList.add('active'); }
+function closeModal(id){ $('#'+id).classList.remove('active'); }
+</script>
+</body>
 </html>
