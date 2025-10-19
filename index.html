@@ -1186,19 +1186,6 @@
     <div class="loading-text">
      Sisteme bağlanıyor...
     </div>
-    <div class="corporate-signature">
-     <p class="signature-text">System engineered with precision by Karslio ⚙️</p>
-     <div class="bilingual-slogan">
-      <div class="slogan-container">
-       <div class="slogan-text slogan-english">
-        Designed for precision, built for performance.
-       </div>
-       <div class="slogan-text slogan-turkish">
-        Mükemmeliyet için tasarlandı, performans için üretildi.
-       </div>
-      </div>
-     </div>
-    </div>
    </div>
   </div><!-- Main Application -->
   <div class="app-container" id="appContainer"><!-- Sidebar -->
@@ -1207,15 +1194,7 @@
      <h2 class="sidebar-title">SOMTECH ERP</h2>
     </div>
     <div class="sidebar-menu">
-     <div class="menu-item active" data-module="dashboard"><span class="menu-icon">🏠</span> <span class="menu-text" id="menuDashboard">Özet</span>
-     </div>
-     <div class="menu-item" data-module="records"><span class="menu-icon">📄</span> <span class="menu-text" id="menuRecords">Kayıt Tablosu</span>
-     </div>
-     <div class="menu-item" data-module="reports"><span class="menu-icon">📎</span> <span class="menu-text" id="menuReports">Rapor Formu</span>
-     </div>
-     <div class="menu-item" data-module="analytics"><span class="menu-icon">📊</span> <span class="menu-text" id="menuAnalytics">Raporlar</span>
-     </div>
-     <div class="menu-item" data-module="settings"><span class="menu-icon">⚙️</span> <span class="menu-text" id="menuSettings">Ayarlar</span>
+     <div class="menu-item active" data-module="records"><span class="menu-icon">📄</span> <span class="menu-text" id="menuRecords">Kayıt Tablosu</span>
      </div>
     </div>
    </div><!-- Main Content -->
@@ -1224,7 +1203,7 @@
      <div class="top-left"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="top-logo" onclick="window.open('https://www.somtech.ru', '_blank')" onerror="this.src=''; this.alt='Logo failed to load'; this.style.display='none';">
      </div>
      <div class="page-title-center" id="pageTitleCenter">
-      Özet
+      Kayıt Tablosu
      </div>
      <div class="top-controls"><button class="control-btn" id="languageBtn" onclick="toggleLanguageDropdown()"> <span>🌐</span>
        <div class="dropdown" id="languageDropdown">
@@ -1243,80 +1222,8 @@
        </div></button>
      </div>
     </div><!-- Content Area -->
-    <div class="content-area"><!-- Dashboard Content -->
-     <div id="dashboardContent" class="module-content">
-      <div class="dashboard-grid">
-       <div class="dashboard-card">
-        <div class="card-title">
-         Toplam Demirbaş Fiyatı
-        </div>
-        <div class="card-value" id="totalAssetValue">
-         ₽ 0
-        </div>
-        <div class="card-subtitle">
-         Tüm demirbaş varlıkları
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Toplam Sarf Fiyatı
-        </div>
-        <div class="card-value" id="totalConsumableValue">
-         ₽ 0
-        </div>
-        <div class="card-subtitle">
-         Sarf malzemeleri
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Toplam Teslimat Adedi
-        </div>
-        <div class="card-value" id="totalDeliveryCount">
-         0
-        </div>
-        <div class="card-subtitle">
-         Teslim edilen ürünler
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Bekleyen Talepler
-        </div>
-        <div class="card-value" id="pendingRequestsCount">
-         0
-        </div>
-        <div class="card-subtitle">
-         İşlem bekleyen
-        </div>
-       </div>
-      </div>
-      <div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
-       <div class="dashboard-card">
-        <div class="card-title">
-         Tamamlanan Talepler
-        </div>
-        <div class="card-value" id="completedRequestsCount">
-         0
-        </div>
-        <div class="card-subtitle">
-         Bu ay tamamlanan işlemler
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Sistem Durumu
-        </div>
-        <div class="card-value" style="color: #22C55E;">
-         Aktif
-        </div>
-        <div class="card-subtitle">
-         Tüm sistemler çalışıyor
-        </div>
-       </div>
-      </div>
-     </div><!-- Records Table Content -->
-     <div id="recordsContent" class="module-content" style="display: none;">
+    <div class="content-area"><!-- Records Table Content -->
+     <div id="recordsContent" class="module-content">
       <div class="table-container">
        <div class="table-header-section">
         <div class="table-title">
@@ -1376,112 +1283,6 @@
         </table>
        </div>
       </div>
-     </div><!-- Reports Content -->
-     <div id="reportsContent" class="module-content" style="display: none;">
-      <div class="table-container">
-       <div class="table-header-section">
-        <div class="table-title">
-         📎 Rapor Formu
-        </div>
-        <div class="table-actions"><button class="primary-btn" onclick="openUploadModal()"> <span>➕</span> <span>Yeni Rapor Ekle</span> </button>
-        </div>
-       </div>
-       <div class="virtual-table-wrapper">
-        <table class="data-table">
-         <thead class="table-header">
-          <tr>
-           <th>Rapor Adı</th>
-           <th>İlgili Talep No</th>
-           <th>Yükleyen</th>
-           <th>Tarih</th>
-           <th>İşlem</th>
-          </tr>
-         </thead>
-         <tbody class="table-body" id="reportsTableBody"><!-- Reports will be populated here -->
-         </tbody>
-        </table>
-       </div>
-      </div>
-     </div><!-- Analytics Content -->
-     <div id="analyticsContent" class="module-content" style="display: none;">
-      <div class="table-title" style="margin-bottom: 2rem;">
-       📊 Raporlar
-      </div>
-      <div class="dashboard-grid">
-       <div class="dashboard-card">
-        <div class="card-title">
-         Aylık Harcama
-        </div>
-        <div class="card-value" id="monthlyExpense">
-         ₽ 0
-        </div>
-        <div class="card-subtitle">
-         Bu ay toplam
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Yıllık Harcama
-        </div>
-        <div class="card-value" id="yearlyExpense">
-         ₽ 0
-        </div>
-        <div class="card-subtitle">
-         Bu yıl toplam
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Ortalama İşlem Süresi
-        </div>
-        <div class="card-value" id="avgProcessTime">
-         0 gün
-        </div>
-        <div class="card-subtitle">
-         Talep-teslim arası
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Tedarikçi Sayısı
-        </div>
-        <div class="card-value" id="supplierCount">
-         0
-        </div>
-        <div class="card-subtitle">
-         Aktif tedarikçiler
-        </div>
-       </div>
-      </div>
-     </div><!-- Settings Content -->
-     <div id="settingsContent" class="module-content" style="display: none;">
-      <div class="table-title" style="margin-bottom: 2rem;">
-       ⚙️ Ayarlar
-      </div>
-      <div class="dashboard-grid">
-       <div class="dashboard-card">
-        <div class="card-title">
-         Sistem Bilgileri
-        </div>
-        <div class="card-value" style="font-size: 1.2rem;">
-         v9.0
-        </div>
-        <div class="card-subtitle">
-         SOMTECH SOF ERP
-        </div>
-       </div>
-       <div class="dashboard-card">
-        <div class="card-title">
-         Kullanıcı Ayarları
-        </div>
-        <div class="card-value" style="font-size: 1.2rem;">
-         Aktif
-        </div>
-        <div class="card-subtitle">
-         Profil ve tercihler
-        </div>
-       </div>
-      </div>
      </div>
     </div>
    </div><!-- Smart Action Bar -->
@@ -1534,7 +1335,7 @@
         // Global Variables
         let currentUser = null;
         let currentLanguage = 'tr';
-        let currentModule = 'dashboard';
+        let currentModule = 'records';
         let selectedRecord = null;
 
         // Language Translations
@@ -1548,11 +1349,7 @@
                 login_button: "Giriş Yap",
                 
                 // Menu
-                dashboard: "Özet",
                 records: "Kayıt Tablosu",
-                reports: "Rapor Formu",
-                analytics: "Raporlar",
-                settings: "Ayarlar",
                 
                 // Common
                 profile: "Profil",
@@ -1568,11 +1365,7 @@
                 login_button: "Login",
                 
                 // Menu
-                dashboard: "Dashboard",
                 records: "Records Table",
-                reports: "Report Forms",
-                analytics: "Analytics",
-                settings: "Settings",
                 
                 // Common
                 profile: "Profile",
@@ -1588,11 +1381,7 @@
                 login_button: "Войти",
                 
                 // Menu
-                dashboard: "Панель управления",
                 records: "Таблица записей",
-                reports: "Формы отчетов",
-                analytics: "Аналитика",
-                settings: "Настройки",
                 
                 // Common
                 profile: "Профиль",
@@ -1695,17 +1484,9 @@
             if (loginButton) loginButton.textContent = t('login_button');
             
             // Menu items
-            const menuDashboard = document.getElementById('menuDashboard');
             const menuRecords = document.getElementById('menuRecords');
-            const menuReports = document.getElementById('menuReports');
-            const menuAnalytics = document.getElementById('menuAnalytics');
-            const menuSettings = document.getElementById('menuSettings');
             
-            if (menuDashboard) menuDashboard.textContent = t('dashboard');
             if (menuRecords) menuRecords.textContent = t('records');
-            if (menuReports) menuReports.textContent = t('reports');
-            if (menuAnalytics) menuAnalytics.textContent = t('analytics');
-            if (menuSettings) menuSettings.textContent = t('settings');
             
             // Other elements
             const profileText = document.getElementById('profileText');
@@ -2334,5 +2115,5 @@
             window.elementSdk.init(element);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9908af3ec1f8e1e2',t:'MTc2MDc5NzMxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991104fd666b23a8',t:'MTc2MDg4NDcxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
