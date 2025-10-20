@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SOMTECH — SOF v1.8.3 (GlassNav SPA)</title>
+<title>SOMTECH — SOF v1.8.4 (MultiLang + RoleControl + Loader)</title>
 <style>
   :root{
     --bg:#0f1115; --fg:#eaeaea; --muted:#9aa0aa; --accent:#22d3ee;
@@ -14,6 +14,20 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--fg);font-family:Segoe UI,system-ui,Roboto,Arial,sans-serif}
   a{color:var(--accent);text-decoration:none}
+  /* Loader */
+  #loader{
+    position:fixed;inset:0;background:rgba(6,8,12,.9);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:18px;
+  }
+  .ring{
+    width:88px;height:88px;border-radius:50%;border:4px solid rgba(34,211,238,.25);
+    border-top-color:var(--accent);animation:spin 1s linear infinite;box-shadow:0 0 22px rgba(34,211,238,.25);
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loader-brand{display:flex;align-items:center;gap:10px}
+  .loader-brand img{width:42px;height:42px;border-radius:12px}
+  .loader-sub{color:#9aa0aa}
+  .loader-sign{font-style:italic;color:#7c8694}
   /* Sidebar */
   .sidebar{
     position:fixed;left:16px;top:16px;bottom:16px;width:var(--navw);
@@ -45,15 +59,21 @@
     position:sticky;top:0;z-index:5;
     margin-left:calc(var(--navw) + 32px);
     background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);
-    display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:10px 16px;
+    display:flex;justify-content:flex-end;gap:10px;align-items:center;padding:10px 16px;
   }
   select,.btn{background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:8px 10px;font-weight:600}
   .btn{cursor:pointer}
+  .flag{cursor:pointer;font-size:18px;line-height:1}
   /* Main content */
   main{max-width:1200px;margin-left:calc(var(--navw) + 32px);padding:18px 16px}
   .card{background:var(--glass);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 0 12px rgba(34,211,238,.06)}
   h2{margin:0 0 12px 0;font-size:18px;color:var(--accent)}
   .muted{color:var(--muted);font-size:12px}
+  /* Summary cards */
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .kpi{background:#0e1a1c;border:1px solid var(--bdr);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px}
+  .kpi .label{font-size:12px;color:#9aa0aa}
+  .kpi .value{font-size:20px;font-weight:800}
   /* Tables */
   table{width:100%;border-collapse:collapse;table-layout:fixed}
   th,td{padding:10px 12px;border-bottom:1px solid var(--bdr);text-align:left;vertical-align:middle;font-size:14px}
@@ -67,16 +87,18 @@
   .st-rej{background:rgba(239,68,68,.18);color:#ef4444}
   .row-toggle{cursor:pointer;color:var(--accent);font-weight:900;text-align:center}
   .details-row{display:none}
+  /* Subtable alignment improvements */
   .subwrap{background:#14161a;border-top:1px solid #22d3ee55;border-bottom:1px solid #22d3ee55;border-radius:10px;margin-top:6px}
+  .sub{width:100%}
   .subhead th{font-size:13px}
   .sub td{border-bottom:1px solid #1e2025}
   .sub tr:last-child td{border-bottom:none}
-  .sub td:nth-child(1){width:22%}
-  .sub td:nth-child(2){width:8%;text-align:center}
-  .sub td:nth-child(3){width:8%;text-align:center}
-  .sub td:nth-child(4){width:26%}
-  .sub td:nth-child(5){width:24%}
-  .sub td:nth-child(6){width:12%;text-align:center}
+  .sub th:nth-child(1), .sub td:nth-child(1){width:22%}
+  .sub th:nth-child(2), .sub td:nth-child(2){width:8%;text-align:center}
+  .sub th:nth-child(3), .sub td:nth-child(3){width:8%;text-align:center}
+  .sub th:nth-child(4), .sub td:nth-child(4){width:26%}
+  .sub th:nth-child(5), .sub td:nth-child(5){width:24%}
+  .sub th:nth-child(6), .sub td:nth-child(6){width:12%;text-align:center}
   /* Modal */
   .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:50}
   .sheet{width:min(1000px,92vw);max-height:86vh;overflow:auto;background:#0c1016;border:1px solid var(--bdr);border-radius:16px;padding:16px}
@@ -90,11 +112,27 @@
     .topbar{margin-left:12px}
     main{margin-left:12px}
     .menu-btn{display:inline-block}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr}
   }
   .menu-btn{display:none;margin-right:auto}
+  .disabled{opacity:.55;pointer-events:none;filter:grayscale(.3)}
 </style>
 </head>
 <body>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-brand">
+    <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH" />
+    <h2 style="margin:0;color:#22d3ee">SOMTECH — SOF</h2>
+  </div>
+  <div class="ring"></div>
+  <div class="loader-sub" data-i18n="connecting">Sisteme bağlanıyor…</div>
+  <div class="loader-sign">System engineered with precision by <b>Karsli</b> ⚙️</div>
+</div>
 
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
@@ -105,25 +143,26 @@
     <h1>SOMTECH — SOF</h1>
   </div>
   <nav class="nav" id="navLinks">
-    <a href="#sec-ledger" class="active">🏷️ Satın Alma Defteri</a>
-    <a href="#sec-mine">📦 Taleplerim</a>
-    <a href="#sec-approvals">🛡️ Onaylar</a>
-    <a href="#sec-payments">💰 Ödemeler</a>
-    <a href="#sec-proc">🛒 Satın Alma</a>
+    <a href="#sec-summary" data-section="sec-summary">🏠 <span data-i18n="summary">Özet</span></a>
+    <a href="#sec-ledger" class="active" data-section="sec-ledger">🏷️ <span data-i18n="ledger">Satın Alma Defteri</span></a>
+    <a href="#sec-mine" data-section="sec-mine">📦 <span data-i18n="mine">Taleplerim</span></a>
+    <a href="#sec-approvals" data-section="sec-approvals">🛡️ <span data-i18n="approvals">Onaylar</span></a>
+    <a href="#sec-payments" data-section="sec-payments">💰 <span data-i18n="payments">Ödemeler</span></a>
+    <a href="#sec-proc" data-section="sec-proc">🛒 <span data-i18n="procurement">Satın Alma</span></a>
   </nav>
   <div class="grow"></div>
-  <div class="nav-footer">v1.8.3 • GlassNav SPA</div>
+  <div class="nav-footer">v1.8.4 • MultiLang + RoleControl + Loader</div>
 </aside>
 
 <!-- Topbar -->
 <div class="topbar">
   <button class="btn menu-btn" onclick="toggleSidebar()">☰</button>
-  <span class="muted">Dil</span>
-  <select id="langSel">
-    <option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option>
-  </select>
+  <span class="muted" data-i18n="language">Dil</span>
+  <span id="flag-tr" class="flag" title="Türkçe">🇹🇷</span>
+  <span id="flag-ru" class="flag" title="Русский">🇷🇺</span>
+  <span id="flag-en" class="flag" title="English">🇬🇧</span>
   <button class="btn" id="themeBtn" title="Tema">🌙</button>
-  <span class="muted">Rol</span>
+  <span class="muted" data-i18n="role">Rol</span>
   <select id="roleSel">
     <option>Birim Kullanıcısı</option>
     <option>Müdür</option>
@@ -134,69 +173,90 @@
 </div>
 
 <main>
+  <!-- Summary -->
+  <section class="card" id="sec-summary">
+    <h2>🏠 <span data-i18n="summary">Özet</span></h2>
+    <div class="grid">
+      <div class="kpi"><div class="label" data-i18n="totalRequests">Toplam Talep Sayısı</div><div class="value" id="kpi-total">0</div></div>
+      <div class="kpi"><div class="label" data-i18n="pendingApprovals">Onay Bekleyen Sayısı</div><div class="value" id="kpi-approve">0</div></div>
+      <div class="kpi"><div class="label" data-i18n="pendingPayments">Ödeme Bekleyen Sayısı</div><div class="value" id="kpi-pay">0</div></div>
+      <div class="kpi"><div class="label" data-i18n="lastAction">Son İşlem Tarihi</div><div class="value" id="kpi-last">—</div></div>
+      <div class="kpi"><div class="label" data-i18n="totalFixed">Toplam Demirbaş Adedi</div><div class="value" id="kpi-demirbas">0</div></div>
+      <div class="kpi"><div class="label" data-i18n="totalConsumable">Toplam Sarf Adedi</div><div class="value" id="kpi-sarf">0</div></div>
+    </div>
+  </section>
+
   <!-- Ledger -->
   <section class="card" id="sec-ledger">
-    <h2>📘 Satın Alma Defteri</h2>
+    <h2>📘 <span data-i18n="ledger">Satın Alma Defteri</span></h2>
     <table>
       <thead><tr>
         <th style="width:6%"></th>
-        <th style="width:20%">SOF No</th>
-        <th style="width:15%">Durum</th>
-        <th style="width:18%">Ana Tür</th>
-        <th style="width:10%">Kalem</th>
-        <th style="width:16%">Termin</th>
-        <th style="width:15%">Demirbaş/Sarf</th>
+        <th style="width:20%" data-i18n="sofno">SOF No</th>
+        <th style="width:15%" data-i18n="status">Durum</th>
+        <th style="width:18%" data-i18n="mainType">Ana Tür</th>
+        <th style="width:10%" data-i18n="items">Kalem</th>
+        <th style="width:16%" data-i18n="due">Termin</th>
+        <th style="width:15%" data-i18n="dsType">Demirbaş/Sarf</th>
       </tr></thead>
       <tbody id="ledgerBody"></tbody>
     </table>
-    <div class="muted" style="margin-top:6px">Satıra tıklayıp alt detayları açabilirsiniz.</div>
+    <div class="muted" style="margin-top:6px" data-i18n="rowHint">Satıra tıklayıp alt detayları açabilirsiniz.</div>
   </section>
 
   <!-- Mine -->
   <section class="card" id="sec-mine">
-    <h2>📦 Taleplerim</h2>
-    <table><thead><tr><th>SOF No</th><th>Malzeme</th><th>Miktar</th><th>Durum</th></tr></thead><tbody id="mineBody"></tbody></table>
+    <h2>📦 <span data-i18n="mine">Taleplerim</span></h2>
+    <table><thead><tr>
+      <th data-i18n="sofno">SOF No</th><th data-i18n="material">Malzeme</th><th data-i18n="quantity">Miktar</th><th data-i18n="status">Durum</th>
+    </tr></thead><tbody id="mineBody"></tbody></table>
   </section>
 
   <!-- Approvals -->
   <section class="card" id="sec-approvals">
-    <h2>🛡️ Onaylar</h2>
-    <table><thead><tr><th>SOF No</th><th>Kalem</th><th>Ana Tür</th><th>İşlem</th></tr></thead><tbody id="approvalsBody"></tbody></table>
+    <h2>🛡️ <span data-i18n="approvals">Onaylar</span></h2>
+    <table><thead><tr>
+      <th data-i18n="sofno">SOF No</th><th data-i18n="items">Kalem</th><th data-i18n="mainType">Ana Tür</th><th data-i18n="action">İşlem</th>
+    </tr></thead><tbody id="approvalsBody"></tbody></table>
   </section>
 
   <!-- Payments -->
   <section class="card" id="sec-payments">
-    <h2>💰 Ödemeler</h2>
-    <table><thead><tr><th>SOF No</th><th>Tutar (₽)</th><th>Tedarikçi</th><th>Ön Fatura</th><th>İşlem</th></tr></thead><tbody id="paymentsBody"></tbody></table>
+    <h2>💰 <span data-i18n="payments">Ödemeler</span></h2>
+    <table><thead><tr>
+      <th data-i18n="sofno">SOF No</th><th data-i18n="amount">Tutar (₽)</th><th data-i18n="vendor">Tedarikçi</th><th data-i18n="proforma">Ön Fatura</th><th data-i18n="action">İşlem</th>
+    </tr></thead><tbody id="paymentsBody"></tbody></table>
   </section>
 
   <!-- Procurement -->
   <section class="card" id="sec-proc">
-    <h2>🛒 Satın Alma</h2>
+    <h2>🛒 <span data-i18n="procurement">Satın Alma</span></h2>
     <table>
-      <thead><tr><th>SOF No</th><th>Tutar (₽)</th><th>Tedarikçi</th><th>Termin</th><th>Ön Fatura</th><th>Açıklama</th><th>Kaydet</th></tr></thead>
+      <thead><tr>
+        <th data-i18n="sofno">SOF No</th><th data-i18n="amount">Tutar (₽)</th><th data-i18n="vendor">Tedarikçi</th><th data-i18n="due">Termin</th><th data-i18n="proforma">Ön Fatura</th><th data-i18n="note">Açıklama</th><th data-i18n="save">Kaydet</th>
+      </tr></thead>
       <tbody id="procBody"></tbody>
     </table>
   </section>
 
-  <footer>System engineered with precision by <b>Karsli</b> ⚙️ — v1.8.3</footer>
+  <footer>System engineered with precision by <b>Karsli</b> ⚙️ — v1.8.4</footer>
 </main>
 
 <!-- Timeline Modal -->
 <div id="tlModal" class="modal" onclick="closeModal(event)">
   <div class="sheet">
-    <h3>📈 Süreç Takibi — <span id="tlSof"></span></h3>
+    <h3>📈 <span data-i18n="timeline">Süreç Takibi</span> — <span id="tlSof"></span></h3>
     <div class="timeline" id="tlBody"></div>
-    <div class="right"><button class="btn" onclick="modalHide()">Kapat</button></div>
+    <div class="right"><button class="btn" onclick="modalHide()" data-i18n="close">Kapat</button></div>
   </div>
 </div>
 
 <!-- PDF Modal -->
 <div id="pdfModal" class="modal" onclick="pdfClose(event)">
   <div class="sheet" style="width:min(1100px,92vw);height:min(86vh,900px)">
-    <h3>📄 Ön Fatura Görüntüleme</h3>
+    <h3>📄 <span data-i18n="proformaView">Ön Fatura Görüntüleme</span></h3>
     <embed id="pdfViewer" type="application/pdf" width="100%" height="80%">
-    <div class="right"><button class="btn" onclick="pdfHide()">Kapat</button></div>
+    <div class="right"><button class="btn" onclick="pdfHide()" data-i18n="close">Kapat</button></div>
   </div>
 </div>
 
@@ -230,15 +290,28 @@ window.addEventListener('load', ()=>{
   });
 });
 
-// ==== App State (from v1.8.2) ====
-const app = { role: localStorage.getItem('sof_role') || 'Birim Kullanıcısı', theme: localStorage.getItem('sof_theme') || 'dark', requests: [] };
+// ==== App State (keep previous data, no deletion) ====
+const app = { 
+  role: localStorage.getItem('sof_role') || 'Birim Kullanıcısı', 
+  theme: localStorage.getItem('sof_theme') || 'dark', 
+  lang: localStorage.getItem('sof_lang') || 'tr',
+  requests: [] 
+};
 const $ = s => document.querySelector(s);
 function ts(){ return new Date().toLocaleString(); }
-function persist(){ localStorage.setItem('sof_state_v183', JSON.stringify(app)); }
-function load(){ const raw=localStorage.getItem('sof_state_v183'); if(raw){ try{ Object.assign(app, JSON.parse(raw)); }catch(e){} } }
+function persist(){ localStorage.setItem('sof_state_v184', JSON.stringify(app)); }
+function load(){ 
+  const raw184=localStorage.getItem('sof_state_v184'); 
+  const raw183=localStorage.getItem('sof_state_v183'); 
+  const raw182=localStorage.getItem('sof_state_v182'); 
+  const src = raw184 || raw183 || raw182;
+  if(src){ try{ Object.assign(app, JSON.parse(src)); }catch(e){} } 
+}
 
 function seed(){
+  // do not overwrite if data exists
   if((app.requests||[]).length) return;
+  // same seed as previous + safe to extend in future
   app.requests = [
     { sof:'SMT-SOFD-0003', typeDS:'D', anaTur:'Mobilya',
       lines:[
@@ -270,8 +343,42 @@ function applyTheme(){
 }
 document.getElementById('themeBtn').onclick = ()=>{ app.theme=app.theme==='dark'?'light':'dark'; localStorage.setItem('sof_theme',app.theme); applyTheme(); };
 
-function setRole(r){ app.role=r; localStorage.setItem('sof_role',r); /* v1.8.3: görünürlük SPA ile yönetiliyor */ renderAll(); }
+function setRole(r){ app.role=r; localStorage.setItem('sof_role',r); applyRoleMenu(); renderAll(); }
 document.getElementById('roleSel').addEventListener('change', (e)=> setRole(e.target.value));
+
+// Role-based navigation + permission
+function applyRoleMenu(){
+  const role = app.role;
+  const show = id => { const el = document.querySelector(`[data-section="${id}"]`); if(el) el.style.display='flex'; };
+  const hide = id => { const el = document.querySelector(`[data-section="${id}"]`); if(el) el.style.display='none'; };
+
+  // default hide all
+  ['sec-summary','sec-ledger','sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>hide(id));
+
+  // Everyone sees Summary + Ledger
+  show('sec-summary'); show('sec-ledger');
+
+  if(role==='Birim Kullanıcısı'){ show('sec-mine'); }
+  else if(role==='Müdür'){ show('sec-approvals'); }
+  else if(role==='Muhasebe'){ show('sec-payments'); }
+  else if(role==='Satın Alma'){ show('sec-approvals'); show('sec-payments'); show('sec-proc'); }
+  else { // Admin
+    ['sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>show(id));
+  }
+
+  // If current hash points to hidden section, fallback to ledger
+  const current = (location.hash||'#sec-ledger').substring(1);
+  const currentLink = document.querySelector(`[data-section="${current}"]`);
+  if(!currentLink || currentLink.style.display==='none'){
+    switchSection('sec-ledger');
+    document.querySelectorAll('#navLinks a').forEach(x=>x.classList.remove('active'));
+    document.querySelector('[data-section="sec-ledger"]').classList.add('active');
+  }
+
+  // Permissions: make approvals/payments read-only for 'Satın Alma'
+  const ro = (role==='Satın Alma');
+  document.body.dataset.readonlyApprovals = ro ? '1' : '0';
+}
 
 // Render helpers
 function pill(status){
@@ -294,13 +401,20 @@ function renderLedger(){
     const dtr = document.createElement('tr');
     dtr.className='details-row'; dtr.id='det-'+i;
     dtr.innerHTML = `<td colspan="7"><div class="subwrap">
-      <table class="sub" style="width:100%">
+      <table class="sub">
         <thead class="subhead">
-          <tr><th>Malzeme</th><th>Miktar</th><th>Birim</th><th>Detay Bilgi</th><th>Açıklama</th><th>Ön Fatura / Link</th></tr>
+          <tr>
+            <th data-i18n="material">Malzeme</th>
+            <th data-i18n="quantityShort">Miktar</th>
+            <th data-i18n="unit">Birim</th>
+            <th data-i18n="detailInfo">Detay Bilgi</th>
+            <th data-i18n="note">Açıklama</th>
+            <th data-i18n="proformaOrLink">Ön Fatura / Link</th>
+          </tr>
         </thead>
         <tbody>${r.lines.map(l=>`
-          <tr><td>${l.item||''}</td><td>${l.qty||''}</td><td>${l.unit||''}</td><td>${l.info||''}</td><td>${l.note||''}</td>
-              <td>${r.procurement?.onFatura? `<a href="#" onclick="showPdf('${r.sof}')">📄 ${r.procurement.onFatura}</a>` : (l.link? `<a href="${l.link}" target="_blank">🔗 link</a>`:'—')}</td></tr>`).join('')}
+          <tr><td>${l.item||''}</td><td style="text-align:center">${l.qty||''}</td><td style="text-align:center">${l.unit||''}</td><td>${l.info||''}</td><td>${l.note||''}</td>
+              <td style="text-align:center">${r.procurement?.onFatura? `<a href="#" onclick="showPdf('${r.sof}')">📄 ${r.procurement.onFatura}</a>` : (l.link? `<a href="${l.link}" target="_blank">🔗 link</a>`:'—')}</td></tr>`).join('')}
         </tbody>
       </table></div></td>`;
     body.appendChild(dtr);
@@ -329,8 +443,10 @@ function renderApprovals(){
   app.requests.filter(r=>r.status==='Onay Bekliyor').forEach(r=>{
     const tr=document.createElement('tr');
     tr.innerHTML = `<td>${r.sof}</td><td>${r.lines.length}</td><td>${r.anaTur||'—'}</td>
-      <td><button class="btn" onclick="approve('${r.sof}')">✅ Onayla</button>
-          <button class="btn" onclick="rejectPrompt('${r.sof}')">❌ Reddet</button></td>`;
+      <td>
+        <button class="btn ${document.body.dataset.readonlyApprovals==='1'?'disabled':''}" onclick="approve('${r.sof}')" data-i18n="approveBtn">✅ Onayla</button>
+        <button class="btn ${document.body.dataset.readonlyApprovals==='1'?'disabled':''}" onclick="rejectPrompt('${r.sof}')" data-i18n="rejectBtn">❌ Reddet</button>
+      </td>`;
     body.appendChild(tr);
   });
 }
@@ -340,9 +456,10 @@ function renderPayments(){
   const body=document.getElementById('paymentsBody'); body.innerHTML='';
   app.requests.filter(r=>r.status==='Ödeme Bekliyor').forEach(r=>{
     const f=r.procurement||{}; const pf=f.onFatura? `<a href="#" onclick="showPdf('${r.sof}')">${f.onFatura}</a>`:'—';
+    const ro = document.body.dataset.readonlyApprovals==='1';
     const tr=document.createElement('tr');
     tr.innerHTML = `<td>${r.sof}</td><td>${f.fiyat||0}</td><td>${f.tedarikci||'-'}</td><td>${pf}</td>
-      <td><button class="btn" onclick="markPaid('${r.sof}')">💸 Ödeme Yapıldı</button></td>`;
+      <td><button class="btn ${ro?'disabled':''}" onclick="markPaid('${r.sof}')" data-i18n="markPaidBtn">💸 Ödeme Yapıldı</button></td>`;
     body.appendChild(tr);
   });
 }
@@ -359,14 +476,14 @@ function renderProc(){
       <td><input type="date" value="${p.termin||''}" style="background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
       <td><input type="file" accept="application/pdf" style="color:#cbd5e1"></td>
       <td><input value="${p.aciklama||''}" style="width:180px;background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
-      <td><button class="btn" onclick="saveProc(this,'${r.sof}')">Kaydet</button></td>`;
+      <td><button class="btn" onclick="saveProc(this,'${r.sof}')" data-i18n="save">Kaydet</button></td>`;
     body.appendChild(tr);
   });
 }
 
 // Actions
-function approve(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Onaylandı'; pushHistory(r,'Onaylandı'); persist(); renderAll(); }
-function rejectPrompt(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; const txt=prompt('Red sebebi (opsiyonel):'); r.status='Reddedildi'; if(txt) r.rejectReason=txt; pushHistory(r,'Reddedildi'); persist(); renderAll(); }
+function approve(sof){ if(document.body.dataset.readonlyApprovals==='1') return; const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Onaylandı'; pushHistory(r,'Onaylandı'); persist(); renderAll(); }
+function rejectPrompt(sof){ if(document.body.dataset.readonlyApprovals==='1') return; const r=app.requests.find(x=>x.sof===sof); if(!r) return; const txt=prompt(i18n('rejectReason')); r.status='Reddedildi'; if(txt) r.rejectReason=txt; pushHistory(r,'Reddedildi'); persist(); renderAll(); }
 function pushHistory(r, step){ r.history=r.history||[]; r.history.push({step,at:ts(),by:app.role}); }
 function saveProc(btn, sof){
   const tr=btn.closest('tr'); const inputs=tr.querySelectorAll('input');
@@ -381,7 +498,7 @@ function saveProc(btn, sof){
   r.status='Ödeme Bekliyor'; pushHistory(r,'Satın Alma'); pushHistory(r,'Ödeme Bekliyor');
   persist(); renderAll();
 }
-function markPaid(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Ödeme Yapıldı'; pushHistory(r,'Ödeme Yapıldı'); persist(); renderAll(); }
+function markPaid(sof){ if(document.body.dataset.readonlyApprovals==='1') return; const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Ödeme Yapıldı'; pushHistory(r,'Ödeme Yapıldı'); persist(); renderAll(); }
 
 // Timeline + PDF
 function openTimeline(sof){
@@ -390,7 +507,7 @@ function openTimeline(sof){
   const tl=document.getElementById('tlBody'); tl.innerHTML='';
   (r.history||[]).forEach(h=>{
     const div=document.createElement('div'); div.className='t';
-    div.innerHTML=`<b>${h.step}</b><div class="muted">${h.at} — ${h.by}${r.rejectReason && h.step==='Reddedildi' ? '<br><i>Sebep: '+r.rejectReason+'</i>':''}</div>`;
+    div.innerHTML=`<b>${h.step}</b><div class="muted">${h.at} — ${h.by}${r.rejectReason && h.step==='Reddedildi' ? '<br><i>'+i18n('reason')+': '+r.rejectReason+'</i>':''}</div>`;
     tl.appendChild(div);
   });
   document.getElementById('tlModal').style.display='flex';
@@ -407,14 +524,73 @@ function showPdf(sof){
 function pdfHide(){ document.getElementById('pdfModal').style.display='none'; }
 function pdfClose(e){ if(e.target.id==='pdfModal') pdfHide(); }
 
+// Summary compute
+function renderSummary(){
+  const all=app.requests||[];
+  $('#kpi-total').textContent = all.length;
+  $('#kpi-approve').textContent = all.filter(r=>r.status==='Onay Bekliyor').length;
+  $('#kpi-pay').textContent = all.filter(r=>r.status==='Ödeme Bekliyor').length;
+  const last = all.flatMap(r=> (r.history||[])).map(h=>h.at).sort().slice(-1)[0];
+  $('#kpi-last').textContent = last || '—';
+  $('#kpi-demirbas').textContent = all.filter(r=>r.typeDS==='D').length;
+  $('#kpi-sarf').textContent = all.filter(r=>r.typeDS==='S').length;
+}
+
+// i18n
+const LANG = {
+  tr: {
+    connecting:"Sisteme bağlanıyor…", language:"Dil", role:"Rol", summary:"Özet", ledger:"Satın Alma Defteri", mine:"Taleplerim",
+    approvals:"Onaylar", payments:"Ödemeler", procurement:"Satın Alma", sofno:"SOF No", status:"Durum", mainType:"Ana Tür", items:"Kalem", due:"Termin", dsType:"Demirbaş/Sarf",
+    rowHint:"Satıra tıklayıp alt detayları açabilirsiniz.", material:"Malzeme", quantity:"Miktar", quantityShort:"Miktar", unit:"Birim", detailInfo:"Detay Bilgi", note:"Açıklama",
+    proforma:"Ön Fatura", proformaOrLink:"Ön Fatura / Link", action:"İşlem", amount:"Tutar (₽)", vendor:"Tedarikçi", save:"Kaydet", timeline:"Süreç Takibi", close:"Kapat",
+    proformaView:"Ön Fatura Görüntüleme", approveBtn:"✅ Onayla", rejectBtn:"❌ Reddet", markPaidBtn:"💸 Ödeme Yapıldı", rejectReason:"Red sebebi (opsiyonel):",
+    reason:"Sebep", totalRequests:"Toplam Talep Sayısı", pendingApprovals:"Onay Bekleyen Sayısı", pendingPayments:"Ödeme Bekleyen Sayısı",
+    lastAction:"Son İşlem Tarihi", totalFixed:"Toplam Demirbaş Adedi", totalConsumable:"Toplam Sarf Adedi"
+  },
+  ru: {
+    connecting:"Подключение к системе…", language:"Язык", role:"Роль", summary:"Сводка", ledger:"Журнал закупок", mine:"Мои заявки",
+    approvals:"Согласования", payments:"Платежи", procurement:"Закупка", sofno:"Номер SOF", status:"Статус", mainType:"Категория", items:"Позиции", due:"Срок", dsType:"ОС/Расход",
+    rowHint:"Кликните по строке, чтобы открыть детали.", material:"Материал", quantity:"Кол-во", quantityShort:"Кол-во", unit:"Ед.", detailInfo:"Подробно", note:"Примечание",
+    proforma:"Проформа", proformaOrLink:"Проформа / Ссылка", action:"Действие", amount:"Сумма (₽)", vendor:"Поставщик", save:"Сохранить", timeline:"Ход процесса", close:"Закрыть",
+    proformaView:"Просмотр проформы", approveBtn:"✅ Утвердить", rejectBtn:"❌ Отклонить", markPaidBtn:"💸 Оплачено", rejectReason:"Причина отказа (необязательно):",
+    reason:"Причина", totalRequests:"Всего заявок", pendingApprovals:"В ожидании утверждения", pendingPayments:"В ожидании оплаты",
+    lastAction:"Последнее действие", totalFixed:"Всего ОС", totalConsumable:"Всего расходных"
+  },
+  en: {
+    connecting:"Connecting to the system…", language:"Language", role:"Role", summary:"Summary", ledger:"Purchase Ledger", mine:"My Requests",
+    approvals:"Approvals", payments:"Payments", procurement:"Procurement", sofno:"SOF No", status:"Status", mainType:"Main Type", items:"Items", due:"Due Date", dsType:"Fixed/Consumable",
+    rowHint:"Click a row to expand details.", material:"Material", quantity:"Quantity", quantityShort:"Qty", unit:"Unit", detailInfo:"Detail Info", note:"Note",
+    proforma:"Proforma", proformaOrLink:"Proforma / Link", action:"Action", amount:"Amount (₽)", vendor:"Vendor", save:"Save", timeline:"Process Timeline", close:"Close",
+    proformaView:"View Proforma", approveBtn:"✅ Approve", rejectBtn:"❌ Reject", markPaidBtn:"💸 Mark Paid", rejectReason:"Rejection reason (optional):",
+    reason:"Reason", totalRequests:"Total Requests", pendingApprovals:"Pending Approvals", pendingPayments:"Pending Payments",
+    lastAction:"Last Action Time", totalFixed:"Total Fixed Assets", totalConsumable:"Total Consumables"
+  }
+};
+function i18n(key){
+  const dict = LANG[app.lang]||LANG.tr;
+  return dict[key]||key;
+}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    el.textContent = i18n(key);
+  });
+  localStorage.setItem('sof_lang', app.lang);
+}
+document.getElementById('flag-tr').onclick = ()=>{ app.lang='tr'; applyLang(); };
+document.getElementById('flag-ru').onclick = ()=>{ app.lang='ru'; applyLang(); };
+document.getElementById('flag-en').onclick = ()=>{ app.lang='en'; applyLang(); };
+
 function init(){
   load(); seed();
   document.getElementById('roleSel').value = app.role;
-  applyTheme(); renderAll();
-  // Başlangıçta hash yoksa defteri göster
-  if(!location.hash){ switchSection('sec-ledger'); }
+  applyTheme(); applyLang(); applyRoleMenu(); renderAll();
+  // Loader hide
+  setTimeout(()=>{ document.getElementById('loader').style.display='none'; }, 1000);
+  // Default section if none
+  if(!location.hash){ switchSection('sec-ledger'); document.querySelectorAll('#navLinks a').forEach(x=>x.classList.remove('active')); document.querySelector('[data-section="sec-ledger"]').classList.add('active'); }
 }
-function renderAll(){ renderLedger(); renderMine(); renderApprovals(); renderPayments(); renderProc(); }
+function renderAll(){ renderSummary(); renderLedger(); renderMine(); renderApprovals(); renderPayments(); renderProc(); }
 init();
 </script>
 </body>
