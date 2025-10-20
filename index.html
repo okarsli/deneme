@@ -1,585 +1,400 @@
+
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SOMTECH — SOF Sistemi (LocalStorage) v1.6.0</title>
-  <style>
-    :root{
-      --bg:#0F1115;--panel:#141822;--muted:#1A1F2B;--text:#E5E7EB;--sub:#A5B4FC;--acc:#22D3EE;--ok:#10B981;--warn:#F59E0B;--err:#EF4444;--chip:#2A3142;--glass:12px;
-      --shadow:0 8px 30px rgba(0,0,0,.35)
-    }
-    [data-theme="light"]{--bg:#F8FAFC;--panel:#FFFFFF;--muted:#E5E7EB;--text:#0F172A;--sub:#4F46E5;--acc:#06B6D4;--ok:#10B981;--warn:#D97706;--err:#DC2626;--chip:#E9EEF8}
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial}
-    .shell{display:grid;grid-template-columns:260px 1fr;height:100dvh}
-    aside{backdrop-filter:blur(var(--glass));background:linear-gradient(180deg,rgba(34,211,238,.06),rgba(34,211,238,0)) , var(--panel);border-right:1px solid var(--muted);padding:18px;position:sticky;top:0}
-    .logo{display:grid;place-items:center;height:84px;margin-bottom:12px}
-    .logo a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-    .logo img{width:56px;height:56px;border-radius:14px;box-shadow:var(--shadow)}
-    nav{display:flex;flex-direction:column;gap:8px}
-    .nav-btn{padding:10px 12px;border-radius:12px;background:transparent;border:1px solid transparent;color:var(--text);text-align:left;cursor:pointer}
-    .nav-btn.active,.nav-btn:hover{background:var(--muted);border-color:#2b3243}
-    header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--muted);background:var(--panel);position:sticky;top:0;z-index:3}
-    .title{font-weight:700}
-    .controls{display:flex;align-items:center;gap:10px}
-    .chip{background:var(--chip);padding:6px 10px;border-radius:999px;font-size:12px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid #2b3243;background:var(--panel);color:var(--text);cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--acc),#60A5FA);border:0;color:#06202a}
-    .btn.ghost{background:transparent;border:1px dashed #2b3243}
-    main{padding:16px;overflow:auto}
-    .card{background:var(--panel);border:1px solid var(--muted);border-radius:16px;box-shadow:var(--shadow)}
-    .grid{display:grid;gap:12px}
-    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
-    .kpi{padding:14px}
-    .kpi .label{opacity:.75}
-    .kpi .value{font-size:24px;font-weight:700;margin-top:6px}
-    .searchbar{display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--muted)}
-    .table-wrap{overflow:auto}
-    table{width:100%;border-collapse:separate;border-spacing:0}
-    thead th{position:sticky;top:0;background:linear-gradient(180deg,rgba(34,211,238,.06),rgba(34,211,238,0)),var(--panel);border-bottom:1px solid var(--muted);padding:10px 8px;text-align:left}
-    tbody td{border-bottom:1px solid var(--muted);padding:10px 8px;vertical-align:top}
-    tr:hover{background:rgba(34,211,238,.05)}
-    .status{padding:4px 8px;border-radius:999px;font-size:12px;display:inline-flex;align-items:center;gap:6px}
-    .s-draft{background:#374151}
-    .s-onay{background:#1f4937}
-    .s-teklif{background:#3b2f18}
-    .s-odeme{background:#2d3647}
-    .s-termin{background:#2a2b18}
-    .s-geldi{background:#1e2a3a}
-    .stack{display:flex;flex-wrap:wrap;gap:6px}
-    .hidden{display:none !important}
-    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:50}
-    .modal.active{display:grid}
-    .modal .content{width:min(900px,92vw);max-height:84vh;overflow:auto;padding:16px}
-    .row-actions{display:flex;gap:6px}
-    .role-tag{font-weight:600}
-    .hint{opacity:.7;font-size:12px}
-    .loader{height:88px;display:grid;place-items:center}
-    .ring{width:54px;height:54px;border-radius:999px;border:3px solid rgba(34,211,238,.35);border-top-color:var(--acc);animation:spin 1s linear infinite;box-shadow:0 0 20px rgba(34,211,238,.3)}
-    #banner{position:fixed;top:-60px;left:0;right:0;z-index:1000;padding:14px;text-align:center;font-weight:600;transition:top .4s}
-    #banner.show{top:0}
-    #banner.ok{background:#14532d;color:#bbf7d0}
-    #banner.err{background:#450a0a;color:#fecaca}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media (max-width:960px){.shell{grid-template-columns:1fr}aside{position:fixed;inset:0 40% 0 0;transform:translateX(-100%);transition:.25s}aside.open{transform:none}header .title{font-size:14px}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SOMTECH — SOF v1.8.2 (GlassNav)</title>
+<style>
+  :root{
+    --bg:#0f1115; --fg:#eaeaea; --muted:#9aa0aa; --accent:#22d3ee;
+    --glass:rgba(255,255,255,0.06); --bdr:rgba(255,255,255,0.12);
+    --good:#22c55e; --warn:#f59e0b; --bad:#ef4444; --info:#60a5fa;
+    --navw:240px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:Segoe UI,system-ui,Roboto,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  /* Sidebar */
+  .sidebar{
+    position:fixed;left:16px;top:16px;bottom:16px;width:var(--navw);
+    background:var(--glass);border:1px solid var(--bdr);border-radius:18px;
+    padding:14px;backdrop-filter:blur(12px);box-shadow:0 0 18px rgba(34,211,238,.08);
+    display:flex;flex-direction:column;gap:12px;z-index:10;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;justify-content:center;
+    padding:8px;border-bottom:1px solid var(--bdr);
+  }
+  .logo .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22d3ee33,#22d3ee77);box-shadow:0 0 20px rgba(34,211,238,.35)}
+  .logo h1{font-size:14px;color:var(--accent);margin:0}
+  .nav{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+  .nav a{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:var(--fg);
+    border:1px solid transparent;
+  }
+  .nav a:hover{background:rgba(255,255,255,.06);border-color:var(--bdr)}
+  .nav a.active{background:rgba(34,211,238,.12);border-color:#22d3ee88;box-shadow:0 0 0 2px rgba(34,211,238,.25) inset}
+  .grow{flex:1}
+  .nav-footer{font-size:12px;color:var(--muted);text-align:center;padding-top:6px;border-top:1px solid var(--bdr)}
+  /* Header controls */
+  .topbar{
+    position:sticky;top:0;z-index:5;
+    margin-left:calc(var(--navw) + 32px);
+    background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);
+    display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:10px 16px;
+  }
+  select,.btn{background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:8px 10px;font-weight:600}
+  .btn{cursor:pointer}
+  /* Main content */
+  main{max-width:1200px;margin-left:calc(var(--navw) + 32px);padding:18px 16px}
+  .card{background:var(--glass);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 0 12px rgba(34,211,238,.06)}
+  h2{margin:0 0 12px 0;font-size:18px;color:var(--accent)}
+  .muted{color:var(--muted);font-size:12px}
+  /* Tables */
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  th,td{padding:10px 12px;border-bottom:1px solid var(--bdr);text-align:left;vertical-align:middle;font-size:14px}
+  th{color:var(--accent);font-weight:700}
+  tr:hover{background:rgba(255,255,255,.03)}
+  .status-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800}
+  .st-wait{background:rgba(245,158,11,.15);color:#f59e0b}
+  .st-acc{background:rgba(34,197,94,.15);color:#22c55e}
+  .st-pay{background:rgba(96,165,250,.15);color:#60a5fa}
+  .st-done{background:rgba(148,163,184,.2);color:#cbd5e1}
+  .st-rej{background:rgba(239,68,68,.18);color:#ef4444}
+  .row-toggle{cursor:pointer;color:var(--accent);font-weight:900;text-align:center}
+  .details-row{display:none}
+  .subwrap{background:#14161a;border-top:1px solid #22d3ee55;border-bottom:1px solid #22d3ee55;border-radius:10px;margin-top:6px}
+  .subhead th{font-size:13px}
+  .sub td{border-bottom:1px solid #1e2025}
+  .sub tr:last-child td{border-bottom:none}
+  .sub td:nth-child(1){width:22%}
+  .sub td:nth-child(2){width:8%;text-align:center}
+  .sub td:nth-child(3){width:8%;text-align:center}
+  .sub td:nth-child(4){width:26%}
+  .sub td:nth-child(5){width:24%}
+  .sub td:nth-child(6){width:12%;text-align:center}
+  /* Modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:50}
+  .sheet{width:min(1000px,92vw);max-height:86vh;overflow:auto;background:#0c1016;border:1px solid var(--bdr);border-radius:16px;padding:16px}
+  .right{display:flex;gap:8px;justify-content:flex-end}
+  .timeline{border-left:2px solid var(--accent);margin-left:10px;padding-left:12px}
+  footer{text-align:center;color:#9aa0aa;padding:12px;border-top:1px solid var(--bdr);margin-top:10px}
+  /* Responsive */
+  @media (max-width:980px){
+    .sidebar{position:fixed;transform:translateX(-120%);transition:.3s;left:12px;right:auto}
+    .sidebar.open{transform:none}
+    .topbar{margin-left:12px}
+    main{margin-left:12px}
+    .menu-btn{display:inline-block}
+  }
+  .menu-btn{display:none;margin-right:auto}
+</style>
 </head>
 <body>
-<div id="banner"></div>
-<audio id="sound-ok" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
-<audio id="sound-err" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
 
-<div class="shell">
-  <aside id="sidebar">
-    <div class="logo">
-      <a href="https://somtech.ru" target="_blank" rel="noopener">
-        <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH"/>
-        <strong>SOMTECH — SOF</strong>
-      </a>
-    </div>
-    <nav>
-      <button class="nav-btn active" data-page="dashboard">🏠 Özet</button>
-      <button class="nav-btn" data-page="list">📄 Kayıt Tablosu</button>
-      <button class="nav-btn" data-page="form">📎 Talep Formu</button>
-      <button class="nav-btn" data-page="reports">📊 Raporlar</button>
-      <button class="nav-btn" data-page="logs" id="logsMenu" style="display:none">🧾 İşlem Geçmişi</button>
-      <button class="nav-btn" data-page="settings">⚙️ Ayarlar</button>
-    </nav>
-  </aside>
-  <section class="right">
-    <header>
-      <div class="title">SOF Sistemi</div>
-      <div class="controls">
-        <span class="chip" id="roleChip">Rol: <span class="role-tag" id="roleName">-</span></span>
-        <button class="btn" id="langBtn" title="Dil">🌐 TR</button>
-        <button class="btn" id="themeBtn" title="Tema">🌙</button>
-        <button class="btn" id="loginBtn" title="Giriş">👤 Giriş</button>
-      </div>
-    </header>
-    <main id="main">
-      <div class="card loader" id="loader">
-        <div>
-          <div class="ring" style="margin:auto"></div>
-          <div style="text-align:center;margin-top:8px">Sisteme bağlanıyor…</div>
-          <div style="text-align:center;margin-top:6px;font-style:italic;opacity:.7">System engineered with precision by Karslio ⚙️</div>
-        </div>
-      </div>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <a href="https://somtech.ru" target="_blank" title="SOMTECH"><div class="mark"></div></a>
+    <h1>SOMTECH — SOF</h1>
+  </div>
+  <nav class="nav" id="navLinks">
+    <a href="#sec-ledger" class="active">🏷️ Satın Alma Defteri</a>
+    <a href="#sec-mine">📦 Taleplerim</a>
+    <a href="#sec-approvals">🛡️ Onaylar</a>
+    <a href="#sec-payments">💰 Ödemeler</a>
+    <a href="#sec-proc">🛒 Satın Alma</a>
+  </nav>
+  <div class="grow"></div>
+  <div class="nav-footer">v1.8.2 • GlassNav</div>
+</aside>
 
-      <section id="dashboard" class="page hidden">
-        <div class="grid cols-3">
-          <div class="card kpi"><div class="label">Sarf Toplamı</div><div class="value" id="kpiSarf">0</div></div>
-          <div class="card kpi"><div class="label">Demirbaş Toplamı</div><div class="value" id="kpiDemirbas">0</div></div>
-          <div class="card kpi"><div class="label">Genel Toplam</div><div class="value" id="kpiGenel">0</div></div>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="searchbar">
-            <input id="qDash" class="btn" style="flex:1" placeholder="Hızlı arama (SOF No, isim, tedarikçi)"/>
-            <button class="btn" id="newFromDash">+ Yeni Talep</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>SOF No</th>
-                  <th>Talep Eden</th>
-                  <th>Tip</th>
-                  <th>Malzeme</th>
-                  <th>Miktar</th>
-                  <th class="col-fiyat">Fiyat/Toplam</th>
-                  <th>Durum</th>
-                  <th>Termin</th>
-                  <th>Tedarikçi</th>
-                  <th>İşlemler</th>
-                </tr>
-              </thead>
-              <tbody id="sofTableBody"></tbody>
-            </table>
-          </div>
-          <div class="hint" style="padding:10px">İpucu: Satıra çift tıkla → <strong>Talep Süreç Takip</strong> penceresi açılır.</div>
-        </div>
-      </section>
-
-      <section id="list" class="page hidden">
-        <div class="card">
-          <div class="searchbar">
-            <input id="q" class="btn" style="flex:1" placeholder="Ara…"/>
-            <select id="fTip" class="btn"><option value="">Tip (Hepsi)</option><option>Sarf</option><option>Demirbaş</option><option>Genel</option></select>
-            <select id="fDurum" class="btn"><option value="">Durum (Hepsi)</option><option>Taslak</option><option>Müdür Onayı</option><option>Fiyat Teklifi</option><option>Ödeme</option><option>Termin</option><option>Geldi</option></select>
-            <button class="btn" id="exportJson">JSON Dışa Aktar</button>
-            <button class="btn ghost" id="importJson">JSON İçe Aktar</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>SOF No</th><th>Talep Eden</th><th>Tip</th><th>Malzeme</th><th>Miktar</th><th class="col-fiyat">Fiyat/Toplam</th><th>Durum</th><th>Termin</th><th>Tedarikçi</th><th>İşlemler</th>
-                </tr>
-              </thead>
-              <tbody id="sofTableBody2"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="form" class="page hidden">
-        <div class="card" style="padding:16px">
-          <h3>Yeni Talep</h3>
-          <div class="grid" style="grid-template-columns:repeat(2,1fr)">
-            <label>Talep Eden Birim<input id="fBirim" class="btn" placeholder="Birim adı"></label>
-            <label>Malzeme Tipi<select id="fTip2" class="btn"><option>Sarf</option><option>Demirbaş</option><option>Genel</option></select></label>
-            <label>Malzeme Adı<input id="fAd" class="btn" placeholder="Örn. Ethernet kablo"></label>
-            <label>Miktar<input id="fMiktar" type="number" class="btn" value="1"></label>
-            <label>Birim<input id="fBirim2" class="btn" placeholder="adet, m, kg"></label>
-            <label>Tedarikçi<input id="fTedarikci" class="btn" placeholder="(isteğe bağlı)"></label>
-            <label>Termin Tarihi<input id="fTermin" type="date" class="btn"></label>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button class="btn primary" id="saveTalep">Kaydet</button>
-            <button class="btn" id="resetForm">Sıfırla</button>
-          </div>
-        </div>
-        <div class="card" style="padding:16px;margin-top:12px">
-          <h3>Toplu Veri Göm (Opsiyonel)</h3>
-          <div class="hint">CSV/TSV yapıştır → Alan sırası: SOF No (isteğe bağlı), Birim, Tip, Malzeme, Miktar, Birim, Fiyat (ops), Tedarikçi (ops), Termin (YYYY-MM-DD)</div>
-          <textarea id="bulkBox" class="btn" style="width:100%;height:140px"></textarea>
-          <div style="margin-top:8px;display:flex;gap:8px">
-            <button class="btn" id="parseBulk">Yükle</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="reports" class="page hidden">
-        <div class="card" style="padding:16px">
-          <h3>Raporlar</h3>
-          <div class="grid cols-3">
-            <div class="kpi"><div class="label">Bekleyen Müdür Onayı</div><div class="value" id="rOnay">0</div></div>
-            <div class="kpi"><div class="label">Ödeme Bekleyen</div><div class="value" id="rOdeme">0</div></div>
-            <div class="kpi"><div class="label">Termin Aşımı</div><div class="value" id="rOverdue">0</div></div>
-          </div>
-          <div style="margin-top:12px" class="hint">İleri raporlar için dışa aktarım planlandı.</div>
-        </div>
-      </section>
-
-      <section id="logs" class="page hidden">
-        <div class="card" style="padding:16px">
-          <h3>🧾 İşlem Geçmişi</h3>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Tarih</th><th>Kullanıcı</th><th>İşlem</th></tr></thead>
-              <tbody id="logTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="settings" class="page hidden">
-        <div class="card" style="padding:16px">
-          <h3>Ayarlar</h3>
-          <div class="grid" style="grid-template-columns:repeat(2,1fr)">
-            <div>
-              <div class="label">Rol Seç</div>
-              <select id="roleSelect" class="btn">
-                <option value="Birim">Birim Kullanıcısı (fiyat gizli)</option>
-                <option value="Müdür">Müdür</option>
-                <option value="Muhasebe">Muhasebe</option>
-                <option value="SatınAlma">Satın Alma</option>
-                <option value="Admin">Admin (hepsi)</option>
-              </select>
-            </div>
-            <div>
-              <div class="label">Dil</div>
-              <select id="langSelect" class="btn"><option value="tr">Türkçe</option><option value="en">English</option><option value="ru">Русский</option></select>
-            </div>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button class="btn" id="clearLS">LocalStorage Temizle</button>
-            <button class="btn ghost" id="dumpLS">Veriyi Göster (JSON)</button>
-          </div>
-          <div class="hint" style="margin-top:10px">Giriş ekranı ileride eklenecek. Şimdilik rolü buradan seç.</div>
-        </div>
-      </section>
-    </main>
-  </section>
+<!-- Topbar -->
+<div class="topbar">
+  <button class="btn menu-btn" onclick="toggleSidebar()">☰</button>
+  <span class="muted">Dil</span>
+  <select id="langSel">
+    <option value="tr">TR</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button class="btn" id="themeBtn" title="Tema">🌙</button>
+  <span class="muted">Rol</span>
+  <select id="roleSel">
+    <option>Birim Kullanıcısı</option>
+    <option>Müdür</option>
+    <option>Muhasebe</option>
+    <option>Satın Alma</option>
+    <option>Admin</option>
+  </select>
 </div>
 
+<main>
+  <!-- Ledger -->
+  <section class="card" id="sec-ledger">
+    <h2>📘 Satın Alma Defteri</h2>
+    <table>
+      <thead><tr>
+        <th style="width:6%"></th>
+        <th style="width:20%">SOF No</th>
+        <th style="width:15%">Durum</th>
+        <th style="width:18%">Ana Tür</th>
+        <th style="width:10%">Kalem</th>
+        <th style="width:16%">Termin</th>
+        <th style="width:15%">Demirbaş/Sarf</th>
+      </tr></thead>
+      <tbody id="ledgerBody"></tbody>
+    </table>
+    <div class="muted" style="margin-top:6px">Satıra tıklayıp alt detayları açabilirsiniz.</div>
+  </section>
+
+  <!-- Mine -->
+  <section class="card" id="sec-mine">
+    <h2>📦 Taleplerim</h2>
+    <table><thead><tr><th>SOF No</th><th>Malzeme</th><th>Miktar</th><th>Durum</th></tr></thead><tbody id="mineBody"></tbody></table>
+  </section>
+
+  <!-- Approvals -->
+  <section class="card" id="sec-approvals">
+    <h2>🛡️ Onaylar</h2>
+    <table><thead><tr><th>SOF No</th><th>Kalem</th><th>Ana Tür</th><th>İşlem</th></tr></thead><tbody id="approvalsBody"></tbody></table>
+  </section>
+
+  <!-- Payments -->
+  <section class="card" id="sec-payments">
+    <h2>💰 Ödemeler</h2>
+    <table><thead><tr><th>SOF No</th><th>Tutar (₽)</th><th>Tedarikçi</th><th>Ön Fatura</th><th>İşlem</th></tr></thead><tbody id="paymentsBody"></tbody></table>
+  </section>
+
+  <!-- Procurement -->
+  <section class="card" id="sec-proc">
+    <h2>🛒 Satın Alma</h2>
+    <table>
+      <thead><tr><th>SOF No</th><th>Tutar (₽)</th><th>Tedarikçi</th><th>Termin</th><th>Ön Fatura</th><th>Açıklama</th><th>Kaydet</th></tr></thead>
+      <tbody id="procBody"></tbody>
+    </table>
+  </section>
+
+  <footer>System engineered with precision by <b>Karsli</b> ⚙️ — v1.8.2</footer>
+</main>
+
 <!-- Timeline Modal -->
-<div class="modal" id="timelineModal">
-  <div class="card content">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h3>Talep Süreç Takip — <span id="tlSof"></span></h3>
-      <button class="btn" onclick="closeModal('timelineModal')">✖</button>
-    </div>
-    <div id="timelineWrap" style="margin-top:8px"></div>
+<div id="tlModal" class="modal" onclick="closeModal(event)">
+  <div class="sheet">
+    <h3>📈 Süreç Takibi — <span id="tlSof"></span></h3>
+    <div class="timeline" id="tlBody"></div>
+    <div class="right"><button class="btn" onclick="modalHide()">Kapat</button></div>
   </div>
 </div>
 
-<!-- JSON Import Modal -->
-<div class="modal" id="jsonModal">
-  <div class="card content">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h3>JSON İçe Aktar</h3>
-      <button class="btn" onclick="closeModal('jsonModal')">✖</button>
-    </div>
-    <textarea id="jsonBox" class="btn" style="width:100%;height:260px"></textarea>
-    <div style="margin-top:8px"><button class="btn primary" id="confirmImport">İçe Aktar</button></div>
+<!-- PDF Modal -->
+<div id="pdfModal" class="modal" onclick="pdfClose(event)">
+  <div class="sheet" style="width:min(1100px,92vw);height:min(86vh,900px)">
+    <h3>📄 Ön Fatura Görüntüleme</h3>
+    <embed id="pdfViewer" type="application/pdf" width="100%" height="80%">
+    <div class="right"><button class="btn" onclick="pdfHide()">Kapat</button></div>
   </div>
 </div>
 
 <script>
-const KEY = 'sof_records_v160';
-const KEY_SETTINGS = 'sof_settings';
-const LOG_KEY = 'sof_action_log';
-
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-const ROLES = {
-  Birim: {showPrice:false, canApprove:false, canPayment:false, canArrival:false},
-  Müdür: {showPrice:true, canApprove:true, canPayment:false, canArrival:false},
-  Muhasebe: {showPrice:true, canApprove:false, canPayment:true, canArrival:false},
-  SatınAlma: {showPrice:true, canApprove:false, canPayment:false, canArrival:true},
-  Admin: {showPrice:true, canApprove:true, canPayment:true, canArrival:true}
-};
-
-const DURUMLAR = ['Taslak','Müdür Onayı','Fiyat Teklifi','Ödeme','Termin','Geldi'];
-
-function uid(){return Math.random().toString(36).slice(2,8)}
-function now(){return new Date().toISOString()}
-function load(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
-function save(arr){localStorage.setItem(KEY, JSON.stringify(arr))}
-function loadSettings(){return JSON.parse(localStorage.getItem(KEY_SETTINGS)||'{"role":"Birim","lang":"tr","theme":"dark"}')}
-function saveSettings(s){localStorage.setItem(KEY_SETTINGS, JSON.stringify(s))}
-
-let settings = loadSettings();
-applyTheme(settings.theme||'dark');
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  setTimeout(()=>{
-    $('#loader').classList.add('hidden');
-    $('#dashboard').classList.remove('hidden');
-    renderAll();
-  }, 500);
-
-  // Nav
-  $$('#sidebar .nav-btn').forEach(b=>b.onclick=()=>switchPage(b.dataset.page,b));
-  $('#newFromDash').onclick=()=>switchPage('form');
-
-  // Search/Filters
-  ['q','qDash','fTip','fDurum'].forEach(id=>{ const el=$('#'+id); if(el){ el.addEventListener('input', renderAll); el.addEventListener('change', renderAll); } });
-
-  // Form
-  $('#saveTalep').onclick=saveTalep;
-  $('#resetForm').onclick=()=>$$('#form input').forEach(i=>i.value='');
-  $('#parseBulk').onclick=parseBulk;
-
-  // Export/Import
-  $('#exportJson').onclick=()=>{
-    const data = load();
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'sof_localstorage_export.json';
-    a.click();
-  };
-  $('#importJson').onclick=()=>openModal('jsonModal');
-  $('#confirmImport').onclick=()=>{
-    try{
-      const obj = JSON.parse($('#jsonBox').value||'[]');
-      if(!Array.isArray(obj)) throw new Error('Array bekleniyor');
-      save(obj); closeModal('jsonModal'); renderAll(); showBanner('JSON içe aktarıldı ✅','ok');
-    }catch(e){ showBanner('Hata: '+e.message,'err'); }
-  };
-
-  // Settings / UI
-  $('#clearLS').onclick=()=>{ if(confirm('Tüm LocalStorage verisi silinsin mi?')){ localStorage.removeItem(KEY); renderAll(); showBanner('Veri temizlendi','ok'); } };
-  $('#dumpLS').onclick=()=>{ alert(localStorage.getItem(KEY)||'[]'); };
-  $('#roleSelect').value = settings.role||'Birim';
-  $('#langSelect').value = settings.lang||'tr';
-  $('#roleSelect').onchange = e=>{ settings.role=e.target.value; saveSettings(settings); applyRole(); renderAll(); };
-  $('#langSelect').onchange = e=>{ settings.lang=e.target.value; saveSettings(settings); $('#langBtn').textContent = settings.lang.toUpperCase(); };
-  $('#loginBtn').onclick=()=>switchPage('settings');
-  $('#themeBtn').onclick=toggleTheme;
-  $('#langBtn').onclick=()=>switchLang();
-
-  applyRole();
-  $('#langBtn').textContent = (settings.lang||'tr').toUpperCase();
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+document.querySelectorAll('#navLinks a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    document.querySelectorAll('#navLinks a').forEach(x=>x.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+  });
 });
 
-// UI helpers
-function switchPage(page, btn){
-  $$('.page').forEach(p=>p.classList.add('hidden'));
-  $('#'+page).classList.remove('hidden');
-  if(btn){ $$('#sidebar .nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
-}
-function switchLang(){
-  const seq = ['tr','en','ru'];
-  const i = seq.indexOf(settings.lang||'tr');
-  settings.lang = seq[(i+1)%seq.length];
-  saveSettings(settings);
-  $('#langBtn').textContent = settings.lang.toUpperCase();
-}
-function toggleTheme(){
-  const cur = document.documentElement.getAttribute('data-theme')||'dark';
-  applyTheme(cur==='dark'?'light':'dark');
-  settings.theme = document.documentElement.getAttribute('data-theme');
-  saveSettings(settings);
-}
-function applyTheme(theme){
-  document.documentElement.setAttribute('data-theme', theme);
-  $('#themeBtn').textContent = theme==='dark' ? '🌙' : '☀️';
-}
-function applyRole(){
-  $('#roleName').textContent = settings.role||'Birim';
-  const cfg = ROLES[settings.role||'Birim'];
-  // Fiyat kolonlarını göster/gizle
-  $$('.col-fiyat').forEach(th=> th.style.display = cfg.showPrice? 'table-cell' : 'none');
-  // Log menüsünü sadece SatınAlma/Admin görsün
-  $('#logsMenu').style.display = (settings.role==='SatınAlma' || settings.role==='Admin') ? 'block' : 'none';
+const app = { role: localStorage.getItem('sof_role') || 'Birim Kullanıcısı', theme: localStorage.getItem('sof_theme') || 'dark', requests: [] };
+const $ = s => document.querySelector(s);
+function ts(){ return new Date().toLocaleString(); }
+function persist(){ localStorage.setItem('sof_state_v182', JSON.stringify(app)); }
+function load(){ const raw=localStorage.getItem('sof_state_v182'); if(raw){ try{ Object.assign(app, JSON.parse(raw)); }catch(e){} } }
+
+function seed(){
+  if((app.requests||[]).length) return;
+  app.requests = [
+    { sof:'SMT-SOFD-0003', typeDS:'D', anaTur:'Mobilya',
+      lines:[
+        {item:'Masa', qty:1, unit:'adet', info:'Doğal ahşap', note:'Çalışma masası', link:''},
+        {item:'Sandalye', qty:1, unit:'adet', info:'Ergonomik', note:'Ofis sandalyesi', link:''},
+        {item:'Klavye', qty:1, unit:'adet', info:'Mekanik', note:'USB kablolu', link:''}
+      ],
+      status:'Onaylandı',
+      procurement:{fiyat:120000, tedarikci:'SomTech', termin:'2025-10-25', onFatura:'Proforma_0003.pdf', aciklama:'Set alımı'},
+      history:[{step:'Onay Bekliyor',at:ts(),by:'Birim'},{step:'Onaylandı',at:ts(),by:'Müdür'}],
+      createdBy:'Birim Kullanıcısı'
+    },
+    { sof:'SMT-SOFS-0002', typeDS:'S', anaTur:'Elektrik',
+      lines:[{item:'Cat6 Kablo', qty:50, unit:'mt', info:'LSZH', note:'Turuncu', link:''}],
+      status:'Ödeme Bekliyor',
+      procurement:{fiyat:8500, tedarikci:'Koryon', termin:'2025-10-28', onFatura:'Koryon_pre.pdf', aciklama:''},
+      history:[{step:'Onay Bekliyor',at:ts(),by:'Birim'},{step:'Onaylandı',at:ts(),by:'Müdür'},{step:'Satın Alma',at:ts(),by:'Satın Alma'},{step:'Ödeme Bekliyor',at:ts(),by:'Satın Alma'}],
+      createdBy:'Birim Kullanıcısı'
+    }
+  ];
+  persist();
 }
 
-// Banner + Ses
-function playSound(type){ const id = type==='err'?'sound-err':'sound-ok'; const el = $('#'+id); if(el){ el.currentTime=0; el.play().catch(()=>{}); } }
-function showBanner(msg,type='ok'){
-  const b = $('#banner'); b.textContent = msg; b.className='show '+type; playSound(type); setTimeout(()=>b.classList.remove('show'),2500);
+// Theme
+function applyTheme(){
+  document.getElementById('themeBtn').textContent = app.theme==='dark' ? '🌙' : '☀️';
+  document.body.style.background = app.theme==='dark' ? '#0f1115' : '#f6f7fb';
+  document.body.style.color = app.theme==='dark' ? '#eaeaea' : '#222';
+}
+document.getElementById('themeBtn').onclick = ()=>{ app.theme=app.theme==='dark'?'light':'dark'; localStorage.setItem('sof_theme',app.theme); applyTheme(); };
+
+function setRole(r){ app.role=r; localStorage.setItem('sof_role',r); applyRoleVisibility(); renderAll(); }
+function applyRoleVisibility(){
+  ['sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>document.getElementById(id).style.display='none');
+  if(app.role==='Birim Kullanıcısı'){ $('#sec-mine').style.display='block'; }
+  else if(app.role==='Müdür'){ $('#sec-approvals').style.display='block'; }
+  else if(app.role==='Muhasebe'){ $('#sec-payments').style.display='block'; }
+  else if(app.role==='Satın Alma'){ $('#sec-proc').style.display='block'; }
+  else { ['sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>document.getElementById(id).style.display='block'); }
+  document.getElementById('roleSel').value = app.role;
 }
 
-// Render
-function renderAll(){
-  applyRole();
-  const data = load();
-  // Filters
-  const q = ($('#q')?.value||'').toLowerCase();
-  const q2 = ($('#qDash')?.value||'').toLowerCase();
-  const tip = $('#fTip')?.value||''; const durum = $('#fDurum')?.value||'';
-  const filtered = data.filter(r=>{
-    const hay = [r.sofNo,r.birim,r.tip,r.ad,r.tedarikci].join(' ').toLowerCase();
-    const okQ = q? hay.includes(q) : true;
-    const okQ2 = q2? hay.includes(q2) : true;
-    const okTip = tip? r.tip===tip : true;
-    const okDur = durum? r.durum===durum : true;
-    return okQ && okQ2 && okTip && okDur;
+// Render helpers
+function pill(status){
+  const cls = {'Onay Bekliyor':'st-wait','Onaylandı':'st-acc','Satın Alma':'st-acc','Ödeme Bekliyor':'st-pay','Ödeme Yapıldı':'st-done','Reddedildi':'st-rej'}[status]||'st-wait';
+  return `<span class="status-pill ${cls}">${status}</span>`;
+}
+function fmtDate(iso){ if(!iso) return '—'; try{ const d=new Date(iso); return d.toLocaleDateString(); }catch(e){ return '—'; }}
+
+// Ledger
+function renderLedger(){
+  const body = document.getElementById('ledgerBody'); body.innerHTML='';
+  app.requests.forEach((r,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="row-toggle" onclick="toggleDetails(${i})">▶</td>
+      <td>${r.sof}</td><td>${pill(r.status)}</td><td>${r.anaTur||'—'}</td><td>${r.lines.length}</td>
+      <td>${fmtDate(r.procurement?.termin)}</td><td>${r.typeDS==='D'?'Demirbaş':'Sarf'}</td>`;
+    tr.ondblclick = ()=> openTimeline(r.sof);
+    body.appendChild(tr);
+
+    const dtr = document.createElement('tr');
+    dtr.className='details-row'; dtr.id='det-'+i;
+    dtr.innerHTML = `<td colspan="7"><div class="subwrap">
+      <table class="sub" style="width:100%">
+        <thead class="subhead">
+          <tr><th>Malzeme</th><th>Miktar</th><th>Birim</th><th>Detay Bilgi</th><th>Açıklama</th><th>Ön Fatura / Link</th></tr>
+        </thead>
+        <tbody>${r.lines.map(l=>`
+          <tr><td>${l.item||''}</td><td>${l.qty||''}</td><td>${l.unit||''}</td><td>${l.info||''}</td><td>${l.note||''}</td>
+              <td>${r.procurement?.onFatura? `<a href="#" onclick="showPdf('${r.sof}')">📄 ${r.procurement.onFatura}</a>` : (l.link? `<a href="${l.link}" target="_blank">🔗 link</a>`:'—')}</td></tr>`).join('')}
+        </tbody>
+      </table></div></td>`;
+    body.appendChild(dtr);
   });
+}
+function toggleDetails(idx){
+  const row=document.getElementById('det-'+idx);
+  const headerCell=document.getElementById('ledgerBody').children[idx*2].children[0];
+  if(row.style.display==='table-row'){ row.style.display='none'; headerCell.textContent='▶'; }
+  else{ row.style.display='table-row'; headerCell.textContent='▼'; }
+}
 
-  // KPIs
-  $('#kpiSarf').textContent = data.filter(r=>r.tip==='Sarf').length;
-  $('#kpiDemirbas').textContent = data.filter(r=>r.tip==='Demirbaş').length;
-  $('#kpiGenel').textContent = data.length;
+// Mine
+function renderMine(){
+  const body=document.getElementById('mineBody'); body.innerHTML='';
+  app.requests.filter(r=>r.createdBy===app.role).forEach(r=>{
+    const l=r.lines[0]||{}; const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.sof}</td><td>${l.item||''}</td><td>${(l.qty||'')+' '+(l.unit||'')}</td><td>${pill(r.status)}</td>`;
+    tr.ondblclick=()=>openTimeline(r.sof); body.appendChild(tr);
+  });
+}
 
-  // Reports
-  $('#rOnay').textContent = data.filter(r=>r.durum==='Müdür Onayı').length;
-  $('#rOdeme').textContent = data.filter(r=>r.durum==='Ödeme').length;
-  const today = new Date().toISOString().slice(0,10);
-  $('#rOverdue').textContent = data.filter(r=>r.durum!=='Geldi' && r.termin && r.termin < today).length;
+// Approvals
+function renderApprovals(){
+  const body=document.getElementById('approvalsBody'); body.innerHTML='';
+  app.requests.filter(r=>r.status==='Onay Bekliyor').forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.sof}</td><td>${r.lines.length}</td><td>${r.anaTur||'—'}</td>
+      <td><button class="btn" onclick="approve('${r.sof}')">✅ Onayla</button>
+          <button class="btn" onclick="rejectPrompt('${r.sof}')">❌ Reddet</button></td>`;
+    body.appendChild(tr);
+  });
+}
 
-  // Tables
-  const cfg = ROLES[settings.role||'Birim'];
-  const renderRow = (r)=>{
-    const priceCell = cfg.showPrice ? ('<div>'+fmtMoney(r.fiyat||0)+' / <strong>'+fmtMoney(r.toplam||0)+'</strong></div>') : '';
-    const st = statusBadge(r.durum);
-    return '<tr data-id="'+r.id+'">'
-      + '<td>'+r.sofNo+'</td>'
-      + '<td>'+r.birim+'</td>'
-      + '<td>'+r.tip+'</td>'
-      + '<td>'+r.ad+'</td>'
-      + '<td>'+r.miktar+' '+(r.birim2||'')+'</td>'
-      + (cfg.showPrice?('<td>'+priceCell+'</td>'):'')
-      + '<td>'+st+'</td>'
-      + '<td>'+(r.termin||'-')+'</td>'
-      + '<td>'+(r.tedarikci||'-')+'</td>'
-      + '<td class="row-actions">'+rowActions(r)+'</td>'
-      + '</tr>';
+// Payments
+function renderPayments(){
+  const body=document.getElementById('paymentsBody'); body.innerHTML='';
+  app.requests.filter(r=>r.status==='Ödeme Bekliyor').forEach(r=>{
+    const f=r.procurement||{}; const pf=f.onFatura? `<a href="#" onclick="showPdf('${r.sof}')">${f.onFatura}</a>`:'—';
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.sof}</td><td>${f.fiyat||0}</td><td>${f.tedarikci||'-'}</td><td>${pf}</td>
+      <td><button class="btn" onclick="markPaid('${r.sof}')">💸 Ödeme Yapıldı</button></td>`;
+    body.appendChild(tr);
+  });
+}
+
+// Procurement
+function renderProc(){
+  const body=document.getElementById('procBody'); body.innerHTML='';
+  app.requests.filter(r=>r.status==='Onaylandı' || r.status==='Satın Alma').forEach(r=>{
+    const p=r.procurement||{};
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.sof}</td>
+      <td><input type="number" step="0.01" value="${p.fiyat||''}" style="width:120px;background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
+      <td><input value="${p.tedarikci||''}" style="width:160px;background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
+      <td><input type="date" value="${p.termin||''}" style="background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
+      <td><input type="file" accept="application/pdf" style="color:#cbd5e1"></td>
+      <td><input value="${p.aciklama||''}" style="width:180px;background:#0e1a1c;border:1px solid var(--bdr);color:var(--fg);border-radius:10px;padding:6px"></td>
+      <td><button class="btn" onclick="saveProc(this,'${r.sof}')">Kaydet</button></td>`;
+    body.appendChild(tr);
+  });
+}
+
+// Actions
+function approve(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Onaylandı'; pushHistory(r,'Onaylandı'); persist(); renderAll(); }
+function rejectPrompt(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; const txt=prompt('Red sebebi (opsiyonel):'); r.status='Reddedildi'; if(txt) r.rejectReason=txt; pushHistory(r,'Reddedildi'); persist(); renderAll(); }
+function pushHistory(r, step){ r.history=r.history||[]; r.history.push({step,at:ts(),by:app.role}); }
+function saveProc(btn, sof){
+  const tr=btn.closest('tr'); const inputs=tr.querySelectorAll('input');
+  const r=app.requests.find(x=>x.sof===sof); if(!r) return;
+  r.procurement = {
+    fiyat: parseFloat(inputs[0].value||'0'),
+    tedarikci: inputs[1].value.trim(),
+    termin: inputs[2].value,
+    onFatura: inputs[3].files && inputs[3].files[0] ? inputs[3].files[0].name : (r.procurement?.onFatura||''),
+    aciklama: inputs[4].value.trim()
   };
+  r.status='Ödeme Bekliyor'; pushHistory(r,'Satın Alma'); pushHistory(r,'Ödeme Bekliyor');
+  persist(); renderAll();
+}
+function markPaid(sof){ const r=app.requests.find(x=>x.sof===sof); if(!r) return; r.status='Ödeme Yapıldı'; pushHistory(r,'Ödeme Yapıldı'); persist(); renderAll(); }
 
-  $('#sofTableBody').innerHTML = filtered.map(renderRow).join('');
-  $('#sofTableBody2').innerHTML = filtered.map(renderRow).join('');
-
-  // dblclick → Timeline
-  $$('#sofTableBody tr, #sofTableBody2 tr').forEach(tr=>{
-    tr.ondblclick = ()=> openTimeline(tr.getAttribute('data-id'));
+// Timeline + PDF
+function openTimeline(sof){
+  const r=app.requests.find(x=>x.sof===sof); if(!r) return;
+  document.getElementById('tlSof').textContent = sof;
+  const tl=document.getElementById('tlBody'); tl.innerHTML='';
+  (r.history||[]).forEach(h=>{
+    const div=document.createElement('div'); div.className='t';
+    div.innerHTML=`<b>${h.step}</b><div class="muted">${h.at} — ${h.by}${r.rejectReason && h.step==='Reddedildi' ? '<br><i>Sebep: '+r.rejectReason+'</i>':''}</div>`;
+    tl.appendChild(div);
   });
-
-  // attach action buttons
-  $$('.btn-act').forEach(b=> b.onclick = ()=>handleAction(b.dataset.act, b.dataset.id));
+  document.getElementById('tlModal').style.display='flex';
 }
+function modalHide(){ document.getElementById('tlModal').style.display='none'; }
+function closeModal(e){ if(e.target.id==='tlModal') modalHide(); }
 
-function statusBadge(d){
-  const m={'Taslak':'s-draft','Müdür Onayı':'s-onay','Fiyat Teklifi':'s-teklif','Ödeme':'s-odeme','Termin':'s-termin','Geldi':'s-geldi'};
-  return '<span class="status '+(m[d]||'s-draft')+'">'+d+'</span>';
+function showPdf(sof){
+  const r=app.requests.find(x=>x.sof===sof); if(!r) return;
+  const src = r.procurement?.onFatura ? 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf' : 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
+  document.getElementById('pdfViewer').src = src;
+  document.getElementById('pdfModal').style.display='flex';
 }
-function rowActions(r){
-  const cfg = ROLES[settings.role||'Birim'];
-  const arr = [];
-  if(cfg.canApprove && r.durum==='Taslak') arr.push(btn('Onayla','approve',r.id));
-  if(cfg.canApprove && r.durum==='Müdür Onayı') arr.push(btn('Teklife Gönder','offer',r.id));
-  if(cfg.canPayment && r.durum==='Fiyat Teklifi') arr.push(btn('Ödemeye Gönder','payment',r.id));
-  if(cfg.canPayment && r.durum==='Ödeme') arr.push(btn('Ödeme Yapıldı','paid',r.id));
-  if(cfg.canArrival && r.durum==='Termin') arr.push(btn('Geldi Onayı','arrived',r.id));
-  if(settings.role==='Admin') arr.push(btn('Sil','delete',r.id));
-  return arr.join('');
+function pdfHide(){ document.getElementById('pdfModal').style.display='none'; }
+function pdfClose(e){ if(e.target.id==='pdfModal') pdfHide(); }
+
+function init(){
+  load(); seed();
+  document.getElementById('roleSel').value = app.role;
+  applyTheme(); applyRoleVisibility(); renderAll();
 }
-function btn(label, act, id){return '<button class="btn btn-act" data-act="'+act+'" data-id="'+id+'">'+label+'</button>'}
-
-function roleCheck(role, act){
-  const cfg = ROLES[role] || ROLES.Birim;
-  if(act==='approve' && !cfg.canApprove) return false;
-  if((act==='payment' || act==='paid') && !cfg.canPayment) return false;
-  if(act==='arrived' && !cfg.canArrival) return false;
-  if(act==='delete' && role!=='Admin') return false;
-  return true;
-}
-
-function handleAction(act,id){
-  const data = load();
-  const ix = data.findIndex(x=>x.id===id);
-  if(ix<0) return;
-  const r = data[ix];
-  if(!roleCheck(settings.role, act)){ showBanner('Bu işlemi yapma yetkiniz yok ❌','err'); return; }
-  const pushTL = (ev)=>{ (r.timeline ||= []).push({ts:now(), ev}); };
-
-  if(act==='approve'){ r.durum='Müdür Onayı'; pushTL('Müdür onayı verildi'); showBanner('Onay verildi ✅','ok'); }
-  if(act==='offer'){ r.durum='Fiyat Teklifi'; pushTL('Fiyat teklifi talep edildi'); showBanner('Fiyat teklifi aşamasında 🔄','ok'); }
-  if(act==='payment'){ r.durum='Ödeme'; pushTL('Ödeme sürecine aktarıldı'); showBanner('Ödeme aşamasına aktarıldı 💰','ok'); }
-  if(act==='paid'){ r.durum='Termin'; pushTL('Ödeme yapıldı, termin bekleniyor'); showBanner('Ödeme yapıldı ⏳','ok'); }
-  if(act==='arrived'){ r.durum='Geldi'; r.gelisOnayi=true; pushTL('Satın alma birimi ürünün geldiğini onayladı'); showBanner('Ürün geldi ✅','ok'); }
-  if(act==='delete'){ data.splice(ix,1); showBanner('Kayıt silindi 🗑️','ok'); }
-
-  data[ix]=r; save(data); renderAll();
-  pushLog(settings.role, act, r.sofNo);
-}
-
-// Timeline
-function openTimeline(id){
-  const r = load().find(x=>x.id===id);
-  if(!r) return;
-  $('#tlSof').textContent = r.sofNo;
-  const arr = (r.timeline||[]);
-  let html = '<div class="stack">';
-  for (const x of arr){ html += '<span class="chip">'+x.ts.slice(0,16).replace('T',' ')+' — '+x.ev+'</span>'; }
-  html += '</div>';
-  $('#timelineWrap').innerHTML = html || '<div class="hint">Henüz kayıt yok.</div>';
-  openModal('timelineModal');
-}
-function openModal(id){ $('#'+id).classList.add('active'); }
-function closeModal(id){ $('#'+id).classList.remove('active'); }
-
-// Money
-function fmtMoney(n){ try{ return new Intl.NumberFormat('tr-TR', {style:'currency', currency:'TRY', maximumFractionDigits:0}).format(n||0) }catch(e){ return (n||0)+' TL' } }
-function nextSofNo(){
-  const y = new Date().getFullYear();
-  let seq = (parseInt(localStorage.getItem('sof_seq')||'0',10) + 1);
-  localStorage.setItem('sof_seq', String(seq));
-  return 'SOF-'+y+'-'+String(seq).padStart(4,'0');
-}
-
-// Save & Bulk
-function saveTalep(){
-  const rec = {
-    id: uid(),
-    sofNo: nextSofNo(),
-    birim: $('#fBirim').value.trim()||'—',
-    tip: $('#fTip2').value,
-    ad: $('#fAd').value.trim(),
-    miktar: Number($('#fMiktar').value||1),
-    birim2: $('#fBirim2').value.trim(),
-    fiyat: 0, toplam: 0,
-    tedarikci: $('#fTedarikci').value.trim(),
-    termin: $('#fTermin').value||'',
-    durum: 'Taslak',
-    timeline: [{ts:now(), ev:'Talep oluşturuldu'}],
-    owner: $('#fBirim').value.trim()||'—',
-    bildirimler: []
-  };
-  const data = load(); data.unshift(rec); save(data);
-  showBanner('Talep kaydedildi: '+rec.sofNo,'ok');
-  switchPage('dashboard'); renderAll();
-}
-function parseBulk(){
-  const raw = $('#bulkBox').value.trim(); if(!raw) return showBanner('Veri yok','err');
-  const lines = raw.split(/\n+/).filter(Boolean);
-  const data = load();
-  lines.forEach(line=>{
-    const cols = line.split(/[\t,;]+/);
-    const rec = {
-      id: uid(), sofNo: cols[0] && cols[0].startsWith('SOF-')? cols[0] : nextSofNo(),
-      birim: cols[0] && cols[0].startsWith('SOF-')? (cols[1]||'—') : (cols[0]||'—'),
-      tip: cols[0] && cols[0].startsWith('SOF-')? (cols[2]||'Genel') : (cols[1]||'Genel'),
-      ad: cols[0] && cols[0].startsWith('SOF-')? (cols[3]||'') : (cols[2]||''),
-      miktar: Number(cols[0] && cols[0].startsWith('SOF-')? (cols[4]||1) : (cols[3]||1)),
-      birim2: cols[0] && cols[0].startsWith('SOF-')? (cols[5]||'') : (cols[4]||''),
-      fiyat: Number(cols[0] && cols[0].startsWith('SOF-')? (cols[6]||0) : (cols[5]||0)),
-      toplam: 0,
-      tedarikci: cols[0] && cols[0].startsWith('SOF-')? (cols[7]||'') : (cols[6]||''),
-      termin: (cols[0] && cols[0].startsWith('SOF-')? (cols[8]||'') : (cols[7]||'')).slice(0,10),
-      durum:'Taslak', timeline:[{ts:now(), ev:'Toplu yükleme'}], owner:'—', bildirimler:[]
-    };
-    rec.toplam = (rec.fiyat||0) * (rec.miktar||1);
-    data.push(rec);
-  });
-  save(data); renderAll(); showBanner(lines.length+' satır eklendi.','ok');
-}
-
-// Logs
-function pushLog(user,act,sofNo){
-  const arr = JSON.parse(localStorage.getItem(LOG_KEY)||'[]');
-  arr.unshift({ts:now(), user, act, sofNo});
-  localStorage.setItem(LOG_KEY, JSON.stringify(arr));
-  renderLog();
-}
-function renderLog(){
-  const logs = JSON.parse(localStorage.getItem(LOG_KEY)||'[]');
-  const tb = $('#logTable');
-  tb.innerHTML = logs.map(x=>{
-    return '<tr><td>'+x.ts.replace('T',' ').slice(0,16)+'</td><td>'+x.user+'</td><td>'+(x.act+(x.sofNo?(' • '+x.sofNo):''))+'</td></tr>';
-  }).join('');
-}
-
-// Banner audio
-function playAudio(url){ const a=new Audio(url); a.play().catch(()=>{}); }
-
-// Modal
-function openModal(id){ $('#'+id).classList.add('active'); }
-function closeModal(id){ $('#'+id).classList.remove('active'); }
+function renderAll(){ renderLedger(); renderMine(); renderApprovals(); renderPayments(); renderProc(); }
+init();
 </script>
 </body>
 </html>
