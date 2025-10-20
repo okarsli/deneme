@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SOMTECH — SOF v1.8.2 (GlassNav)</title>
+<title>SOMTECH — SOF v1.8.3 (GlassNav SPA)</title>
 <style>
   :root{
     --bg:#0f1115; --fg:#eaeaea; --muted:#9aa0aa; --accent:#22d3ee;
@@ -24,10 +23,14 @@
   }
   .logo{
     display:flex;align-items:center;gap:10px;justify-content:center;
-    padding:8px;border-bottom:1px solid var(--bdr);
+    padding:8px;border-bottom:1px solid var(--bdr); position:relative; z-index:11;
   }
-  .logo .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22d3ee33,#22d3ee77);box-shadow:0 0 20px rgba(34,211,238,.35)}
-  .logo h1{font-size:14px;color:var(--accent);margin:0}
+  .logo img.markimg{
+    width:40px;height:40px;object-fit:contain;border-radius:10px;
+    filter: drop-shadow(0 0 8px rgba(34,211,238,.5));
+    background:#0c1118;
+  }
+  .logo h1{font-size:14px;color:var(--accent);margin:0;white-space:nowrap}
   .nav{display:flex;flex-direction:column;gap:6px;margin-top:6px}
   .nav a{
     display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:var(--fg);
@@ -96,7 +99,9 @@
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
   <div class="logo">
-    <a href="https://somtech.ru" target="_blank" title="SOMTECH"><div class="mark"></div></a>
+    <a href="https://somtech.ru" target="_blank" title="SOMTECH">
+      <img class="markimg" src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" />
+    </a>
     <h1>SOMTECH — SOF</h1>
   </div>
   <nav class="nav" id="navLinks">
@@ -107,7 +112,7 @@
     <a href="#sec-proc">🛒 Satın Alma</a>
   </nav>
   <div class="grow"></div>
-  <div class="nav-footer">v1.8.2 • GlassNav</div>
+  <div class="nav-footer">v1.8.3 • GlassNav SPA</div>
 </aside>
 
 <!-- Topbar -->
@@ -174,7 +179,7 @@
     </table>
   </section>
 
-  <footer>System engineered with precision by <b>Karsli</b> ⚙️ — v1.8.2</footer>
+  <footer>System engineered with precision by <b>Karsli</b> ⚙️ — v1.8.3</footer>
 </main>
 
 <!-- Timeline Modal -->
@@ -197,18 +202,40 @@
 
 <script>
 function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+// SPA Navigation
 document.querySelectorAll('#navLinks a').forEach(a=>{
   a.addEventListener('click', e=>{
+    e.preventDefault();
+    const target = a.getAttribute('href').substring(1);
+    switchSection(target);
     document.querySelectorAll('#navLinks a').forEach(x=>x.classList.remove('active'));
-    e.currentTarget.classList.add('active');
+    a.classList.add('active');
+    history.replaceState(null,'','#'+target);
   });
 });
 
+function switchSection(id){
+  document.querySelectorAll('main > section').forEach(sec=>sec.style.display='none');
+  const el = document.getElementById(id);
+  if(el){ el.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+}
+
+// Preserve active on load if hash present
+window.addEventListener('load', ()=>{
+  const hash = location.hash ? location.hash.substring(1) : 'sec-ledger';
+  switchSection(hash);
+  document.querySelectorAll('#navLinks a').forEach(x=>{
+    if(x.getAttribute('href') === '#'+hash) x.classList.add('active'); else x.classList.remove('active');
+  });
+});
+
+// ==== App State (from v1.8.2) ====
 const app = { role: localStorage.getItem('sof_role') || 'Birim Kullanıcısı', theme: localStorage.getItem('sof_theme') || 'dark', requests: [] };
 const $ = s => document.querySelector(s);
 function ts(){ return new Date().toLocaleString(); }
-function persist(){ localStorage.setItem('sof_state_v182', JSON.stringify(app)); }
-function load(){ const raw=localStorage.getItem('sof_state_v182'); if(raw){ try{ Object.assign(app, JSON.parse(raw)); }catch(e){} } }
+function persist(){ localStorage.setItem('sof_state_v183', JSON.stringify(app)); }
+function load(){ const raw=localStorage.getItem('sof_state_v183'); if(raw){ try{ Object.assign(app, JSON.parse(raw)); }catch(e){} } }
 
 function seed(){
   if((app.requests||[]).length) return;
@@ -243,16 +270,8 @@ function applyTheme(){
 }
 document.getElementById('themeBtn').onclick = ()=>{ app.theme=app.theme==='dark'?'light':'dark'; localStorage.setItem('sof_theme',app.theme); applyTheme(); };
 
-function setRole(r){ app.role=r; localStorage.setItem('sof_role',r); applyRoleVisibility(); renderAll(); }
-function applyRoleVisibility(){
-  ['sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>document.getElementById(id).style.display='none');
-  if(app.role==='Birim Kullanıcısı'){ $('#sec-mine').style.display='block'; }
-  else if(app.role==='Müdür'){ $('#sec-approvals').style.display='block'; }
-  else if(app.role==='Muhasebe'){ $('#sec-payments').style.display='block'; }
-  else if(app.role==='Satın Alma'){ $('#sec-proc').style.display='block'; }
-  else { ['sec-mine','sec-approvals','sec-payments','sec-proc'].forEach(id=>document.getElementById(id).style.display='block'); }
-  document.getElementById('roleSel').value = app.role;
-}
+function setRole(r){ app.role=r; localStorage.setItem('sof_role',r); /* v1.8.3: görünürlük SPA ile yönetiliyor */ renderAll(); }
+document.getElementById('roleSel').addEventListener('change', (e)=> setRole(e.target.value));
 
 // Render helpers
 function pill(status){
@@ -391,7 +410,9 @@ function pdfClose(e){ if(e.target.id==='pdfModal') pdfHide(); }
 function init(){
   load(); seed();
   document.getElementById('roleSel').value = app.role;
-  applyTheme(); applyRoleVisibility(); renderAll();
+  applyTheme(); renderAll();
+  // Başlangıçta hash yoksa defteri göster
+  if(!location.hash){ switchSection('sec-ledger'); }
 }
 function renderAll(){ renderLedger(); renderMine(); renderApprovals(); renderPayments(); renderProc(); }
 init();
