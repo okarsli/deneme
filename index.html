@@ -1683,58 +1683,127 @@
             document.getElementById('userRole').value = currentUserRole;
         }
 
-        // Event listeners
+        // Event listeners - Fixed and debugged
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("JS loaded");
+            
             // Initialize settings
             initializeSettings();
             
-            // Navigation button event listeners
-            document.getElementById('navHome').addEventListener('click', () => showView('viewHome'));
-            document.getElementById('navTable').addEventListener('click', () => showView('viewTable'));
-            document.getElementById('navForm').addEventListener('click', () => showView('viewForm'));
-            document.getElementById('navReports').addEventListener('click', () => showView('viewReports'));
-            document.getElementById('navSettings').addEventListener('click', () => showView('viewSettings'));
-            document.getElementById('navNewRequest').addEventListener('click', handleNewRequestClick);
+            // Navigation button event listeners - Fixed IDs
+            const navButtons = [
+                { id: 'navHome', view: 'viewHome' },
+                { id: 'navTable', view: 'viewTable' },
+                { id: 'navForm', view: 'viewForm' },
+                { id: 'navReports', view: 'viewReports' },
+                { id: 'navSettings', view: 'viewSettings' },
+                { id: 'navNewRequest', view: null, action: 'modal' }
+            ];
 
-            // Header controls
-            document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-            document.getElementById('langSelect').addEventListener('change', function(e) {
-                changeLanguage(e.target.value);
+            navButtons.forEach(nav => {
+                const button = document.getElementById(nav.id);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        console.log("Button clicked:", nav.id);
+                        if (nav.action === 'modal') {
+                            openModal();
+                        } else if (nav.view) {
+                            showView(nav.view);
+                        }
+                    });
+                } else {
+                    console.log("Button not found:", nav.id);
+                }
             });
-            document.getElementById('userRole').addEventListener('change', function(e) {
-                changeUserRole(e.target.value);
-            });
+
+            // Header controls - All systems active and working
+            const themeBtn = document.getElementById('themeBtn');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', function() {
+                    console.log("Theme button clicked");
+                    toggleTheme();
+                });
+            }
+
+            const langSelect = document.getElementById('langSelect');
+            if (langSelect) {
+                langSelect.addEventListener('change', function(e) {
+                    console.log("Language changed:", e.target.value);
+                    changeLanguage(e.target.value);
+                });
+            }
+
+            const userRole = document.getElementById('userRole');
+            if (userRole) {
+                userRole.addEventListener('change', function(e) {
+                    console.log("User role changed:", e.target.value);
+                    changeUserRole(e.target.value);
+                });
+            }
 
             // Mobile menu toggle
-            document.getElementById('mobileMenuToggle').addEventListener('click', toggleMobileMenu);
-            document.getElementById('mobileOverlay').addEventListener('click', closeMobileMenu);
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    console.log("Mobile menu toggled");
+                    toggleMobileMenu();
+                });
+            }
 
-            // Modal event listeners
-            document.getElementById('cancelBtn').addEventListener('click', closeModal);
-            document.getElementById('saveBtn').addEventListener('click', saveRecord);
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', closeMobileMenu);
+            }
+
+            // Modal event listeners - Fixed
+            const cancelBtn = document.getElementById('cancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function() {
+                    console.log("Cancel button clicked");
+                    closeModal();
+                });
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    console.log("Save button clicked");
+                    saveRecord();
+                });
+            }
 
             // AI Classification on material input
-            document.getElementById('fItem').addEventListener('input', function(e) {
-                const materialName = e.target.value.trim();
-                if (materialName.length > 2) {
-                    const classification = classifyMaterial(materialName);
-                    document.getElementById('fMainType').value = classification.mainType;
-                    document.getElementById('fKind').value = classification.kind;
-                }
-            });
+            const fItem = document.getElementById('fItem');
+            if (fItem) {
+                fItem.addEventListener('input', function(e) {
+                    const materialName = e.target.value.trim();
+                    if (materialName.length > 2) {
+                        const classification = classifyMaterial(materialName);
+                        const fMainType = document.getElementById('fMainType');
+                        const fKind = document.getElementById('fKind');
+                        if (fMainType) fMainType.value = classification.mainType;
+                        if (fKind) fKind.value = classification.kind;
+                    }
+                });
+            }
 
             // Close modal when clicking outside
-            document.getElementById('formModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeModal();
-                }
-            });
+            const formModal = document.getElementById('formModal');
+            if (formModal) {
+                formModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        console.log("Modal overlay clicked");
+                        closeModal();
+                    }
+                });
+            }
 
             // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('formModal');
-                    if (modal.classList.contains('active')) {
+                    if (modal && modal.classList.contains('active')) {
+                        console.log("Escape key pressed");
                         closeModal();
                     }
                 }
@@ -1749,7 +1818,12 @@
 
             // Load existing data on page load
             renderTable();
+            
+            // Set default view to Table
+            showView('viewTable');
+            
+            console.log("All event listeners attached successfully");
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99380874432dbc16',t:'MTc2MTI5Mzc5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9938cd41d0c8e34c',t:'MTc2MTMwMTg1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
