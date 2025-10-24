@@ -63,8 +63,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100px;
-            padding: 16px 0;
+            height: 120px;
+            padding: 12px 0;
             text-align: center;
             border-bottom: 1px solid rgba(34, 211, 238, 0.12);
         }
@@ -77,12 +77,12 @@
         }
 
         .brand-logo {
-            width: 60px;
-            height: 60px;
+            width: 76px;
+            height: 76px;
             object-fit: contain;
-            border-radius: 12px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.3));
+            border-radius: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
         }
 
         .brand-logo:hover {
@@ -184,28 +184,20 @@
             overflow: hidden;
         }
 
-        /* Enhanced Header with Status Bar */
-        .header {
-            height: 80px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+        /* Clean Topbar */
+        .topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
+            padding: 12px 24px;
+            background: rgba(15, 17, 21, 0.8);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+            backdrop-filter: blur(12px);
             position: relative;
             box-shadow: 0 0 18px rgba(34, 211, 238, 0.1);
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-        }
-
-        .header::after {
+        .topbar::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -215,52 +207,60 @@
             background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.6), transparent);
         }
 
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #e6e8ee;
-            letter-spacing: -0.025em;
-            position: relative;
-        }
-
-        .page-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #22d3ee, #06b6d4);
-            border-radius: 2px;
-            box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
-        }
-
-        .header-controls {
+        .left-side {
             display: flex;
             align-items: center;
-            gap: 16px;
         }
 
-        .header-select {
-            padding: 8px 12px;
-            background: rgba(34, 211, 238, 0.1);
+        .logo {
+            width: 72px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.45);
+        }
+
+        .right-side {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .right-side select,
+        .right-side button {
+            background: rgba(34, 211, 238, 0.08);
             border: 1px solid rgba(34, 211, 238, 0.3);
-            border-radius: 10px;
-            color: #e6e8ee;
-            font-size: 14px;
-            font-family: inherit;
+            border-radius: 8px;
+            color: #e5e7eb;
+            padding: 6px 12px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
+            transition: 0.2s;
+            font-family: inherit;
         }
 
-        .header-select:focus {
+        .right-side select:hover,
+        .right-side button:hover {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.4);
+        }
+
+        .role-select {
+            min-width: 120px;
+        }
+
+        .role-select:focus {
             outline: none;
             border-color: #22d3ee;
-            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.15), 0 0 8px rgba(34, 211, 238, 0.3);
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.15);
         }
 
-        .header-select option {
+        .role-select option {
             background: #12151c;
             color: #e6e8ee;
         }
@@ -271,33 +271,25 @@
             display: inline-block;
         }
 
-        .lang-toggle {
-            padding: 8px 12px;
-            background: rgba(34, 211, 238, 0.1);
+        .lang-switch {
+            background: rgba(34, 211, 238, 0.08);
             border: 1px solid rgba(34, 211, 238, 0.3);
-            border-radius: 10px;
-            color: #e6e8ee;
-            font-size: 14px;
+            border-radius: 8px;
+            color: #e5e7eb;
+            padding: 6px 12px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-family: inherit;
-            backdrop-filter: blur(8px);
-            min-width: 100px;
-            font-weight: 500;
+            min-width: 70px;
         }
 
-        .lang-toggle:hover {
-            background: rgba(34, 211, 238, 0.2);
-            border-color: rgba(34, 211, 238, 0.5);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
-        }
-
-        .lang-toggle:active {
-            transform: translateY(0);
+        .lang-switch:hover {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.4);
         }
 
         .lang-menu {
@@ -396,68 +388,56 @@
 
         /* Enhanced Theme Toggle */
         .theme-toggle {
-            width: 40px;
-            height: 40px;
-            background: rgba(34, 211, 238, 0.1);
+            background: rgba(34, 211, 238, 0.08);
             border: 1px solid rgba(34, 211, 238, 0.3);
-            border-radius: 10px;
-            color: #e6e8ee;
-            font-size: 18px;
+            border-radius: 8px;
+            color: #e5e7eb;
+            padding: 6px 12px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            font-family: inherit;
+            min-width: 36px;
         }
 
         .theme-toggle:hover {
-            background: rgba(34, 211, 238, 0.2);
-            border-color: #22d3ee;
-            transform: scale(1.05) rotate(15deg);
-            box-shadow: 0 0 16px rgba(34, 211, 238, 0.4);
-        }
-
-        .theme-toggle:hover::before {
-            opacity: 1;
-        }
-
-        .theme-toggle:active {
-            transform: scale(0.95);
+            background: rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.4);
         }
 
         #themeIcon {
-            transition: all 0.4s ease;
-            filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.3));
+            transition: all 0.2s ease;
+            font-size: 16px;
         }
 
         /* Light Theme Adjustments for Controls */
-        body.light-theme .lang-toggle,
-        body.light-theme .theme-toggle {
+        body.light-theme .lang-switch,
+        body.light-theme .theme-toggle,
+        body.light-theme .role-select {
             background: rgba(37, 89, 160, 0.1);
             border-color: rgba(37, 89, 160, 0.3);
             color: #1b1e22;
         }
 
-        body.light-theme .lang-toggle:hover,
-        body.light-theme .theme-toggle:hover {
+        body.light-theme .lang-switch:hover,
+        body.light-theme .theme-toggle:hover,
+        body.light-theme .role-select:hover {
             background: rgba(37, 89, 160, 0.2);
             border-color: #2459a0;
             box-shadow: 0 0 16px rgba(37, 89, 160, 0.3);
+        }
+
+        body.light-theme .topbar {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(37, 89, 160, 0.2);
+            box-shadow: 0 0 18px rgba(37, 89, 160, 0.1);
+        }
+
+        body.light-theme .topbar::after {
+            background: linear-gradient(90deg, transparent, rgba(37, 89, 160, 0.6), transparent);
         }
 
         body.light-theme .lang-dropdown {
@@ -486,64 +466,7 @@
             transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
         }
 
-        /* Status Bar */
-        .status-bar {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
-            padding: 12px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: rgba(34, 211, 238, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: #e6e8ee;
-        }
-
-        .badge-role {
-            background: rgba(34, 211, 238, 0.2);
-            color: #22d3ee;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .project-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #8a93a6;
-        }
-
-        .version {
-            background: rgba(34, 211, 238, 0.1);
-            color: #22d3ee;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
 
         /* Enhanced Content Area */
         .content-area {
@@ -1381,6 +1304,13 @@
             box-shadow: 0 0 16px rgba(34, 211, 238, 0.3);
         }
 
+        /* Button Pressed Effect */
+        button.pressed {
+            transform: scale(0.96);
+            box-shadow: 0 0 6px rgba(34, 211, 238, .45) inset;
+            transition: 0.15s ease;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .content-area {
@@ -1416,7 +1346,7 @@
                 margin-left: 0;
             }
             
-            .header {
+            .topbar {
                 padding: 0 80px 0 20px;
             }
 
@@ -1480,7 +1410,7 @@
         }
 
         @media (max-width: 480px) {
-            .header {
+            .topbar {
                 padding: 0 70px 0 16px;
             }
             
@@ -1543,20 +1473,7 @@
             background: linear-gradient(135deg, rgba(37, 89, 160, 0.08) 0%, transparent 50%);
         }
 
-        body.light-theme .header {
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(37, 89, 160, 0.2);
-            box-shadow: 0 0 18px rgba(37, 89, 160, 0.1);
-        }
 
-        body.light-theme .header::after {
-            background: linear-gradient(90deg, transparent, rgba(37, 89, 160, 0.6), transparent);
-        }
-
-        body.light-theme .status-bar {
-            background: rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(37, 89, 160, 0.15);
-        }
 
         body.light-theme .content-card,
         body.light-theme .stat-card,
@@ -1622,9 +1539,8 @@
             background: rgba(37, 89, 160, 0.1);
         }
 
-        body.light-theme .page-title::after {
-            background: linear-gradient(90deg, #2459a0, #1e40af);
-            box-shadow: 0 0 8px rgba(37, 89, 160, 0.5);
+        body.light-theme .page-header::after {
+            background: #2459a0;
         }
 
         body.light-theme .brand-logo {
@@ -2003,22 +1919,12 @@
      </div>
     </nav>
    </aside><!-- Main Content -->
-   <main class="main-content"><!-- Status Bar -->
-    <div class="status-bar">
-     <div class="user-info">
-      <div class="user-avatar">
-       👤
-      </div><span class="user-name">Aktif Kullanıcı</span> <span class="badge-role" id="currentRole">Satın Alma</span>
+   <main class="main-content"><!-- Clean Header -->
+    <header class="topbar">
+     <div class="left-side"><img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="logo">
      </div>
-     <div class="project-info"><span class="project-name">SOMTECH Global</span> <span class="version">v2.0.0</span>
-     </div>
-    </div><!-- Header -->
-    <header class="header">
-     <div class="header-left">
-      <h1 class="page-title" id="pageTitle">Kayıt Tablosu</h1>
-     </div>
-     <div class="header-controls"><select id="userRole" class="header-select"> <option value="Satın Alma">👤 Satın Alma</option> <option value="Muhasebe">💼 Muhasebe</option> <option value="Müdür">🏆 Müdür</option> <option value="Birim Kullanıcısı">👥 Birim Kullanıcısı</option> </select> <!-- Enhanced Language Selector -->
-      <div class="lang-dropdown"><button id="langButton" class="lang-toggle" title="Change Language"> 🌐 <span id="currentLangText">DİL</span> ▾ </button>
+     <div class="right-side"><select id="userRole" class="role-select"> <option value="Satın Alma">Satın Alma</option> <option value="Muhasebe">Muhasebe</option> <option value="Müdür">Müdür</option> <option value="Birim Kullanıcısı">Birim Kullanıcısı</option> </select> <!-- Language Selector -->
+      <div class="lang-dropdown"><button id="langButton" class="lang-switch" title="Change Language"> 🌐 <span id="currentLangText">DİL</span> </button>
        <div id="langMenu" class="lang-menu hidden">
         <div class="lang-option" data-lang="tr"><img src="https://flagcdn.com/w20/tr.png" alt="TR" class="flag-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"> <span class="flag-emoji" style="display: none;">🇹🇷</span> <span class="lang-name">TURKISH</span>
         </div>
@@ -2027,7 +1933,7 @@
         <div class="lang-option" data-lang="ru"><img src="https://flagcdn.com/w20/ru.png" alt="RU" class="flag-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"> <span class="flag-emoji" style="display: none;">🇷🇺</span> <span class="lang-name">РУССКИЙ</span>
         </div>
        </div>
-      </div><!-- Enhanced Theme Toggle --> <button id="themeBtn" class="theme-toggle" title="Toggle Theme"> <span id="themeIcon">🌙</span> </button>
+      </div><!-- Theme Toggle --> <button id="themeBtn" class="theme-toggle" title="Tema Değiştir"> <span id="themeIcon">🌙</span> </button>
      </div>
     </header><!-- Content Area -->
     <div class="content-area"><!-- Home View (Özet) -->
@@ -2295,6 +2201,189 @@
   </div>
   <script>
         console.log("SOMTECH_SOF v2.0.0 CloudSync yüklendi");
+
+        // ===== BUTTON INITIALIZATION SYSTEM =====
+        document.addEventListener("DOMContentLoaded", () => {
+            initButtons();
+            setupEventListeners();
+        });
+
+        function initButtons(){
+            const buttons = document.querySelectorAll("button");
+            buttons.forEach(btn=>{
+                btn.addEventListener("click", e=>{
+                    console.log("Clicked:", e.target.textContent);
+                    btn.classList.add("pressed");
+                    setTimeout(()=>btn.classList.remove("pressed"),150);
+                });
+            });
+        }
+
+        function setupEventListeners() {
+            // Navigation buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const viewId = button.getAttribute('data-view');
+                    if (viewId) showView(viewId);
+                });
+            });
+
+            // Modal and form controls
+            const newRequestBtn = document.getElementById('navNewRequest');
+            if (newRequestBtn) {
+                newRequestBtn.addEventListener('click', handleNewRequestClick);
+            }
+
+            const cancelBtn = document.getElementById('cancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', closeModal);
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', saveNewRequest);
+            }
+
+            // Export and backup controls
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', toggleExportDropdown);
+            }
+
+            const manualBackupBtn = document.getElementById('manualBackupBtn');
+            if (manualBackupBtn) {
+                manualBackupBtn.addEventListener('click', manualBackupData);
+            }
+
+            const restoreBtn = document.getElementById('restoreBtn');
+            if (restoreBtn) {
+                restoreBtn.addEventListener('click', () => {
+                    document.getElementById('restoreFileInput').click();
+                });
+            }
+
+            const restoreFileInput = document.getElementById('restoreFileInput');
+            if (restoreFileInput) {
+                restoreFileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) restoreDataFromFile(file);
+                });
+            }
+
+            // Theme and language controls
+            const themeBtn = document.getElementById('themeBtn');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', toggleTheme);
+            }
+
+            const langButton = document.getElementById('langButton');
+            if (langButton) {
+                langButton.addEventListener('click', () => {
+                    const langMenu = document.getElementById('langMenu');
+                    if (langMenu) {
+                        langMenu.classList.toggle('hidden');
+                    }
+                });
+            }
+
+            // Language options
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const lang = option.getAttribute('data-lang');
+                    if (lang) {
+                        changeLanguage(lang);
+                        const langMenu = document.getElementById('langMenu');
+                        if (langMenu) {
+                            langMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+            // Mobile menu
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            }
+
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', closeMobileMenu);
+            }
+
+            // Form controls
+            const addRowBtn = document.getElementById('addRowBtn');
+            if (addRowBtn) {
+                addRowBtn.addEventListener('click', addRowToTempTable);
+            }
+
+            const removeRowBtn = document.getElementById('removeRowBtn');
+            if (removeRowBtn) {
+                removeRowBtn.addEventListener('click', removeSelectedRow);
+            }
+
+            // Export options
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            if (exportPdfBtn) {
+                exportPdfBtn.addEventListener('click', exportToPDF);
+            }
+
+            const exportExcelBtn = document.getElementById('exportExcelBtn');
+            if (exportExcelBtn) {
+                exportExcelBtn.addEventListener('click', exportToExcel);
+            }
+
+            // User role change
+            const userRole = document.getElementById('userRole');
+            if (userRole) {
+                userRole.addEventListener('change', (e) => {
+                    currentUserRole = e.target.value;
+                    localStorage.setItem('sof_user_role', currentUserRole);
+                    document.getElementById('currentRole').textContent = currentUserRole;
+                    showToast('Kullanıcı rolü değiştirildi', 'info');
+                });
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    filterTable(e.target.value);
+                });
+            }
+
+            // Material input for AI suggestions
+            const fItem = document.getElementById('fItem');
+            if (fItem) {
+                fItem.addEventListener('input', (e) => {
+                    const input = e.target.value.trim();
+                    if (input.length >= 2) {
+                        const suggestions = getSimilarMaterials(input);
+                        showSuggestions(input, suggestions);
+                        
+                        // Auto-classify material
+                        const classification = classifyMaterial(input);
+                        document.getElementById('fMainType').value = classification.mainType;
+                        document.getElementById('fKind').value = classification.kind;
+                    }
+                });
+            }
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.export-container')) {
+                    closeExportDropdown();
+                }
+                if (!e.target.closest('.lang-dropdown')) {
+                    const langMenu = document.getElementById('langMenu');
+                    if (langMenu) {
+                        langMenu.classList.add('hidden');
+                    }
+                }
+            });
+
+            console.log('All event listeners initialized');
+        }
 
         // ===== GOOGLE DRIVE CLOUDSYNC MODULE =====
         
@@ -3859,938 +3948,6 @@
                         case 'viewNewRequest':
                             pageTitle.textContent = t('navNewRequest');
                             break;
-                    }
-                }
-            }
-            
-            // Update navigation
-            const navButtons = [
-                { selector: '[data-view="viewHome"] .nav-text', key: 'navHome' },
-                { selector: '[data-view="viewTable"] .nav-text', key: 'navTable' },
-                { selector: '[data-view="viewForm"] .nav-text', key: 'navForm' },
-                { selector: '[data-view="viewReports"] .nav-text', key: 'navReports' },
-                { selector: '[data-view="viewSettings"] .nav-text', key: 'navSettings' },
-                { selector: '[data-view="viewNewRequest"] .nav-text', key: 'navNewRequest' }
-            ];
-            
-            navButtons.forEach(nav => {
-                const element = document.querySelector(nav.selector);
-                if (element) element.textContent = t(nav.key);
-            });
-            
-            // Update modal title
-            const modalTitle = document.querySelector('.modal-title');
-            if (modalTitle) {
-                modalTitle.innerHTML = `<span>➕</span>${t('modalTitle')}`;
-            }
-            
-            // Update form labels
-            const formLabels = [
-                { id: 'fName', key: 'adiSoyadi', placeholder: 'materialPlaceholder' },
-                { id: 'fDate', key: 'talepTarihi' },
-                { id: 'fItem', key: 'malzeme', placeholder: 'materialPlaceholder' },
-                { id: 'fMainType', key: 'anaTur' },
-                { id: 'fKind', key: 'tip' },
-                { id: 'fUnit', key: 'birim' },
-                { id: 'fQty', key: 'adet' },
-                { id: 'fTermin', key: 'terminTarihi' },
-                { id: 'fDetail', key: 'detay', placeholder: 'detailPlaceholder' },
-                { id: 'fLink', key: 'link' },
-                { id: 'fNote', key: 'aciklama', placeholder: 'descriptionPlaceholder' }
-            ];
-            
-            formLabels.forEach(label => {
-                const element = document.getElementById(label.id);
-                if (element && label.placeholder) {
-                    element.placeholder = t(label.placeholder);
-                }
-            });
-            
-            // Update table headers
-            const headers = document.querySelectorAll('.data-table th');
-            if (headers.length >= 12) {
-                headers[10].textContent = t('durum');
-                headers[11].textContent = t('islemler');
-            }
-            
-            // Update search placeholder
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.placeholder = t('searchPlaceholder');
-            }
-            
-            // Update button texts
-            const buttons = [
-                { id: 'filterBtn', key: 'filter' },
-                { id: 'manualBackupBtn', key: 'backup' },
-                { id: 'restoreBtn', key: 'restore' },
-                { id: 'exportBtn', key: 'export' },
-                { id: 'addRowBtn', key: 'addRow' },
-                { id: 'removeRowBtn', key: 'removeRow' },
-                { id: 'cancelBtn', key: 'vazgec' },
-                { id: 'saveBtn', key: 'kaydet' }
-            ];
-            
-            buttons.forEach(btn => {
-                const element = document.getElementById(btn.id);
-                if (element) {
-                    const text = element.textContent.replace(/[📄📊💾🔁➕❌]/g, '').trim();
-                    const icon = element.textContent.match(/[📄📊💾🔁➕❌]/)?.[0] || '';
-                    element.textContent = icon ? `${icon} ${t(btn.key)}` : t(btn.key);
-                }
-            });
-            
-            // Update unit options
-            const unitSelect = document.getElementById('fUnit');
-            if (unitSelect) {
-                const units = [
-                    { value: '', key: 'birim' },
-                    { value: 'Adet', key: 'unitPiece' },
-                    { value: 'Kutu', key: 'unitBox' },
-                    { value: 'Paket', key: 'unitPackage' },
-                    { value: 'Metre', key: 'unitMeter' },
-                    { value: 'Litre', key: 'unitLiter' },
-                    { value: 'Kg', key: 'unitKg' },
-                    { value: 'Set', key: 'unitSet' },
-                    { value: 'Diğer', key: 'unitOther' }
-                ];
-                
-                const selectedValue = unitSelect.value;
-                unitSelect.innerHTML = '';
-                
-                units.forEach(unit => {
-                    const option = document.createElement('option');
-                    option.value = unit.value;
-                    option.textContent = unit.value === '' ? `${t(unit.key)} seçin` : t(unit.key);
-                    if (unit.value === selectedValue) option.selected = true;
-                    unitSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Language dropdown functions
-        function toggleLanguageDropdown() {
-            const langMenu = document.getElementById('langMenu');
-            langMenu.classList.toggle('hidden');
-        }
-
-        function closeLanguageDropdown() {
-            const langMenu = document.getElementById('langMenu');
-            langMenu.classList.add('hidden');
-        }
-
-        // User role functions
-        function changeUserRole(role) {
-            currentUserRole = role;
-            document.getElementById('currentRole').textContent = role;
-            localStorage.setItem('sof_user_role', role);
-            renderTable(); // Re-render to apply role restrictions
-        }
-
-        // Save record
-        function saveRecord() {
-            const t = translations[currentLang];
-            const adiSoyadi = document.getElementById('fName').value.trim();
-            const talepTarihi = document.getElementById('fDate').value;
-            const terminTarihi = document.getElementById('fTermin').value;
-            const aciklama = document.getElementById('fNote').value.trim();
-            
-            // Get all rows from temp table
-            const tempRows = document.querySelectorAll('#tempTable tbody tr');
-            
-            if (tempRows.length === 0) {
-                showToast('En az bir malzeme satırı eklemelisiniz!', 'error');
-                return;
-            }
-            
-            if (!adiSoyadi || !talepTarihi || !terminTarihi) {
-                showToast('Adı Soyadı, Talep Tarihi ve Termin Tarihi zorunludur!', 'error');
-                return;
-            }
-
-            let rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
-            let addedCount = 0;
-            
-            // Process each row from temp table
-            tempRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                const malzeme = cells[0].textContent;
-                const birim = cells[1].textContent;
-                const adet = cells[2].textContent;
-                const detay = cells[3].textContent === '-' ? '' : cells[3].textContent;
-                const linkCell = cells[4];
-                const link = linkCell.querySelector('a') ? linkCell.querySelector('a').href : '';
-                
-                // Classify material
-                const classification = classifyMaterial(malzeme);
-                const sofCode = generateSOFCode(classification.kind);
-                
-                const newRecord = {
-                    sofCode: sofCode,
-                    talepTarihi: talepTarihi,
-                    malzeme: malzeme,
-                    birim: birim,
-                    anaTur: classification.mainType,
-                    tip: classification.kind,
-                    adet: adet,
-                    terminTarihi: terminTarihi,
-                    detay: detay,
-                    link: link,
-                    durum: t.beklemede,
-                    adiSoyadi: adiSoyadi,
-                    aciklama: aciklama,
-                    createdAt: new Date().toISOString(),
-                    createdBy: currentUserRole
-                };
-                
-                rows.push(newRecord);
-                addedCount++;
-            });
-
-            localStorage.setItem('sof_rows', JSON.stringify(rows));
-            renderTable();
-            updateStatistics();
-            closeModal();
-            
-            showToast(`${addedCount} kayıt başarıyla kaydedildi!`, 'success');
-        }
-
-        // Edit record
-        function editRecord(index) {
-            const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
-            const record = rows[index];
-            
-            if (!record) return;
-            
-            editingRowIndex = index;
-            
-            // Fill form with record data
-            document.getElementById('fName').value = record.adiSoyadi || '';
-            document.getElementById('fDate').value = record.talepTarihi || '';
-            document.getElementById('fItem').value = record.malzeme || '';
-            document.getElementById('fMainType').value = record.anaTur || '';
-            document.getElementById('fKind').value = record.tip || '';
-            document.getElementById('fUnit').value = record.birim || '';
-            document.getElementById('fQty').value = record.adet || '';
-            document.getElementById('fTermin').value = record.terminTarihi || '';
-            document.getElementById('fDetail').value = record.detay || '';
-            document.getElementById('fLink').value = record.link || '';
-            document.getElementById('fNote').value = record.aciklama || '';
-            
-            openModal();
-        }
-
-        // Create status badge
-        function createStatusBadge(status) {
-            const statusClass = status.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
-            
-            const statusIcons = {
-                'beklemede': '⏳',
-                'onaylandi': '✅',
-                'red-edildi': '❌',
-                'odeme-bekliyor': '💳',
-                'tamamlandi': '🎉'
-            };
-
-            const icon = statusIcons[statusClass] || '⏳';
-            
-            return `<span class="status-badge ${statusClass}">${icon} ${status}</span>`;
-        }
-
-        // Render table
-        function renderTable() {
-            const tbody = document.getElementById('sofBody');
-            const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
-            const t = translations[currentLang];
-            const canEdit = currentUserRole !== 'Birim Kullanıcısı';
-            
-            tbody.innerHTML = '';
-            
-            // Apply search filter
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filteredRows = rows.filter(row => 
-                row.malzeme.toLowerCase().includes(searchTerm) || 
-                row.sofCode.toLowerCase().includes(searchTerm)
-            );
-            
-            filteredRows.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                const editButton = canEdit ? 
-                    `<button class="edit-button" onclick="editRecord(${rows.indexOf(row)})">${t.duzenle}</button>` : 
-                    '-';
-                
-                tr.innerHTML = `
-                    <td>${row.sofCode}</td>
-                    <td>${row.talepTarihi}</td>
-                    <td>${row.malzeme}</td>
-                    <td>${row.birim}</td>
-                    <td>${row.anaTur}</td>
-                    <td>${row.tip}</td>
-                    <td>${row.adet}</td>
-                    <td>${row.terminTarihi}</td>
-                    <td>${row.detay || '-'}</td>
-                    <td>${row.link ? `<a href="${row.link}" target="_blank" style="color: #22d3ee;">Link</a>` : '-'}</td>
-                    <td>${createStatusBadge(row.durum)}</td>
-                    <td>${editButton}</td>
-                `;
-                
-                // Add tooltip with requester name if available
-                if (row.adiSoyadi) {
-                    tr.title = `Talep Eden: ${row.adiSoyadi}`;
-                }
-                
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Search functionality
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    renderTable();
-                });
-            }
-        }
-
-        // ===== ENHANCED INITIALIZATION =====
-        function initializeSettings() {
-            // Initialize theme and language detection
-            initializeTheme();
-            initializeLanguage();
-            
-            // Apply theme
-            applyTheme();
-            
-            // Apply language and update UI
-            updateLanguageUI();
-            applyTranslations();
-            
-            // Load user role
-            currentUserRole = localStorage.getItem('sof_user_role') || 'Satın Alma';
-            document.getElementById('userRole').value = currentUserRole;
-            document.getElementById('currentRole').textContent = currentUserRole;
-            
-            console.log(`Settings initialized - Language: ${currentLang}, Theme: ${currentTheme}, Role: ${currentUserRole}`);
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("SOMTECH_SOF v2.0.0 JavaScript yüklendi");
-            
-            // Initialize settings
-            initializeSettings();
-            
-            // Navigation button event listeners
-            const navButtons = [
-                { id: 'navHome', view: 'viewHome' },
-                { id: 'navTable', view: 'viewTable' },
-                { id: 'navForm', view: 'viewForm' },
-                { id: 'navReports', view: 'viewReports' },
-                { id: 'navSettings', view: 'viewSettings' },
-                { id: 'navNewRequest', view: null, action: 'modal' }
-            ];
-
-            navButtons.forEach(nav => {
-                const button = document.getElementById(nav.id);
-                if (button) {
-                    button.addEventListener('click', function() {
-                        if (nav.action === 'modal') {
-                            openModal();
-                        } else if (nav.view) {
-                            showView(nav.view);
-                        }
-                    });
-                }
-            });
-
-            // Enhanced Header controls
-            const themeBtn = document.getElementById('themeBtn');
-            if (themeBtn) {
-                themeBtn.addEventListener('click', toggleTheme);
-            }
-
-            // Enhanced Language Selector
-            const langButton = document.getElementById('langButton');
-            const langMenu = document.getElementById('langMenu');
-            
-            if (langButton && langMenu) {
-                langButton.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleLanguageDropdown();
-                });
-
-                // Language options
-                const langOptions = langMenu.querySelectorAll('.lang-option');
-                langOptions.forEach(option => {
-                    option.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const selectedLang = this.dataset.lang;
-                        changeLanguage(selectedLang);
-                        closeLanguageDropdown();
-                    });
-                });
-
-                // Close language dropdown when clicking outside
-                document.addEventListener('click', function(e) {
-                    const langDropdown = document.querySelector('.lang-dropdown');
-                    if (langDropdown && !langDropdown.contains(e.target)) {
-                        closeLanguageDropdown();
-                    }
-                });
-            }
-
-            const userRole = document.getElementById('userRole');
-            if (userRole) {
-                userRole.addEventListener('change', function(e) {
-                    changeUserRole(e.target.value);
-                });
-            }
-
-            // Mobile menu toggle
-            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-            }
-
-            const mobileOverlay = document.getElementById('mobileOverlay');
-            if (mobileOverlay) {
-                mobileOverlay.addEventListener('click', closeMobileMenu);
-            }
-
-            // Modal event listeners
-            const cancelBtn = document.getElementById('cancelBtn');
-            if (cancelBtn) {
-                cancelBtn.addEventListener('click', closeModal);
-            }
-
-            const saveBtn = document.getElementById('saveBtn');
-            if (saveBtn) {
-                saveBtn.addEventListener('click', saveRecord);
-            }
-
-            // AI Classification and Smart Suggestions on material input
-            const fItem = document.getElementById('fItem');
-            if (fItem) {
-                fItem.addEventListener('input', function(e) {
-                    const materialName = e.target.value.trim();
-                    
-                    if (materialName.length > 2) {
-                        // AI Classification
-                        const classification = classifyMaterial(materialName);
-                        const fMainType = document.getElementById('fMainType');
-                        const fKind = document.getElementById('fKind');
-                        if (fMainType) fMainType.value = classification.mainType;
-                        if (fKind) fKind.value = classification.kind;
-                        
-                        // Smart Suggestions
-                        const suggestions = getSimilarMaterials(materialName);
-                        if (suggestions.length > 0) {
-                            showSuggestions(materialName, suggestions);
-                        }
-                    }
-                });
-            }
-
-            // Add Row button
-            const addRowBtn = document.getElementById('addRowBtn');
-            if (addRowBtn) {
-                addRowBtn.addEventListener('click', addRowToTempTable);
-            }
-
-            // Remove Row button
-            const removeRowBtn = document.getElementById('removeRowBtn');
-            if (removeRowBtn) {
-                removeRowBtn.addEventListener('click', removeSelectedRow);
-            }
-
-            // Enter key on quantity field to add row
-            const fQty = document.getElementById('fQty');
-            if (fQty) {
-                fQty.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addRowToTempTable();
-                    }
-                });
-            }
-
-            // Close modal when clicking outside
-            const formModal = document.getElementById('formModal');
-            if (formModal) {
-                formModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeModal();
-                    }
-                });
-            }
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('formModal');
-                    if (modal && modal.classList.contains('active')) {
-                        closeModal();
-                    }
-                    
-                    // Close export dropdown with Escape
-                    const dropdown = document.getElementById('exportDropdown');
-                    if (dropdown && dropdown.classList.contains('show')) {
-                        closeExportDropdown();
-                    }
-                }
-            });
-
-            // Export functionality event listeners
-            const exportBtn = document.getElementById('exportBtn');
-            if (exportBtn) {
-                exportBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleExportDropdown();
-                });
-            }
-
-            const exportPdfBtn = document.getElementById('exportPdfBtn');
-            if (exportPdfBtn) {
-                exportPdfBtn.addEventListener('click', exportToPDF);
-            }
-
-            const exportExcelBtn = document.getElementById('exportExcelBtn');
-            if (exportExcelBtn) {
-                exportExcelBtn.addEventListener('click', exportToExcel);
-            }
-
-            // Manual backup button
-            const manualBackupBtn = document.getElementById('manualBackupBtn');
-            if (manualBackupBtn) {
-                manualBackupBtn.addEventListener('click', manualBackupData);
-            }
-
-            // Restore button and file input
-            const restoreBtn = document.getElementById('restoreBtn');
-            const restoreFileInput = document.getElementById('restoreFileInput');
-            
-            if (restoreBtn && restoreFileInput) {
-                restoreBtn.addEventListener('click', function() {
-                    restoreFileInput.click();
-                });
-                
-                restoreFileInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file && file.type === 'application/json') {
-                        restoreDataFromFile(file);
-                    } else {
-                        showToast('Lütfen geçerli bir JSON dosyası seçin', 'error');
-                    }
-                    // Reset file input
-                    e.target.value = '';
-                });
-            }
-
-            // Close export dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                const exportContainer = document.querySelector('.export-container');
-                const dropdown = document.getElementById('exportDropdown');
-                
-                if (dropdown && dropdown.classList.contains('show')) {
-                    if (!exportContainer.contains(e.target)) {
-                        closeExportDropdown();
-                    }
-                }
-            });
-
-            // Close mobile menu on window resize if screen becomes larger
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
-                    closeMobileMenu();
-                }
-            });
-
-            // Setup search functionality
-            setupSearch();
-
-            // ===== ACTIVATE ALL INTERACTIVE BUTTONS =====
-            
-            // Filter Button - Enhanced table filtering
-            const filterBtn = document.getElementById('filterBtn');
-            if (filterBtn) {
-                filterBtn.addEventListener('click', function() {
-                    console.log("Filtrele clicked");
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const searchValue = document.getElementById('searchInput').value.toLowerCase();
-                        const rows = document.querySelectorAll('#sofBody tr');
-                        let visibleCount = 0;
-                        
-                        rows.forEach(row => {
-                            const text = row.textContent.toLowerCase();
-                            const isVisible = text.includes(searchValue);
-                            row.style.display = isVisible ? '' : 'none';
-                            if (isVisible) visibleCount++;
-                        });
-                        
-                        showToast(`${visibleCount} kayıt gösteriliyor`, 'info');
-                    } catch (error) {
-                        console.error('Filter error:', error);
-                        showToast('Filtreleme hatası!', 'error');
-                    }
-                });
-            }
-
-            // Enhanced Backup Button - JSON download
-            const backupBtn = document.getElementById('manualBackupBtn');
-            if (backupBtn) {
-                backupBtn.addEventListener('click', function() {
-                    console.log("Backup clicked");
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const backupData = {
-                            version: '2.0.0',
-                            exportDate: new Date().toISOString(),
-                            totalRecords: JSON.parse(localStorage.getItem('sof_rows') || '[]').length,
-                            sof_rows: JSON.parse(localStorage.getItem('sof_rows') || '[]'),
-                            sof_user_role: localStorage.getItem('sof_user_role') || 'Satın Alma',
-                            sof_theme: localStorage.getItem('sof_theme') || 'dark',
-                            sof_lang: localStorage.getItem('sof_lang') || 'tr',
-                            sof_global_seq: localStorage.getItem('sof_global_seq') || '0'
-                        };
-
-                        const jsonContent = JSON.stringify(backupData, null, 2);
-                        const blob = new Blob([jsonContent], { type: 'application/json' });
-                        const link = document.createElement('a');
-                        const url = URL.createObjectURL(blob);
-                        
-                        link.setAttribute('href', url);
-                        link.setAttribute('download', `SOMTECH_SOF_Backup_${getCurrentDateString()}.json`);
-                        link.style.visibility = 'hidden';
-                        
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                        
-                        console.log("Backup exported successfully");
-                        showToast('JSON yedek indirildi!', 'success');
-                    } catch (error) {
-                        console.error('Backup error:', error);
-                        showToast('Yedekleme hatası!', 'error');
-                    }
-                });
-            }
-
-            // Enhanced Restore Button - JSON import
-            const restoreBtn = document.getElementById('restoreBtn');
-            if (restoreBtn) {
-                restoreBtn.addEventListener('click', function() {
-                    console.log("Restore clicked");
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const input = document.createElement('input');
-                        input.type = 'file';
-                        input.accept = '.json';
-                        input.style.display = 'none';
-                        
-                        input.onchange = function(e) {
-                            const file = e.target.files[0];
-                            if (!file) return;
-                            
-                            const reader = new FileReader();
-                            reader.onload = function(ev) {
-                                try {
-                                    const data = JSON.parse(ev.target.result);
-                                    
-                                    // Validate JSON structure
-                                    if (!data.sof_rows || !Array.isArray(data.sof_rows)) {
-                                        throw new Error('Geçersiz yedek dosyası formatı');
-                                    }
-                                    
-                                    // Restore data
-                                    localStorage.setItem('sof_rows', JSON.stringify(data.sof_rows));
-                                    if (data.sof_user_role) localStorage.setItem('sof_user_role', data.sof_user_role);
-                                    if (data.sof_theme) localStorage.setItem('sof_theme', data.sof_theme);
-                                    if (data.sof_lang) localStorage.setItem('sof_lang', data.sof_lang);
-                                    if (data.sof_global_seq) localStorage.setItem('sof_global_seq', data.sof_global_seq);
-                                    
-                                    console.log("Backup restored successfully");
-                                    showToast('Veriler başarıyla geri yüklendi!', 'success');
-                                    
-                                    // Refresh page to apply changes
-                                    setTimeout(() => location.reload(), 1500);
-                                    
-                                } catch (error) {
-                                    console.error('Restore parse error:', error);
-                                    showToast('Yedek dosyası okunamadı: ' + error.message, 'error');
-                                }
-                            };
-                            
-                            reader.onerror = function() {
-                                showToast('Dosya okuma hatası!', 'error');
-                            };
-                            
-                            reader.readAsText(file);
-                        };
-                        
-                        document.body.appendChild(input);
-                        input.click();
-                        document.body.removeChild(input);
-                        
-                    } catch (error) {
-                        console.error('Restore button error:', error);
-                        showToast('Geri yükleme hatası!', 'error');
-                    }
-                });
-            }
-
-            // Enhanced Export Dropdown Toggle
-            const exportBtn = document.getElementById('exportBtn');
-            if (exportBtn) {
-                exportBtn.addEventListener('click', function(e) {
-                    console.log("Export dropdown clicked");
-                    e.stopPropagation();
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const dropdown = document.getElementById('exportDropdown');
-                        if (dropdown) {
-                            dropdown.classList.toggle('show');
-                        }
-                    } catch (error) {
-                        console.error('Export dropdown error:', error);
-                    }
-                });
-            }
-
-            // Enhanced PDF Export
-            const exportPdfBtn = document.getElementById('exportPdfBtn');
-            if (exportPdfBtn) {
-                exportPdfBtn.addEventListener('click', function() {
-                    console.log("PDF export clicked");
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
-                        
-                        if (rows.length === 0) {
-                            showToast('Dışa aktarılacak veri bulunamadı!', 'error');
-                            return;
-                        }
-
-                        // Create temporary table for PDF export
-                        const tempContainer = document.createElement('div');
-                        tempContainer.style.cssText = `
-                            position: absolute; left: -9999px; top: 0; width: 1200px;
-                            background: #ffffff; padding: 40px; font-family: Arial, sans-serif;
-                        `;
-
-                        const headerHtml = `
-                            <div style="text-align: center; margin-bottom: 30px;">
-                                <h1 style="color: #22d3ee; font-size: 28px; margin: 0;">SOMTECH Global</h1>
-                                <h2 style="color: #333; font-size: 20px; margin: 10px 0;">Malzeme Kayıtları v2.0.0</h2>
-                                <p style="color: #666; font-size: 14px; margin: 0;">Rapor Tarihi: ${getCurrentDateString()}</p>
-                            </div>
-                        `;
-
-                        let tableHtml = `
-                            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                                <thead><tr style="background-color: #22d3ee;">
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">SOF NO</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Talep Tarihi</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Malzeme</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Birim</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Ana Tür</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Tip</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Adet</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Termin</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Detay</th>
-                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Durum</th>
-                                </tr></thead><tbody>
-                        `;
-
-                        rows.forEach((row, index) => {
-                            const bgColor = index % 2 === 0 ? '#f8f9fa' : '#ffffff';
-                            tableHtml += `<tr style="background-color: ${bgColor};">
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.sofCode || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.talepTarihi || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.malzeme || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.birim || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.anaTur || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.tip || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.adet || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.terminTarihi || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.detay || ''}</td>
-                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.durum || ''}</td>
-                            </tr>`;
-                        });
-
-                        tableHtml += '</tbody></table>';
-                        tempContainer.innerHTML = headerHtml + tableHtml;
-                        document.body.appendChild(tempContainer);
-
-                        // Use html2canvas for PDF generation
-                        if (typeof html2canvas !== 'undefined' && typeof jsPDF !== 'undefined') {
-                            html2canvas(tempContainer, {
-                                scale: 2,
-                                useCORS: true,
-                                allowTaint: true,
-                                backgroundColor: '#ffffff'
-                            }).then(canvas => {
-                                document.body.removeChild(tempContainer);
-
-                                const imgData = canvas.toDataURL('image/png');
-                                const pdf = new jsPDF('l', 'mm', 'a4');
-                                
-                                const imgWidth = 277;
-                                const pageHeight = 190;
-                                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                                let heightLeft = imgHeight;
-                                let position = 10;
-
-                                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                                heightLeft -= pageHeight;
-
-                                while (heightLeft >= 0) {
-                                    position = heightLeft - imgHeight + 10;
-                                    pdf.addPage();
-                                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                                    heightLeft -= pageHeight;
-                                }
-
-                                pdf.save(`SOMTECH_SOF_Kayitlar_${getCurrentDateString()}.pdf`);
-                                console.log("PDF exported successfully");
-                                showToast('PDF dışa aktarımı tamamlandı!', 'success');
-                            }).catch(error => {
-                                console.error('PDF export error:', error);
-                                document.body.removeChild(tempContainer);
-                                showToast('PDF dışa aktarımı sırasında hata oluştu!', 'error');
-                            });
-                        } else {
-                            document.body.removeChild(tempContainer);
-                            showToast('PDF kütüphaneleri yüklenemedi!', 'error');
-                        }
-                        
-                        closeExportDropdown();
-                    } catch (error) {
-                        console.error('PDF export error:', error);
-                        showToast('PDF dışa aktarımı hatası!', 'error');
-                    }
-                });
-            }
-
-            // Enhanced Excel/CSV Export
-            const exportExcelBtn = document.getElementById('exportExcelBtn');
-            if (exportExcelBtn) {
-                exportExcelBtn.addEventListener('click', function() {
-                    console.log("CSV export clicked");
-                    try {
-                        this.classList.add('pressed');
-                        setTimeout(() => this.classList.remove('pressed'), 200);
-                        
-                        const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
-                        
-                        if (rows.length === 0) {
-                            showToast('Dışa aktarılacak veri bulunamadı!', 'error');
-                            return;
-                        }
-
-                        // CSV headers
-                        const headers = [
-                            'SOF NO', 'Talep Tarihi', 'Malzeme', 'Birim', 'Ana Tür',
-                            'Tip', 'Adet', 'Termin', 'Detay', 'Link', 'Durum'
-                        ];
-
-                        // Create CSV content with UTF-8 BOM
-                        let csvContent = '\uFEFF';
-                        csvContent += headers.join(',') + '\n';
-
-                        rows.forEach(row => {
-                            const csvRow = [
-                                `"${row.sofCode || ''}"`,
-                                `"${row.talepTarihi || ''}"`,
-                                `"${row.malzeme || ''}"`,
-                                `"${row.birim || ''}"`,
-                                `"${row.anaTur || ''}"`,
-                                `"${row.tip || ''}"`,
-                                `"${row.adet || ''}"`,
-                                `"${row.terminTarihi || ''}"`,
-                                `"${row.detay || ''}"`,
-                                `"${row.link || ''}"`,
-                                `"${row.durum || ''}"`
-                            ];
-                            csvContent += csvRow.join(',') + '\n';
-                        });
-
-                        // Create and download file
-                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                        const link = document.createElement('a');
-                        const url = URL.createObjectURL(blob);
-                        
-                        link.setAttribute('href', url);
-                        link.setAttribute('download', `SOMTECH_SOF_Kayitlar_${getCurrentDateString()}.csv`);
-                        link.style.visibility = 'hidden';
-                        
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                        
-                        console.log("CSV exported successfully");
-                        showToast('Excel dışa aktarımı tamamlandı!', 'success');
-                        closeExportDropdown();
-                    } catch (error) {
-                        console.error('CSV export error:', error);
-                        showToast('Excel dışa aktarımı hatası!', 'error');
-                    }
-                });
-            }
-
-            // Add pressed button effect CSS
-            const style = document.createElement('style');
-            style.textContent = `
-                .pressed {
-                    transform: scale(0.96) !important;
-                    box-shadow: 0 0 8px rgba(34,211,238,.4) inset !important;
-                    transition: all 0.1s ease !important;
-                }
-            `;
-            document.head.appendChild(style);
-
-            // Initialize backup and synchronization systems
-            monitorDataChanges();
-            startAutoBackupSystem();
-            
-            // Setup CloudSync after main initialization
-            setTimeout(() => {
-                setupCloudSyncEventListeners();
-                
-                // Initialize Google APIs when available
-                if (typeof gapi !== 'undefined' && typeof google !== 'undefined') {
-                    initDriveAPI().then(() => {
-                        console.log("Google Drive API hazır");
-                        checkExistingDriveConnection();
-                    }).catch(error => {
-                        console.error("Google Drive API başlatma hatası:", error);
-                    });
-                } else {
-                    console.warn("CloudSync: Google API'ları yüklenemedi");
-                }
-            }, 1000);
-            
-            // Load existing data on page load
-            renderTable();
-            updateStatistics();
-            
-            // Set default view to Table
-            showView('viewTable');
-            
-            console.log("✅ All interactive buttons activated successfully!");
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a40a11140bc16',t:'MTc2MTMxNzA2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a78bb149fbc16',t:'MTc2MTMxOTM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
