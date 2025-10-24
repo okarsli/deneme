@@ -63,36 +63,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 18px 12px;
+            height: 100px;
+            padding: 16px 0;
             text-align: center;
-            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.12);
         }
 
         .brand-link {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             text-decoration: none;
         }
 
         .brand-logo {
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             border-radius: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.25));
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.3));
         }
 
-        .brand-link:hover .brand-logo {
-            transform: scale(1.05);
-            box-shadow: 0 0 8px rgba(34, 211, 238, 0.35);
-        }
-
-        .brand-sub {
-            font-size: 12px;
-            color: #8a93a6;
+        .brand-logo:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.45);
         }
 
         /* Enhanced Navigation Menu */
@@ -1637,8 +1632,11 @@
             box-shadow: none;
         }
 
-        body.light-theme .brand-sub {
-            color: #4a5568;
+        @media (max-width: 768px) {
+            .brand-logo {
+                width: 42px;
+                height: 42px;
+            }
         }
 
         body.light-theme .header-select,
@@ -1988,10 +1986,7 @@
   <div class="dashboard-container"><!-- Mobile Menu Toggle --> <button class="mobile-menu-toggle" id="mobileMenuToggle"> ☰ </button> <!-- Mobile Overlay -->
    <div class="mobile-overlay" id="mobileOverlay"></div><!-- Sidebar -->
    <aside class="sidebar" id="sidebar">
-    <div class="brand" id="brand"><a href="https://somtech.ru" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Somtech Global"> <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="brand-logo">
-      <div class="brand-sub">
-       v2.0.0
-      </div></a>
+    <div class="brand" id="brand"><a href="https://somtech.ru" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Somtech Global"> <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="brand-logo"> </a>
     </div>
     <nav class="nav-menu">
      <div class="nav-item"><button class="nav-button" id="navHome" data-view="viewHome"> <span class="nav-icon">🏠</span> <span class="nav-text">Özet</span> </button>
@@ -4414,6 +4409,359 @@
             // Setup search functionality
             setupSearch();
 
+            // ===== ACTIVATE ALL INTERACTIVE BUTTONS =====
+            
+            // Filter Button - Enhanced table filtering
+            const filterBtn = document.getElementById('filterBtn');
+            if (filterBtn) {
+                filterBtn.addEventListener('click', function() {
+                    console.log("Filtrele clicked");
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+                        const rows = document.querySelectorAll('#sofBody tr');
+                        let visibleCount = 0;
+                        
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            const isVisible = text.includes(searchValue);
+                            row.style.display = isVisible ? '' : 'none';
+                            if (isVisible) visibleCount++;
+                        });
+                        
+                        showToast(`${visibleCount} kayıt gösteriliyor`, 'info');
+                    } catch (error) {
+                        console.error('Filter error:', error);
+                        showToast('Filtreleme hatası!', 'error');
+                    }
+                });
+            }
+
+            // Enhanced Backup Button - JSON download
+            const backupBtn = document.getElementById('manualBackupBtn');
+            if (backupBtn) {
+                backupBtn.addEventListener('click', function() {
+                    console.log("Backup clicked");
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const backupData = {
+                            version: '2.0.0',
+                            exportDate: new Date().toISOString(),
+                            totalRecords: JSON.parse(localStorage.getItem('sof_rows') || '[]').length,
+                            sof_rows: JSON.parse(localStorage.getItem('sof_rows') || '[]'),
+                            sof_user_role: localStorage.getItem('sof_user_role') || 'Satın Alma',
+                            sof_theme: localStorage.getItem('sof_theme') || 'dark',
+                            sof_lang: localStorage.getItem('sof_lang') || 'tr',
+                            sof_global_seq: localStorage.getItem('sof_global_seq') || '0'
+                        };
+
+                        const jsonContent = JSON.stringify(backupData, null, 2);
+                        const blob = new Blob([jsonContent], { type: 'application/json' });
+                        const link = document.createElement('a');
+                        const url = URL.createObjectURL(blob);
+                        
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', `SOMTECH_SOF_Backup_${getCurrentDateString()}.json`);
+                        link.style.visibility = 'hidden';
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        
+                        console.log("Backup exported successfully");
+                        showToast('JSON yedek indirildi!', 'success');
+                    } catch (error) {
+                        console.error('Backup error:', error);
+                        showToast('Yedekleme hatası!', 'error');
+                    }
+                });
+            }
+
+            // Enhanced Restore Button - JSON import
+            const restoreBtn = document.getElementById('restoreBtn');
+            if (restoreBtn) {
+                restoreBtn.addEventListener('click', function() {
+                    console.log("Restore clicked");
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = '.json';
+                        input.style.display = 'none';
+                        
+                        input.onchange = function(e) {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                try {
+                                    const data = JSON.parse(ev.target.result);
+                                    
+                                    // Validate JSON structure
+                                    if (!data.sof_rows || !Array.isArray(data.sof_rows)) {
+                                        throw new Error('Geçersiz yedek dosyası formatı');
+                                    }
+                                    
+                                    // Restore data
+                                    localStorage.setItem('sof_rows', JSON.stringify(data.sof_rows));
+                                    if (data.sof_user_role) localStorage.setItem('sof_user_role', data.sof_user_role);
+                                    if (data.sof_theme) localStorage.setItem('sof_theme', data.sof_theme);
+                                    if (data.sof_lang) localStorage.setItem('sof_lang', data.sof_lang);
+                                    if (data.sof_global_seq) localStorage.setItem('sof_global_seq', data.sof_global_seq);
+                                    
+                                    console.log("Backup restored successfully");
+                                    showToast('Veriler başarıyla geri yüklendi!', 'success');
+                                    
+                                    // Refresh page to apply changes
+                                    setTimeout(() => location.reload(), 1500);
+                                    
+                                } catch (error) {
+                                    console.error('Restore parse error:', error);
+                                    showToast('Yedek dosyası okunamadı: ' + error.message, 'error');
+                                }
+                            };
+                            
+                            reader.onerror = function() {
+                                showToast('Dosya okuma hatası!', 'error');
+                            };
+                            
+                            reader.readAsText(file);
+                        };
+                        
+                        document.body.appendChild(input);
+                        input.click();
+                        document.body.removeChild(input);
+                        
+                    } catch (error) {
+                        console.error('Restore button error:', error);
+                        showToast('Geri yükleme hatası!', 'error');
+                    }
+                });
+            }
+
+            // Enhanced Export Dropdown Toggle
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function(e) {
+                    console.log("Export dropdown clicked");
+                    e.stopPropagation();
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const dropdown = document.getElementById('exportDropdown');
+                        if (dropdown) {
+                            dropdown.classList.toggle('show');
+                        }
+                    } catch (error) {
+                        console.error('Export dropdown error:', error);
+                    }
+                });
+            }
+
+            // Enhanced PDF Export
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            if (exportPdfBtn) {
+                exportPdfBtn.addEventListener('click', function() {
+                    console.log("PDF export clicked");
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
+                        
+                        if (rows.length === 0) {
+                            showToast('Dışa aktarılacak veri bulunamadı!', 'error');
+                            return;
+                        }
+
+                        // Create temporary table for PDF export
+                        const tempContainer = document.createElement('div');
+                        tempContainer.style.cssText = `
+                            position: absolute; left: -9999px; top: 0; width: 1200px;
+                            background: #ffffff; padding: 40px; font-family: Arial, sans-serif;
+                        `;
+
+                        const headerHtml = `
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h1 style="color: #22d3ee; font-size: 28px; margin: 0;">SOMTECH Global</h1>
+                                <h2 style="color: #333; font-size: 20px; margin: 10px 0;">Malzeme Kayıtları v2.0.0</h2>
+                                <p style="color: #666; font-size: 14px; margin: 0;">Rapor Tarihi: ${getCurrentDateString()}</p>
+                            </div>
+                        `;
+
+                        let tableHtml = `
+                            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                <thead><tr style="background-color: #22d3ee;">
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">SOF NO</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Talep Tarihi</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Malzeme</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Birim</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Ana Tür</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Tip</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Adet</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Termin</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Detay</th>
+                                    <th style="padding: 12px 8px; color: white; border: 1px solid #2a2d33;">Durum</th>
+                                </tr></thead><tbody>
+                        `;
+
+                        rows.forEach((row, index) => {
+                            const bgColor = index % 2 === 0 ? '#f8f9fa' : '#ffffff';
+                            tableHtml += `<tr style="background-color: ${bgColor};">
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.sofCode || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.talepTarihi || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.malzeme || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.birim || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.anaTur || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.tip || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.adet || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.terminTarihi || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.detay || ''}</td>
+                                <td style="padding: 10px 8px; border: 1px solid #ddd;">${row.durum || ''}</td>
+                            </tr>`;
+                        });
+
+                        tableHtml += '</tbody></table>';
+                        tempContainer.innerHTML = headerHtml + tableHtml;
+                        document.body.appendChild(tempContainer);
+
+                        // Use html2canvas for PDF generation
+                        if (typeof html2canvas !== 'undefined' && typeof jsPDF !== 'undefined') {
+                            html2canvas(tempContainer, {
+                                scale: 2,
+                                useCORS: true,
+                                allowTaint: true,
+                                backgroundColor: '#ffffff'
+                            }).then(canvas => {
+                                document.body.removeChild(tempContainer);
+
+                                const imgData = canvas.toDataURL('image/png');
+                                const pdf = new jsPDF('l', 'mm', 'a4');
+                                
+                                const imgWidth = 277;
+                                const pageHeight = 190;
+                                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                                let heightLeft = imgHeight;
+                                let position = 10;
+
+                                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                                heightLeft -= pageHeight;
+
+                                while (heightLeft >= 0) {
+                                    position = heightLeft - imgHeight + 10;
+                                    pdf.addPage();
+                                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                                    heightLeft -= pageHeight;
+                                }
+
+                                pdf.save(`SOMTECH_SOF_Kayitlar_${getCurrentDateString()}.pdf`);
+                                console.log("PDF exported successfully");
+                                showToast('PDF dışa aktarımı tamamlandı!', 'success');
+                            }).catch(error => {
+                                console.error('PDF export error:', error);
+                                document.body.removeChild(tempContainer);
+                                showToast('PDF dışa aktarımı sırasında hata oluştu!', 'error');
+                            });
+                        } else {
+                            document.body.removeChild(tempContainer);
+                            showToast('PDF kütüphaneleri yüklenemedi!', 'error');
+                        }
+                        
+                        closeExportDropdown();
+                    } catch (error) {
+                        console.error('PDF export error:', error);
+                        showToast('PDF dışa aktarımı hatası!', 'error');
+                    }
+                });
+            }
+
+            // Enhanced Excel/CSV Export
+            const exportExcelBtn = document.getElementById('exportExcelBtn');
+            if (exportExcelBtn) {
+                exportExcelBtn.addEventListener('click', function() {
+                    console.log("CSV export clicked");
+                    try {
+                        this.classList.add('pressed');
+                        setTimeout(() => this.classList.remove('pressed'), 200);
+                        
+                        const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
+                        
+                        if (rows.length === 0) {
+                            showToast('Dışa aktarılacak veri bulunamadı!', 'error');
+                            return;
+                        }
+
+                        // CSV headers
+                        const headers = [
+                            'SOF NO', 'Talep Tarihi', 'Malzeme', 'Birim', 'Ana Tür',
+                            'Tip', 'Adet', 'Termin', 'Detay', 'Link', 'Durum'
+                        ];
+
+                        // Create CSV content with UTF-8 BOM
+                        let csvContent = '\uFEFF';
+                        csvContent += headers.join(',') + '\n';
+
+                        rows.forEach(row => {
+                            const csvRow = [
+                                `"${row.sofCode || ''}"`,
+                                `"${row.talepTarihi || ''}"`,
+                                `"${row.malzeme || ''}"`,
+                                `"${row.birim || ''}"`,
+                                `"${row.anaTur || ''}"`,
+                                `"${row.tip || ''}"`,
+                                `"${row.adet || ''}"`,
+                                `"${row.terminTarihi || ''}"`,
+                                `"${row.detay || ''}"`,
+                                `"${row.link || ''}"`,
+                                `"${row.durum || ''}"`
+                            ];
+                            csvContent += csvRow.join(',') + '\n';
+                        });
+
+                        // Create and download file
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const link = document.createElement('a');
+                        const url = URL.createObjectURL(blob);
+                        
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', `SOMTECH_SOF_Kayitlar_${getCurrentDateString()}.csv`);
+                        link.style.visibility = 'hidden';
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        
+                        console.log("CSV exported successfully");
+                        showToast('Excel dışa aktarımı tamamlandı!', 'success');
+                        closeExportDropdown();
+                    } catch (error) {
+                        console.error('CSV export error:', error);
+                        showToast('Excel dışa aktarımı hatası!', 'error');
+                    }
+                });
+            }
+
+            // Add pressed button effect CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                .pressed {
+                    transform: scale(0.96) !important;
+                    box-shadow: 0 0 8px rgba(34,211,238,.4) inset !important;
+                    transition: all 0.1s ease !important;
+                }
+            `;
+            document.head.appendChild(style);
+
             // Initialize backup and synchronization systems
             monitorDataChanges();
             startAutoBackupSystem();
@@ -4441,6 +4789,8 @@
             
             // Set default view to Table
             showView('viewTable');
+            
+            console.log("✅ All interactive buttons activated successfully!");
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a374d647cbc16',t:'MTc2MTMxNjY4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a40a11140bc16',t:'MTc2MTMxNzA2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
