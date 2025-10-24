@@ -59,49 +59,40 @@
             pointer-events: none;
         }
 
-        .logo-section {
-            padding: 24px 20px;
-            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #22d3ee, #06b6d4);
-            border-radius: 16px;
+        .sidebar .brand {
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4), 0 0 12px rgba(34, 211, 238, 0.2);
-            font-size: 24px;
+            padding: 18px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
         }
 
-        .logo-text {
+        .brand-link {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        .logo-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #e6e8ee;
-            letter-spacing: -0.025em;
-            text-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+        .brand-logo {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.25));
         }
 
-        .logo-version {
+        .brand-link:hover .brand-logo {
+            transform: scale(1.05);
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.35);
+        }
+
+        .brand-sub {
             font-size: 12px;
-            color: #22d3ee;
-            font-weight: 600;
-            margin-top: 2px;
+            color: #8a93a6;
         }
 
         /* Enhanced Navigation Menu */
@@ -212,6 +203,13 @@
             box-shadow: 0 0 18px rgba(34, 211, 238, 0.1);
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
         .header::after {
             content: '';
             position: absolute;
@@ -272,6 +270,136 @@
             color: #e6e8ee;
         }
 
+        /* Enhanced Language Selector */
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-toggle {
+            padding: 8px 12px;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 10px;
+            color: #e6e8ee;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            backdrop-filter: blur(8px);
+            min-width: 100px;
+            font-weight: 500;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
+        }
+
+        .lang-toggle:active {
+            transform: translateY(0);
+        }
+
+        .lang-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: rgba(15, 17, 21, 0.96);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.1), 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            width: 140px;
+            padding: 8px 0;
+            overflow: hidden;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .lang-menu.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .lang-option {
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #e6e8ee;
+            transition: all 0.2s ease;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .lang-option:hover {
+            background: rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+        }
+
+        .flag-img {
+            width: 20px;
+            height: 14px;
+            object-fit: cover;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .flag-emoji {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .lang-name {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Light Theme Adjustments for Language Selector */
+        body.light-theme .lang-toggle {
+            background: rgba(37, 89, 160, 0.1);
+            border-color: rgba(37, 89, 160, 0.3);
+            color: #1b1e22;
+        }
+
+        body.light-theme .lang-toggle:hover {
+            background: rgba(37, 89, 160, 0.2);
+            border-color: #2459a0;
+            box-shadow: 0 4px 12px rgba(37, 89, 160, 0.3);
+        }
+
+        body.light-theme .lang-menu {
+            background: rgba(255, 255, 255, 0.96);
+            border-color: rgba(37, 89, 160, 0.25);
+            box-shadow: 0 0 8px rgba(37, 89, 160, 0.1), 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .lang-option {
+            color: #1b1e22;
+        }
+
+        body.light-theme .lang-option:hover {
+            background: rgba(37, 89, 160, 0.15);
+            color: #2459a0;
+        }
+
+        /* Enhanced Theme Toggle */
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -281,18 +409,86 @@
             color: #e6e8ee;
             font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .theme-toggle:hover {
-            background: #22d3ee;
-            color: #0f1115;
-            transform: scale(1.05);
-            box-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
+            background: rgba(34, 211, 238, 0.2);
+            border-color: #22d3ee;
+            transform: scale(1.05) rotate(15deg);
+            box-shadow: 0 0 16px rgba(34, 211, 238, 0.4);
+        }
+
+        .theme-toggle:hover::before {
+            opacity: 1;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        #themeIcon {
+            transition: all 0.4s ease;
+            filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.3));
+        }
+
+        /* Light Theme Adjustments for Controls */
+        body.light-theme .lang-toggle,
+        body.light-theme .theme-toggle {
+            background: rgba(37, 89, 160, 0.1);
+            border-color: rgba(37, 89, 160, 0.3);
+            color: #1b1e22;
+        }
+
+        body.light-theme .lang-toggle:hover,
+        body.light-theme .theme-toggle:hover {
+            background: rgba(37, 89, 160, 0.2);
+            border-color: #2459a0;
+            box-shadow: 0 0 16px rgba(37, 89, 160, 0.3);
+        }
+
+        body.light-theme .lang-dropdown {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(37, 89, 160, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 20px rgba(37, 89, 160, 0.2);
+        }
+
+        body.light-theme .lang-option {
+            color: #1b1e22;
+        }
+
+        body.light-theme .lang-option:hover {
+            background: rgba(37, 89, 160, 0.1);
+            color: #2459a0;
+        }
+
+        body.light-theme .lang-option.active {
+            background: rgba(37, 89, 160, 0.15);
+            color: #2459a0;
+            border-left-color: #2459a0;
+        }
+
+        /* Smooth Theme Transition */
+        * {
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
         }
 
         /* Status Bar */
@@ -387,22 +583,28 @@
         /* Statistics Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
             margin-bottom: 32px;
         }
 
         .stat-card {
+            width: 220px;
+            height: 120px;
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(34, 211, 238, 0.3);
-            border-radius: 18px;
-            padding: 24px;
+            border-radius: 14px;
+            padding: 14px 18px;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 18px rgba(34, 211, 238, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .stat-card::before {
@@ -413,12 +615,12 @@
             right: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--card-color), transparent);
-            border-radius: 18px 18px 0 0;
+            border-radius: 14px 14px 0 0;
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.2), 0 12px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2), 0 8px 32px rgba(0, 0, 0, 0.3);
             border-color: rgba(34, 211, 238, 0.4);
         }
 
@@ -428,16 +630,16 @@
         .stat-card.rejected { --card-color: #ef4444; }
 
         .stat-icon {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 16px;
+            width: 28px;
+            height: 28px;
+            margin: 0 auto 8px;
             background: rgba(var(--icon-color), 0.2);
-            border-radius: 16px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 12px rgba(var(--icon-color), 0.3);
+            font-size: 16px;
+            box-shadow: 0 0 8px rgba(var(--icon-color), 0.3);
         }
 
         .stat-card.total .stat-icon { --icon-color: 34, 211, 238; }
@@ -446,23 +648,23 @@
         .stat-card.rejected .stat-icon { --icon-color: 239, 68, 68; }
 
         .stat-count {
-            font-size: 32px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: 700;
             color: #e6e8ee;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             line-height: 1;
-            text-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+            text-shadow: 0 0 6px rgba(34, 211, 238, 0.3);
         }
 
         .stat-label {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #e6e8ee;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .stat-description {
-            font-size: 13px;
+            font-size: 12px;
             color: #8a93a6;
         }
 
@@ -1192,7 +1394,7 @@
             
             .stats-grid {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 16px;
+                gap: 12px;
             }
         }
 
@@ -1220,7 +1422,17 @@
             }
             
             .header {
-                padding: 0 80px 0 32px;
+                padding: 0 80px 0 20px;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .lang-menu {
+                right: -10px;
+                width: 130px;
             }
             
             .page-title {
@@ -1232,12 +1444,14 @@
             }
             
             .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .stat-card {
-                padding: 20px;
+                width: 100%;
+                height: 110px;
+                padding: 12px 16px;
             }
             
             .table-header {
@@ -1272,7 +1486,7 @@
 
         @media (max-width: 480px) {
             .header {
-                padding: 0 70px 0 20px;
+                padding: 0 70px 0 16px;
             }
             
             .page-title {
@@ -1287,8 +1501,15 @@
                 padding: 24px;
             }
             
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
             .stat-card {
-                padding: 16px;
+                width: 100%;
+                height: 100px;
+                padding: 12px 14px;
             }
         }
 
@@ -1311,42 +1532,57 @@
             opacity: 1;
         }
 
-        /* Light Theme Adjustments */
+        /* Enhanced Light Theme */
         body.light-theme {
-            background: radial-gradient(ellipse at center, #f8fafc 0%, #e2e8f0 70%);
-            color: #1e293b;
+            background: radial-gradient(ellipse at center, #f6f7f9 0%, #e8eaed 70%);
+            color: #1b1e22;
         }
 
         body.light-theme .sidebar {
-            background: rgba(255, 255, 255, 0.8);
-            border-right: 1px solid rgba(34, 211, 238, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            border-right: 1px solid rgba(37, 89, 160, 0.2);
+            box-shadow: 0 0 18px rgba(37, 89, 160, 0.1);
+        }
+
+        body.light-theme .sidebar::before {
+            background: linear-gradient(135deg, rgba(37, 89, 160, 0.08) 0%, transparent 50%);
         }
 
         body.light-theme .header {
-            background: rgba(255, 255, 255, 0.8);
-            border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(37, 89, 160, 0.2);
+            box-shadow: 0 0 18px rgba(37, 89, 160, 0.1);
+        }
+
+        body.light-theme .header::after {
+            background: linear-gradient(90deg, transparent, rgba(37, 89, 160, 0.6), transparent);
         }
 
         body.light-theme .status-bar {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(37, 89, 160, 0.15);
         }
 
         body.light-theme .content-card,
         body.light-theme .stat-card,
         body.light-theme .table-container,
-        body.light-theme .chart-container {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(34, 211, 238, 0.15);
+        body.light-theme .chart-container,
+        body.light-theme .cloud-sync-status {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(37, 89, 160, 0.2);
+            box-shadow: 0 0 18px rgba(37, 89, 160, 0.1);
         }
 
         body.light-theme .modal-container {
             background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(34, 211, 238, 0.3);
+            border: 1px solid rgba(37, 89, 160, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 40px rgba(37, 89, 160, 0.2);
         }
 
         body.light-theme .export-dropdown {
             background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(34, 211, 238, 0.2);
+            border: 1px solid rgba(37, 89, 160, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 20px rgba(37, 89, 160, 0.2);
         }
 
         body.light-theme .page-title,
@@ -1355,31 +1591,74 @@
         body.light-theme .stat-count,
         body.light-theme .table-title,
         body.light-theme .modal-title,
-        body.light-theme .form-label {
-            color: #1e293b;
+        body.light-theme .form-label,
+        body.light-theme .logo-title,
+        body.light-theme .user-name {
+            color: #1b1e22;
         }
 
         body.light-theme .card-content,
         body.light-theme .stat-description,
-        body.light-theme .data-table td {
-            color: #64748b;
+        body.light-theme .data-table td,
+        body.light-theme .project-info {
+            color: #4a5568;
         }
 
         body.light-theme .nav-button {
-            color: #64748b;
+            color: #4a5568;
         }
 
         body.light-theme .nav-button:hover,
         body.light-theme .nav-button.active {
-            color: #22d3ee;
+            color: #2459a0;
+            box-shadow: 0 0 12px rgba(37, 89, 160, 0.4), 0 4px 20px rgba(37, 89, 160, 0.3);
+        }
+
+        body.light-theme .nav-button.active {
+            background: rgba(37, 89, 160, 0.15);
         }
 
         body.light-theme .export-option {
-            color: #1e293b;
+            color: #1b1e22;
         }
 
         body.light-theme .export-option:hover {
-            color: #22d3ee;
+            color: #2459a0;
+            background: rgba(37, 89, 160, 0.1);
+        }
+
+        body.light-theme .page-title::after {
+            background: linear-gradient(90deg, #2459a0, #1e40af);
+            box-shadow: 0 0 8px rgba(37, 89, 160, 0.5);
+        }
+
+        body.light-theme .brand-logo {
+            filter: brightness(0.95) contrast(1.05);
+            box-shadow: none;
+        }
+
+        body.light-theme .brand-sub {
+            color: #4a5568;
+        }
+
+        body.light-theme .header-select,
+        body.light-theme .search-input,
+        body.light-theme .form-input,
+        body.light-theme .form-select,
+        body.light-theme .form-textarea {
+            background: rgba(37, 89, 160, 0.08);
+            border-color: rgba(37, 89, 160, 0.2);
+            color: #1b1e22;
+        }
+
+        body.light-theme .header-select:focus,
+        body.light-theme .search-input:focus,
+        body.light-theme .form-input:focus,
+        body.light-theme .form-select:focus,
+        body.light-theme .form-textarea:focus {
+            border-color: #2459a0;
+            box-shadow: 0 0 0 3px rgba(37, 89, 160, 0.15);
+            background: rgba(37, 89, 160, 0.12);
         }
 
         /* Form Styles (keeping existing form styles) */
@@ -1709,20 +1988,10 @@
   <div class="dashboard-container"><!-- Mobile Menu Toggle --> <button class="mobile-menu-toggle" id="mobileMenuToggle"> ☰ </button> <!-- Mobile Overlay -->
    <div class="mobile-overlay" id="mobileOverlay"></div><!-- Sidebar -->
    <aside class="sidebar" id="sidebar">
-    <div class="logo-section">
-     <div class="logo">
-      <div class="logo-icon">
-       🏢
-      </div>
-      <div class="logo-text">
-       <div class="logo-title">
-        SOMTECH
-       </div>
-       <div class="logo-version">
-        v2.0.0
-       </div>
-      </div>
-     </div>
+    <div class="brand" id="brand"><a href="https://somtech.ru" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Somtech Global"> <img src="https://i.hizliresim.com/ot1wnpw.png" alt="SOMTECH Logo" class="brand-logo">
+      <div class="brand-sub">
+       v2.0.0
+      </div></a>
     </div>
     <nav class="nav-menu">
      <div class="nav-item"><button class="nav-button" id="navHome" data-view="viewHome"> <span class="nav-icon">🏠</span> <span class="nav-text">Özet</span> </button>
@@ -1750,8 +2019,20 @@
      </div>
     </div><!-- Header -->
     <header class="header">
-     <h1 class="page-title" id="pageTitle">Kayıt Tablosu</h1>
-     <div class="header-controls"><select id="userRole" class="header-select"> <option value="Satın Alma">👤 Satın Alma</option> <option value="Muhasebe">💼 Muhasebe</option> <option value="Müdür">🏆 Müdür</option> <option value="Birim Kullanıcısı">👥 Birim Kullanıcısı</option> </select> <select id="langSelect" class="header-select"> <option value="tr">🇹🇷 Türkçe</option> <option value="en">🇺🇸 English</option> <option value="ru">🇷🇺 Русский</option> </select> <button id="themeBtn" class="theme-toggle">🌙</button>
+     <div class="header-left">
+      <h1 class="page-title" id="pageTitle">Kayıt Tablosu</h1>
+     </div>
+     <div class="header-controls"><select id="userRole" class="header-select"> <option value="Satın Alma">👤 Satın Alma</option> <option value="Muhasebe">💼 Muhasebe</option> <option value="Müdür">🏆 Müdür</option> <option value="Birim Kullanıcısı">👥 Birim Kullanıcısı</option> </select> <!-- Enhanced Language Selector -->
+      <div class="lang-dropdown"><button id="langButton" class="lang-toggle" title="Change Language"> 🌐 <span id="currentLangText">DİL</span> ▾ </button>
+       <div id="langMenu" class="lang-menu hidden">
+        <div class="lang-option" data-lang="tr"><img src="https://flagcdn.com/w20/tr.png" alt="TR" class="flag-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"> <span class="flag-emoji" style="display: none;">🇹🇷</span> <span class="lang-name">TURKISH</span>
+        </div>
+        <div class="lang-option" data-lang="en"><img src="https://flagcdn.com/w20/gb.png" alt="EN" class="flag-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"> <span class="flag-emoji" style="display: none;">🇬🇧</span> <span class="lang-name">ENGLISH</span>
+        </div>
+        <div class="lang-option" data-lang="ru"><img src="https://flagcdn.com/w20/ru.png" alt="RU" class="flag-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"> <span class="flag-emoji" style="display: none;">🇷🇺</span> <span class="lang-name">РУССКИЙ</span>
+        </div>
+       </div>
+      </div><!-- Enhanced Theme Toggle --> <button id="themeBtn" class="theme-toggle" title="Toggle Theme"> <span id="themeIcon">🌙</span> </button>
      </div>
     </header><!-- Content Area -->
     <div class="content-area"><!-- Home View (Özet) -->
@@ -2040,10 +2321,12 @@
         let statusChart = null;
         let autoBackupInterval = null;
         let lastDataHash = null;
+        let lastStatsUpdate = null;
 
-        // Language dictionary
-        const translations = {
+        // ===== ENHANCED MULTILINGUAL SYSTEM =====
+        const LANG = {
             tr: {
+                // Navigation & Pages
                 pageTitle: 'Kayıt Tablosu',
                 navHome: 'Özet',
                 navTable: 'Kayıt Tablosu',
@@ -2051,6 +2334,19 @@
                 navReports: 'Raporlar',
                 navSettings: 'Ayarlar',
                 navNewRequest: 'Yeni Talep Oluştur',
+                
+                // Statistics Cards
+                totalRecords: 'Toplam Kayıt',
+                totalRecordsDesc: 'Tüm talepler',
+                approved: 'Onaylı',
+                approvedDesc: 'Onaylanmış',
+                pending: 'Beklemede',
+                pendingDesc: 'Onay bekleyen',
+                rejected: 'Red Edildi',
+                rejectedDesc: 'Reddedilen',
+                lastUpdated: 'Son güncelleme',
+                
+                // Modal & Forms
                 modalTitle: 'Yeni Talep Oluştur',
                 talepTarihi: 'Talep Tarihi',
                 adet: 'Adet',
@@ -2065,6 +2361,8 @@
                 vazgec: 'Vazgeç',
                 kaydet: 'Kaydet',
                 duzenle: 'Düzenle',
+                
+                // Table & Status
                 durum: 'Durum',
                 islemler: 'İşlemler',
                 beklemede: 'Beklemede',
@@ -2072,11 +2370,40 @@
                 redEdildi: 'Red Edildi',
                 odemeBekliyor: 'Ödeme Bekliyor',
                 tamamlandi: 'Tamamlandı',
+                
+                // Messages & Notifications
                 kayitKaydedildi: 'Kayıt kaydedildi!',
                 kayitGuncellendi: 'Kayıt güncellendi!',
-                malzemeBoş: 'Malzeme alanı boş olamaz!'
+                malzemeBoş: 'Malzeme alanı boş olamaz!',
+                languageChanged: 'Dil Türkçe olarak değiştirildi',
+                themeChanged: 'Tema değiştirildi',
+                
+                // Placeholders
+                searchPlaceholder: 'Malzeme veya SOF NO ara...',
+                materialPlaceholder: 'Malzeme adını girin',
+                detailPlaceholder: 'Kısa açıklama',
+                descriptionPlaceholder: 'Detaylı açıklama yazın...',
+                
+                // Buttons & Actions
+                filter: 'Filtrele',
+                export: 'Dışa Aktar',
+                backup: 'Veri Yedekle',
+                restore: 'Veri Yükle',
+                addRow: 'Satır Ekle',
+                removeRow: 'Satır Sil',
+                
+                // Units
+                unitPiece: 'Adet',
+                unitBox: 'Kutu',
+                unitPackage: 'Paket',
+                unitMeter: 'Metre',
+                unitLiter: 'Litre',
+                unitKg: 'Kg',
+                unitSet: 'Set',
+                unitOther: 'Diğer'
             },
             en: {
+                // Navigation & Pages
                 pageTitle: 'Record Table',
                 navHome: 'Summary',
                 navTable: 'Record Table',
@@ -2084,6 +2411,19 @@
                 navReports: 'Reports',
                 navSettings: 'Settings',
                 navNewRequest: 'Create New Request',
+                
+                // Statistics Cards
+                totalRecords: 'Total Records',
+                totalRecordsDesc: 'All requests',
+                approved: 'Approved',
+                approvedDesc: 'Approved items',
+                pending: 'Pending',
+                pendingDesc: 'Awaiting approval',
+                rejected: 'Rejected',
+                rejectedDesc: 'Rejected items',
+                lastUpdated: 'Last updated',
+                
+                // Modal & Forms
                 modalTitle: 'Create New Request',
                 talepTarihi: 'Request Date',
                 adet: 'Quantity',
@@ -2098,6 +2438,8 @@
                 vazgec: 'Cancel',
                 kaydet: 'Save',
                 duzenle: 'Edit',
+                
+                // Table & Status
                 durum: 'Status',
                 islemler: 'Actions',
                 beklemede: 'Pending',
@@ -2105,11 +2447,40 @@
                 redEdildi: 'Rejected',
                 odemeBekliyor: 'Payment Pending',
                 tamamlandi: 'Completed',
+                
+                // Messages & Notifications
                 kayitKaydedildi: 'Record saved!',
                 kayitGuncellendi: 'Record updated!',
-                malzemeBoş: 'Material field cannot be empty!'
+                malzemeBoş: 'Material field cannot be empty!',
+                languageChanged: 'Language changed to English',
+                themeChanged: 'Theme changed',
+                
+                // Placeholders
+                searchPlaceholder: 'Search material or SOF NO...',
+                materialPlaceholder: 'Enter material name',
+                detailPlaceholder: 'Brief description',
+                descriptionPlaceholder: 'Write detailed description...',
+                
+                // Buttons & Actions
+                filter: 'Filter',
+                export: 'Export',
+                backup: 'Backup Data',
+                restore: 'Restore Data',
+                addRow: 'Add Row',
+                removeRow: 'Remove Row',
+                
+                // Units
+                unitPiece: 'Piece',
+                unitBox: 'Box',
+                unitPackage: 'Package',
+                unitMeter: 'Meter',
+                unitLiter: 'Liter',
+                unitKg: 'Kg',
+                unitSet: 'Set',
+                unitOther: 'Other'
             },
             ru: {
+                // Navigation & Pages
                 pageTitle: 'Таблица записей',
                 navHome: 'Сводка',
                 navTable: 'Таблица записей',
@@ -2117,6 +2488,19 @@
                 navReports: 'Отчеты',
                 navSettings: 'Настройки',
                 navNewRequest: 'Создать новый запрос',
+                
+                // Statistics Cards
+                totalRecords: 'Всего записей',
+                totalRecordsDesc: 'Все запросы',
+                approved: 'Одобрено',
+                approvedDesc: 'Одобренные элементы',
+                pending: 'В ожидании',
+                pendingDesc: 'Ожидают одобрения',
+                rejected: 'Отклонено',
+                rejectedDesc: 'Отклоненные элементы',
+                lastUpdated: 'Последнее обновление',
+                
+                // Modal & Forms
                 modalTitle: 'Создать новый запрос',
                 talepTarihi: 'Дата запроса',
                 adet: 'Количество',
@@ -2131,6 +2515,8 @@
                 vazgec: 'Отмена',
                 kaydet: 'Сохранить',
                 duzenle: 'Редактировать',
+                
+                // Table & Status
                 durum: 'Статус',
                 islemler: 'Действия',
                 beklemede: 'Ожидание',
@@ -2138,11 +2524,102 @@
                 redEdildi: 'Отклонено',
                 odemeBekliyor: 'Ожидание оплаты',
                 tamamlandi: 'Завершено',
+                
+                // Messages & Notifications
                 kayitKaydedildi: 'Запись сохранена!',
                 kayitGuncellendi: 'Запись обновлена!',
-                malzemeBoš: 'Поле материала не может быть пустым!'
+                malzemeBoš: 'Поле материала не может быть пустым!',
+                languageChanged: 'Язык изменен на русский',
+                themeChanged: 'Тема изменена',
+                
+                // Placeholders
+                searchPlaceholder: 'Поиск материала или SOF NO...',
+                materialPlaceholder: 'Введите название материала',
+                detailPlaceholder: 'Краткое описание',
+                descriptionPlaceholder: 'Напишите подробное описание...',
+                
+                // Buttons & Actions
+                filter: 'Фильтр',
+                export: 'Экспорт',
+                backup: 'Резервное копирование',
+                restore: 'Восстановить данные',
+                addRow: 'Добавить строку',
+                removeRow: 'Удалить строку',
+                
+                // Units
+                unitPiece: 'Штука',
+                unitBox: 'Коробка',
+                unitPackage: 'Упаковка',
+                unitMeter: 'Метр',
+                unitLiter: 'Литр',
+                unitKg: 'Кг',
+                unitSet: 'Набор',
+                unitOther: 'Другое'
             }
         };
+
+        // Translation function
+        function t(key) {
+            return LANG[currentLang] && LANG[currentLang][key] ? LANG[currentLang][key] : key;
+        }
+
+        // ===== LANGUAGE DETECTION & MANAGEMENT =====
+        function detectBrowserLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage || 'tr';
+            
+            if (browserLang.startsWith('tr')) return 'tr';
+            if (browserLang.startsWith('en')) return 'en';
+            if (browserLang.startsWith('ru')) return 'ru';
+            
+            return 'tr'; // Default to Turkish
+        }
+
+        function initializeLanguage() {
+            const savedLang = localStorage.getItem('sof_lang');
+            
+            if (savedLang && LANG[savedLang]) {
+                currentLang = savedLang;
+            } else {
+                currentLang = detectBrowserLanguage();
+                localStorage.setItem('sof_lang', currentLang);
+            }
+            
+            console.log(`Language initialized: ${currentLang}`);
+        }
+
+        // ===== THEME DETECTION & MANAGEMENT =====
+        function detectSystemTheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('sof_theme');
+            
+            if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
+                currentTheme = savedTheme;
+            } else {
+                currentTheme = detectSystemTheme();
+                localStorage.setItem('sof_theme', currentTheme);
+            }
+            
+            console.log(`Theme initialized: ${currentTheme}`);
+        }
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                // Only auto-switch if user hasn't manually set a preference
+                const savedTheme = localStorage.getItem('sof_theme');
+                if (!savedTheme) {
+                    currentTheme = e.matches ? 'dark' : 'light';
+                    applyTheme();
+                    console.log(`System theme changed to: ${currentTheme}`);
+                }
+            });
+        }
 
         // Initialize Google Drive API
         function initDriveAPI() {
@@ -2539,33 +3016,68 @@
             return `${prefix}${seq.toString().padStart(4, '0')}`;
         }
 
-        // Update statistics
+        // ===== DYNAMIC STATISTICS SYSTEM =====
         function updateStatistics() {
             const rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
+            const currentTime = new Date().toLocaleString(currentLang === 'tr' ? 'tr-TR' : currentLang === 'ru' ? 'ru-RU' : 'en-US');
             
             const stats = {
                 total: rows.length,
-                approved: rows.filter(r => r.durum === 'Onaylandı').length,
-                pending: rows.filter(r => r.durum === 'Beklemede').length,
-                rejected: rows.filter(r => r.durum === 'Red Edildi').length,
-                paymentPending: rows.filter(r => r.durum === 'Ödeme Bekliyor').length,
-                completed: rows.filter(r => r.durum === 'Tamamlandı').length
+                approved: rows.filter(r => r.durum === t('onaylandi') || r.durum === 'Onaylandı').length,
+                pending: rows.filter(r => r.durum === t('beklemede') || r.durum === 'Beklemede').length,
+                rejected: rows.filter(r => r.durum === t('redEdildi') || r.durum === 'Red Edildi').length,
+                paymentPending: rows.filter(r => r.durum === t('odemeBekliyor') || r.durum === 'Ödeme Bekliyor').length,
+                completed: rows.filter(r => r.durum === t('tamamlandi') || r.durum === 'Tamamlandı').length
             };
 
-            // Update home view stats
-            document.getElementById('totalCount').textContent = stats.total;
-            document.getElementById('approvedCount').textContent = stats.approved;
-            document.getElementById('pendingCount').textContent = stats.pending;
-            document.getElementById('rejectedCount').textContent = stats.rejected;
+            // Update statistics with animation
+            updateStatCard('totalCount', stats.total, 'totalRecords', 'totalRecordsDesc', currentTime);
+            updateStatCard('approvedCount', stats.approved, 'approved', 'approvedDesc', currentTime);
+            updateStatCard('pendingCount', stats.pending, 'pending', 'pendingDesc', currentTime);
+            updateStatCard('rejectedCount', stats.rejected, 'rejected', 'rejectedDesc', currentTime);
 
             // Update table view stats
-            document.getElementById('tableTotal').textContent = stats.total;
-            document.getElementById('tableApproved').textContent = stats.approved;
-            document.getElementById('tablePending').textContent = stats.pending;
-            document.getElementById('tableRejected').textContent = stats.rejected;
+            updateStatCard('tableTotal', stats.total, 'totalRecords', 'totalRecordsDesc', currentTime);
+            updateStatCard('tableApproved', stats.approved, 'approved', 'approvedDesc', currentTime);
+            updateStatCard('tablePending', stats.pending, 'pending', 'pendingDesc', currentTime);
+            updateStatCard('tableRejected', stats.rejected, 'rejected', 'rejectedDesc', currentTime);
 
             // Update chart
             updateChart(stats);
+            
+            // Store last update time
+            lastStatsUpdate = currentTime;
+        }
+
+        function updateStatCard(elementId, newValue, labelKey, descKey, updateTime) {
+            const countElement = document.getElementById(elementId);
+            if (!countElement) return;
+
+            const currentValue = parseInt(countElement.textContent) || 0;
+            
+            // Animate number change if different
+            if (currentValue !== newValue) {
+                countElement.style.transform = 'scale(1.1)';
+                countElement.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                setTimeout(() => {
+                    countElement.textContent = newValue;
+                    countElement.style.transform = 'scale(1)';
+                }, 150);
+            }
+
+            // Update card labels and tooltips
+            const card = countElement.closest('.stat-card');
+            if (card) {
+                const labelElement = card.querySelector('.stat-label');
+                const descElement = card.querySelector('.stat-description');
+                
+                if (labelElement) labelElement.textContent = t(labelKey);
+                if (descElement) descElement.textContent = t(descKey);
+                
+                // Add tooltip with last updated time
+                card.title = `${t('lastUpdated')}: ${updateTime}`;
+            }
         }
 
         // Update chart
@@ -3252,51 +3764,224 @@
             });
         }
 
-        // Theme functions
+        // ===== ENHANCED THEME SYSTEM =====
         function toggleTheme() {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
             applyTheme();
             localStorage.setItem('sof_theme', currentTheme);
+            showToast(t('themeChanged'), 'info');
+            console.log(`Theme changed to: ${currentTheme}`);
         }
 
         function applyTheme() {
-            const themeBtn = document.getElementById('themeBtn');
+            const themeIcon = document.getElementById('themeIcon');
+            const body = document.body;
+            
+            // Add transition class for smooth theme change
+            body.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            
             if (currentTheme === 'light') {
-                document.body.classList.add('light-theme');
-                themeBtn.textContent = '☀️';
+                body.classList.add('light-theme');
+                if (themeIcon) themeIcon.textContent = '☀️';
             } else {
-                document.body.classList.remove('light-theme');
-                themeBtn.textContent = '🌙';
+                body.classList.remove('light-theme');
+                if (themeIcon) themeIcon.textContent = '🌙';
             }
+            
+            // Remove transition after theme change completes
+            setTimeout(() => {
+                body.style.transition = '';
+            }, 400);
         }
 
-        // Language functions
+        // ===== ENHANCED LANGUAGE SYSTEM =====
         function changeLanguage(lang) {
+            if (!LANG[lang]) return;
+            
             currentLang = lang;
-            applyTranslations();
             localStorage.setItem('sof_lang', lang);
+            
+            // Update UI elements
+            updateLanguageUI();
+            applyTranslations();
+            
+            // Update statistics with new language
+            updateStatistics();
+            
+            // Re-render table to update status labels
+            renderTable();
+            
+            showToast(t('languageChanged'), 'success');
+            console.log(`Language set to ${lang}`);
+        }
+
+        function updateLanguageUI() {
+            const currentLangText = document.getElementById('currentLangText');
+            
+            const langData = {
+                tr: { text: 'DİL' },
+                en: { text: 'LANG' },
+                ru: { text: 'ЯЗЫК' }
+            };
+            
+            if (currentLangText && langData[currentLang]) {
+                currentLangText.textContent = langData[currentLang].text;
+            }
+            
+            // Update active state in dropdown
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.lang === currentLang) {
+                    option.classList.add('active');
+                }
+            });
         }
 
         function applyTranslations() {
-            const t = translations[currentLang];
+            // Update page title
+            const pageTitle = document.getElementById('pageTitle');
+            if (pageTitle) {
+                const currentView = document.querySelector('.view-section.active');
+                if (currentView) {
+                    const viewId = currentView.id;
+                    switch(viewId) {
+                        case 'viewHome':
+                            pageTitle.textContent = t('navHome');
+                            break;
+                        case 'viewTable':
+                            pageTitle.textContent = t('navTable');
+                            break;
+                        case 'viewForm':
+                            pageTitle.textContent = t('navForm');
+                            break;
+                        case 'viewReports':
+                            pageTitle.textContent = t('navReports');
+                            break;
+                        case 'viewSettings':
+                            pageTitle.textContent = t('navSettings');
+                            break;
+                        case 'viewNewRequest':
+                            pageTitle.textContent = t('navNewRequest');
+                            break;
+                    }
+                }
+            }
             
             // Update navigation
-            document.querySelector('[data-view="viewHome"] .nav-text').textContent = t.navHome;
-            document.querySelector('[data-view="viewTable"] .nav-text').textContent = t.navTable;
-            document.querySelector('[data-view="viewForm"] .nav-text').textContent = t.navForm;
-            document.querySelector('[data-view="viewReports"] .nav-text').textContent = t.navReports;
-            document.querySelector('[data-view="viewSettings"] .nav-text').textContent = t.navSettings;
-            document.querySelector('[data-view="viewNewRequest"] .nav-text').textContent = t.navNewRequest;
+            const navButtons = [
+                { selector: '[data-view="viewHome"] .nav-text', key: 'navHome' },
+                { selector: '[data-view="viewTable"] .nav-text', key: 'navTable' },
+                { selector: '[data-view="viewForm"] .nav-text', key: 'navForm' },
+                { selector: '[data-view="viewReports"] .nav-text', key: 'navReports' },
+                { selector: '[data-view="viewSettings"] .nav-text', key: 'navSettings' },
+                { selector: '[data-view="viewNewRequest"] .nav-text', key: 'navNewRequest' }
+            ];
             
-            // Update modal
-            document.querySelector('.modal-title').innerHTML = `<span>➕</span>${t.modalTitle}`;
+            navButtons.forEach(nav => {
+                const element = document.querySelector(nav.selector);
+                if (element) element.textContent = t(nav.key);
+            });
+            
+            // Update modal title
+            const modalTitle = document.querySelector('.modal-title');
+            if (modalTitle) {
+                modalTitle.innerHTML = `<span>➕</span>${t('modalTitle')}`;
+            }
+            
+            // Update form labels
+            const formLabels = [
+                { id: 'fName', key: 'adiSoyadi', placeholder: 'materialPlaceholder' },
+                { id: 'fDate', key: 'talepTarihi' },
+                { id: 'fItem', key: 'malzeme', placeholder: 'materialPlaceholder' },
+                { id: 'fMainType', key: 'anaTur' },
+                { id: 'fKind', key: 'tip' },
+                { id: 'fUnit', key: 'birim' },
+                { id: 'fQty', key: 'adet' },
+                { id: 'fTermin', key: 'terminTarihi' },
+                { id: 'fDetail', key: 'detay', placeholder: 'detailPlaceholder' },
+                { id: 'fLink', key: 'link' },
+                { id: 'fNote', key: 'aciklama', placeholder: 'descriptionPlaceholder' }
+            ];
+            
+            formLabels.forEach(label => {
+                const element = document.getElementById(label.id);
+                if (element && label.placeholder) {
+                    element.placeholder = t(label.placeholder);
+                }
+            });
             
             // Update table headers
             const headers = document.querySelectorAll('.data-table th');
             if (headers.length >= 12) {
-                headers[10].textContent = t.durum;
-                headers[11].textContent = t.islemler;
+                headers[10].textContent = t('durum');
+                headers[11].textContent = t('islemler');
             }
+            
+            // Update search placeholder
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.placeholder = t('searchPlaceholder');
+            }
+            
+            // Update button texts
+            const buttons = [
+                { id: 'filterBtn', key: 'filter' },
+                { id: 'manualBackupBtn', key: 'backup' },
+                { id: 'restoreBtn', key: 'restore' },
+                { id: 'exportBtn', key: 'export' },
+                { id: 'addRowBtn', key: 'addRow' },
+                { id: 'removeRowBtn', key: 'removeRow' },
+                { id: 'cancelBtn', key: 'vazgec' },
+                { id: 'saveBtn', key: 'kaydet' }
+            ];
+            
+            buttons.forEach(btn => {
+                const element = document.getElementById(btn.id);
+                if (element) {
+                    const text = element.textContent.replace(/[📄📊💾🔁➕❌]/g, '').trim();
+                    const icon = element.textContent.match(/[📄📊💾🔁➕❌]/)?.[0] || '';
+                    element.textContent = icon ? `${icon} ${t(btn.key)}` : t(btn.key);
+                }
+            });
+            
+            // Update unit options
+            const unitSelect = document.getElementById('fUnit');
+            if (unitSelect) {
+                const units = [
+                    { value: '', key: 'birim' },
+                    { value: 'Adet', key: 'unitPiece' },
+                    { value: 'Kutu', key: 'unitBox' },
+                    { value: 'Paket', key: 'unitPackage' },
+                    { value: 'Metre', key: 'unitMeter' },
+                    { value: 'Litre', key: 'unitLiter' },
+                    { value: 'Kg', key: 'unitKg' },
+                    { value: 'Set', key: 'unitSet' },
+                    { value: 'Diğer', key: 'unitOther' }
+                ];
+                
+                const selectedValue = unitSelect.value;
+                unitSelect.innerHTML = '';
+                
+                units.forEach(unit => {
+                    const option = document.createElement('option');
+                    option.value = unit.value;
+                    option.textContent = unit.value === '' ? `${t(unit.key)} seçin` : t(unit.key);
+                    if (unit.value === selectedValue) option.selected = true;
+                    unitSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Language dropdown functions
+        function toggleLanguageDropdown() {
+            const langMenu = document.getElementById('langMenu');
+            langMenu.classList.toggle('hidden');
+        }
+
+        function closeLanguageDropdown() {
+            const langMenu = document.getElementById('langMenu');
+            langMenu.classList.add('hidden');
         }
 
         // User role functions
@@ -3473,21 +4158,25 @@
             }
         }
 
-        // Initialize settings from localStorage
+        // ===== ENHANCED INITIALIZATION =====
         function initializeSettings() {
-            // Load theme
-            currentTheme = localStorage.getItem('sof_theme') || 'dark';
+            // Initialize theme and language detection
+            initializeTheme();
+            initializeLanguage();
+            
+            // Apply theme
             applyTheme();
             
-            // Load language
-            currentLang = localStorage.getItem('sof_lang') || 'tr';
-            document.getElementById('langSelect').value = currentLang;
+            // Apply language and update UI
+            updateLanguageUI();
             applyTranslations();
             
             // Load user role
             currentUserRole = localStorage.getItem('sof_user_role') || 'Satın Alma';
             document.getElementById('userRole').value = currentUserRole;
             document.getElementById('currentRole').textContent = currentUserRole;
+            
+            console.log(`Settings initialized - Language: ${currentLang}, Theme: ${currentTheme}, Role: ${currentUserRole}`);
         }
 
         // Event listeners
@@ -3520,16 +4209,39 @@
                 }
             });
 
-            // Header controls
+            // Enhanced Header controls
             const themeBtn = document.getElementById('themeBtn');
             if (themeBtn) {
                 themeBtn.addEventListener('click', toggleTheme);
             }
 
-            const langSelect = document.getElementById('langSelect');
-            if (langSelect) {
-                langSelect.addEventListener('change', function(e) {
-                    changeLanguage(e.target.value);
+            // Enhanced Language Selector
+            const langButton = document.getElementById('langButton');
+            const langMenu = document.getElementById('langMenu');
+            
+            if (langButton && langMenu) {
+                langButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleLanguageDropdown();
+                });
+
+                // Language options
+                const langOptions = langMenu.querySelectorAll('.lang-option');
+                langOptions.forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const selectedLang = this.dataset.lang;
+                        changeLanguage(selectedLang);
+                        closeLanguageDropdown();
+                    });
+                });
+
+                // Close language dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    const langDropdown = document.querySelector('.lang-dropdown');
+                    if (langDropdown && !langDropdown.contains(e.target)) {
+                        closeLanguageDropdown();
+                    }
                 });
             }
 
@@ -3730,5 +4442,5 @@
             // Set default view to Table
             showView('viewTable');
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a1ea34225bc16',t:'MTc2MTMxNTY3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993a374d647cbc16',t:'MTc2MTMxNjY4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
