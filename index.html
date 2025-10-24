@@ -3,6 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
   <title>SOMTECH_SOF v1.9.8 - Kayıt Tablosu</title>
   <style>
         body {
@@ -695,6 +696,114 @@
             grid-column: 1 / -1;
         }
 
+        /* New Form Layout */
+        #newRequestForm {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        #newRequestForm #fNote {
+            grid-column: 1 / span 2;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: flex-start;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 10px;
+            color: #22d3ee;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            background: #22d3ee;
+            color: #0f1115;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.add-row {
+            background: rgba(34, 211, 238, 0.15);
+        }
+
+        .action-btn.remove-row {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .action-btn.remove-row:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .temp-table-container {
+            margin-top: 20px;
+            border: 1px solid rgba(34, 211, 238, 0.15);
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .temp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .temp-table th,
+        .temp-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .temp-table th {
+            background: rgba(34, 211, 238, 0.1);
+            color: #e6e8ee;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .temp-table td {
+            color: #8a93a6;
+        }
+
+        .temp-table tbody tr:hover {
+            background: rgba(34, 211, 238, 0.08);
+        }
+
+        .delete-row-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 6px;
+            color: #ef4444;
+            font-size: 12px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .delete-row-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
         .form-label {
             font-size: 14px;
             font-weight: 600;
@@ -810,6 +919,15 @@
                 gap: 16px;
             }
 
+            #newRequestForm {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            #newRequestForm #fNote {
+                grid-column: 1;
+            }
+
             .modal-footer {
                 flex-direction: column;
             }
@@ -817,6 +935,23 @@
             .modal-button {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .temp-table-container {
+                overflow-x: auto;
+            }
+
+            .temp-table {
+                min-width: 500px;
             }
         }
 
@@ -1183,30 +1318,25 @@
      <h2 class="modal-title"><span>➕</span> Yeni Talep Oluştur</h2>
     </div>
     <div class="modal-body">
-     <form id="newRequestForm">
-      <div class="form-grid">
-       <div class="form-group"><label class="form-label" for="talepTarihi">Talep Tarihi</label> <input type="date" id="talepTarihi" name="talepTarihi" class="form-input" required>
-       </div>
-       <div class="form-group"><label class="form-label" for="adet">Adet</label> <input type="number" id="adet" name="adet" class="form-input" min="1" placeholder="Miktar girin" required>
-       </div>
-       <div class="form-group full-width"><label class="form-label" for="fItem">Malzeme</label> <input type="text" id="fItem" name="malzeme" class="form-input" placeholder="Malzeme adını girin" required>
-       </div>
-       <div class="form-group"><label class="form-label" for="fMainType">Ana Tür</label> <input type="text" id="fMainType" name="anaTur" class="form-input" value="Otomatik Belirlenecek" readonly>
-       </div>
-       <div class="form-group"><label class="form-label" for="fKind">Tip</label> <input type="text" id="fKind" name="tip" class="form-input" value="Otomatik Belirlenecek" readonly>
-       </div>
-       <div class="form-group"><label class="form-label" for="birim">Birim</label> <select id="birim" name="birim" class="form-select" required> <option value="">Birim seçin</option> <option value="Adet">Adet</option> <option value="Kutu">Kutu</option> <option value="Paket">Paket</option> <option value="Metre">Metre</option> <option value="Litre">Litre</option> <option value="Kg">Kg</option> <option value="Set">Set</option> <option value="Diğer">Diğer</option> </select>
-       </div>
-       <div class="form-group"><label class="form-label" for="terminTarihi">Termin Tarihi</label> <input type="date" id="terminTarihi" name="terminTarihi" class="form-input" required>
-       </div>
-       <div class="form-group full-width"><label class="form-label" for="detay">Detay</label> <input type="text" id="detay" name="detay" class="form-input" placeholder="Kısa açıklama">
-       </div>
-       <div class="form-group full-width"><label class="form-label" for="link">Link</label> <input type="url" id="link" name="link" class="form-input" placeholder="https://example.com">
-       </div>
-       <div class="form-group full-width"><label class="form-label" for="aciklama">Açıklama</label> <textarea id="aciklama" name="aciklama" class="form-textarea" placeholder="Detaylı açıklama yazın..."></textarea>
-       </div>
-      </div>
+     <form id="newRequestForm"><label class="form-label" for="fName">Adı Soyadı</label> <input type="text" id="fName" name="adiSoyadi" class="form-input" placeholder="Adınızı ve soyadınızı girin" required> <label class="form-label" for="fDate">Talep Tarihi</label> <input type="date" id="fDate" name="talepTarihi" class="form-input" required> <label class="form-label" for="fItem">Malzeme</label> <input type="text" id="fItem" name="malzeme" class="form-input" placeholder="Malzeme adını girin" required> <label class="form-label" for="fMainType">Ana Tür</label> <input type="text" id="fMainType" name="anaTur" class="form-input" value="Otomatik Belirlenecek" readonly> <label class="form-label" for="fKind">Tip</label> <input type="text" id="fKind" name="tip" class="form-input" value="Otomatik Belirlenecek" readonly> <label class="form-label" for="fUnit">Birim</label> <select id="fUnit" name="birim" class="form-select" required> <option value="">Birim seçin</option> <option value="Adet">Adet</option> <option value="Kutu">Kutu</option> <option value="Paket">Paket</option> <option value="Metre">Metre</option> <option value="Litre">Litre</option> <option value="Kg">Kg</option> <option value="Set">Set</option> <option value="Diğer">Diğer</option> </select> <label class="form-label" for="fQty">Adet</label> <input type="number" id="fQty" name="adet" class="form-input" min="1" placeholder="Miktar girin" required> <label class="form-label" for="fTermin">Termin Tarihi</label> <input type="date" id="fTermin" name="terminTarihi" class="form-input" required> <label class="form-label" for="fDetail">Detay</label> <input type="text" id="fDetail" name="detay" class="form-input" placeholder="Kısa açıklama"> <label class="form-label" for="fLink">Link</label> <input type="url" id="fLink" name="link" class="form-input" placeholder="https://example.com"> <label class="form-label" for="fNote">Açıklama</label> <textarea id="fNote" name="aciklama" class="form-textarea" placeholder="Detaylı açıklama yazın..."></textarea>
      </form>
+     <div class="form-actions"><button type="button" class="action-btn add-row" id="addRowBtn">Satır Ekle</button> <button type="button" class="action-btn remove-row" id="removeRowBtn">Satır Sil</button>
+     </div>
+     <div class="temp-table-container">
+      <table id="tempTable" class="temp-table">
+       <thead>
+        <tr>
+         <th>Malzeme</th>
+         <th>Birim</th>
+         <th>Adet</th>
+         <th>Detay</th>
+         <th>Link</th>
+         <th>Sil</th>
+        </tr>
+       </thead>
+       <tbody></tbody>
+      </table>
+     </div>
     </div>
     <div class="modal-footer"><button type="button" class="modal-button secondary" id="cancelBtn">Vazgeç</button> <button type="button" class="modal-button primary" id="saveBtn">Kaydet</button>
     </div>
@@ -1286,16 +1416,19 @@
             
             // Set default date to today
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('talepTarihi').value = today;
+            document.getElementById('fDate').value = today;
             
             // Set default termin date to 2 weeks from today
             const terminDate = new Date();
             terminDate.setDate(terminDate.getDate() + 14);
-            document.getElementById('terminTarihi').value = terminDate.toISOString().split('T')[0];
+            document.getElementById('fTermin').value = terminDate.toISOString().split('T')[0];
+            
+            // Clear temp table
+            clearTempTable();
             
             // Focus first input
             setTimeout(() => {
-                document.getElementById('adet').focus();
+                document.getElementById('fName').focus();
             }, 300);
         }
 
@@ -1309,6 +1442,78 @@
             // Reset readonly fields
             document.getElementById('fMainType').value = 'Otomatik Belirlenecek';
             document.getElementById('fKind').value = 'Otomatik Belirlenecek';
+            
+            // Clear temp table
+            clearTempTable();
+        }
+
+        // Temp table functionality
+        function clearTempTable() {
+            const tbody = document.querySelector('#tempTable tbody');
+            tbody.innerHTML = '';
+        }
+
+        function addRowToTempTable() {
+            const malzeme = document.getElementById('fItem').value.trim();
+            const birim = document.getElementById('fUnit').value;
+            const adet = document.getElementById('fQty').value;
+            const detay = document.getElementById('fDetail').value.trim();
+            const link = document.getElementById('fLink').value.trim();
+
+            // Validation
+            if (!malzeme || !birim || !adet) {
+                showToast('Malzeme, Birim ve Adet alanları zorunludur!');
+                return;
+            }
+
+            const tbody = document.querySelector('#tempTable tbody');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${malzeme}</td>
+                <td>${birim}</td>
+                <td>${adet}</td>
+                <td>${detay || '-'}</td>
+                <td>${link ? `<a href="${link}" target="_blank" style="color: #22d3ee;">Link</a>` : '-'}</td>
+                <td><button class="delete-row-btn" onclick="deleteRowFromTempTable(this)">❌</button></td>
+            `;
+            
+            tbody.appendChild(row);
+            
+            // Clear input fields for next entry
+            document.getElementById('fItem').value = '';
+            document.getElementById('fUnit').value = '';
+            document.getElementById('fQty').value = '';
+            document.getElementById('fDetail').value = '';
+            document.getElementById('fLink').value = '';
+            
+            // Reset readonly fields
+            document.getElementById('fMainType').value = 'Otomatik Belirlenecek';
+            document.getElementById('fKind').value = 'Otomatik Belirlenecek';
+            
+            // Focus back to material input
+            document.getElementById('fItem').focus();
+        }
+
+        function deleteRowFromTempTable(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        function removeSelectedRow() {
+            const tbody = document.querySelector('#tempTable tbody');
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0) {
+                showToast('Silinecek satır bulunamadı!');
+                return;
+            }
+            
+            // Remove the last row
+            const lastRow = rows[rows.length - 1];
+            lastRow.remove();
+            
+            showToast('Son satır silindi!');
         }
 
         function handleNewRequestClick() {
@@ -1562,52 +1767,67 @@
 
         // Save record
         function saveRecord() {
-            const malzeme = document.getElementById('fItem').value.trim();
             const t = translations[currentLang];
+            const adiSoyadi = document.getElementById('fName').value.trim();
+            const talepTarihi = document.getElementById('fDate').value;
+            const terminTarihi = document.getElementById('fTermin').value;
+            const aciklama = document.getElementById('fNote').value.trim();
             
-            if (!malzeme) {
-                showToast(t.malzemeBoş);
+            // Get all rows from temp table
+            const tempRows = document.querySelectorAll('#tempTable tbody tr');
+            
+            if (tempRows.length === 0) {
+                showToast('En az bir malzeme satırı eklemelisiniz!');
+                return;
+            }
+            
+            if (!adiSoyadi || !talepTarihi || !terminTarihi) {
+                showToast('Adı Soyadı, Talep Tarihi ve Termin Tarihi zorunludur!');
                 return;
             }
 
-            const formData = {
-                talepTarihi: document.getElementById('talepTarihi').value,
-                adet: document.getElementById('adet').value,
-                malzeme: malzeme,
-                anaTur: document.getElementById('fMainType').value,
-                tip: document.getElementById('fKind').value,
-                birim: document.getElementById('birim').value,
-                terminTarihi: document.getElementById('terminTarihi').value,
-                detay: document.getElementById('detay').value,
-                link: document.getElementById('link').value,
-                aciklama: document.getElementById('aciklama').value
-            };
-
             let rows = JSON.parse(localStorage.getItem('sof_rows') || '[]');
+            let addedCount = 0;
             
-            if (editingRowIndex >= 0) {
-                // Update existing record
-                rows[editingRowIndex] = {
-                    ...rows[editingRowIndex],
-                    ...formData
-                };
-                showToast(t.kayitGuncellendi);
-                editingRowIndex = -1;
-            } else {
-                // Add new record
-                const sofCode = generateSOFCode(formData.tip);
+            // Process each row from temp table
+            tempRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const malzeme = cells[0].textContent;
+                const birim = cells[1].textContent;
+                const adet = cells[2].textContent;
+                const detay = cells[3].textContent === '-' ? '' : cells[3].textContent;
+                const linkCell = cells[4];
+                const link = linkCell.querySelector('a') ? linkCell.querySelector('a').href : '';
+                
+                // Classify material
+                const classification = classifyMaterial(malzeme);
+                const sofCode = generateSOFCode(classification.kind);
+                
                 const newRecord = {
                     sofCode: sofCode,
+                    talepTarihi: talepTarihi,
+                    malzeme: malzeme,
+                    birim: birim,
+                    anaTur: classification.mainType,
+                    tip: classification.kind,
+                    adet: adet,
+                    terminTarihi: terminTarihi,
+                    detay: detay,
+                    link: link,
                     durum: t.acik,
-                    ...formData
+                    adiSoyadi: adiSoyadi,
+                    aciklama: aciklama
                 };
+                
                 rows.push(newRecord);
-                showToast(t.kayitKaydedildi);
-            }
+                addedCount++;
+            });
 
             localStorage.setItem('sof_rows', JSON.stringify(rows));
             renderTable();
             closeModal();
+            
+            showToast(`${addedCount} kayıt başarıyla kaydedildi!`);
         }
 
         // Edit record
@@ -1663,6 +1883,12 @@
                     <td><span class="status-badge">${row.durum}</span></td>
                     <td>${editButton}</td>
                 `;
+                
+                // Add tooltip with requester name if available
+                if (row.adiSoyadi) {
+                    tr.title = `Talep Eden: ${row.adiSoyadi}`;
+                }
+                
                 tbody.appendChild(tr);
             });
         }
@@ -1787,6 +2013,35 @@
                 });
             }
 
+            // Add Row button
+            const addRowBtn = document.getElementById('addRowBtn');
+            if (addRowBtn) {
+                addRowBtn.addEventListener('click', function() {
+                    console.log("Add row button clicked");
+                    addRowToTempTable();
+                });
+            }
+
+            // Remove Row button
+            const removeRowBtn = document.getElementById('removeRowBtn');
+            if (removeRowBtn) {
+                removeRowBtn.addEventListener('click', function() {
+                    console.log("Remove row button clicked");
+                    removeSelectedRow();
+                });
+            }
+
+            // Enter key on quantity field to add row
+            const fQty = document.getElementById('fQty');
+            if (fQty) {
+                fQty.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addRowToTempTable();
+                    }
+                });
+            }
+
             // Close modal when clicking outside
             const formModal = document.getElementById('formModal');
             if (formModal) {
@@ -1825,5 +2080,5 @@
             console.log("All event listeners attached successfully");
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9938d5d576e8e34c',t:'MTc2MTMwMjIwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9938e93363b3e116',t:'MTc2MTMwMzAwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
