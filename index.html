@@ -1495,6 +1495,202 @@
             color: var(--text-dark);
         }
         
+        /* New Request Form Styles */
+        .new-request-container {
+            background: #0f1117;
+            border-radius: 12px;
+            padding: 32px;
+            color: #e2e8f0;
+            min-height: 80vh;
+        }
+        
+        .new-request-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .new-request-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00bcd4;
+            margin: 0;
+        }
+        
+        .new-request-form {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        
+        .form-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .new-request-form .form-group {
+            margin-bottom: 0;
+        }
+        
+        .new-request-form .form-label {
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .new-request-form .form-input {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .new-request-form .form-input:focus {
+            outline: none;
+            border-color: #00bcd4;
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+            background: #2d3748;
+        }
+        
+        .new-request-form .form-input::placeholder {
+            color: #64748b;
+        }
+        
+        .request-table-section {
+            margin-top: 24px;
+        }
+        
+        .table-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00bcd4;
+            margin-bottom: 16px;
+        }
+        
+        .request-table-container {
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        
+        .request-preview-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .request-preview-table th {
+            background: #334155;
+            color: #cbd5e1;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 1px solid #475569;
+        }
+        
+        .request-preview-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #334155;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .request-preview-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .empty-preview {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+            padding: 24px !important;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        
+        .btn-add-row {
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-add-row:hover {
+            background: #5a52d5;
+            transform: translateY(-2px);
+        }
+        
+        .btn-remove-row {
+            background: #64748b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-remove-row:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+        
+        .btn-save-request {
+            background: #2459a0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-save-request:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(36, 89, 160, 0.3);
+        }
+        
+        .btn-close-form {
+            background: #cf2e26;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-close-form:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(207, 46, 38, 0.3);
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -2077,11 +2273,11 @@
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
      </svg><span class="nav-text">Satın Alma</span> </button> <button class="nav-item" onclick="showSection('pending-payments')" data-tr="Ödeme Bekleyen" data-en="Pending Payments" data-ru="Ожидающие оплаты">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-     </svg><span class="nav-text">Ödeme Bekleyen</span> </button> <button class="nav-item" onclick="showSection('activity-log')" data-tr="Log (Aktivite Geçmişi)" data-en="Activity Log" data-ru="Журнал активности">
+     </svg><span class="nav-text">Ödeme Bekleyen</span> </button> <button class="nav-item" onclick="showSection('pending-approvals')" data-tr="Onay Bekleyen" data-en="Pending Approvals" data-ru="Ожидающие одобрения">
+     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+     </svg><span class="nav-text">Onay Bekleyen</span> </button> <button class="nav-item" onclick="showSection('activity-log')" data-tr="Log" data-en="Log" data-ru="Журнал">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-     </svg><span class="nav-text">Log (Aktivite Geçmişi)</span> </button> <button class="nav-item" onclick="showSection('google-drive')" data-tr="Google Drive" data-en="Google Drive" data-ru="Google Drive">
-     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-     </svg><span class="nav-text">Google Drive</span> </button> <button class="nav-item" onclick="showSection('settings')" data-tr="Ayarlar" data-en="Settings" data-ru="Настройки">
+     </svg><span class="nav-text">Log</span> </button> <button class="nav-item" onclick="showSection('settings')" data-tr="Ayarlar" data-en="Settings" data-ru="Настройки">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
      </svg><span class="nav-text">Ayarlar</span> </button>
    </nav>
@@ -2188,20 +2384,20 @@
     <div id="my-requests-section" class="section hidden">
      <div class="section-header">
       <h2 class="section-title" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">Taleplerim</h2>
-      <div class="section-actions"><button class="btn-primary" onclick="showNewRequestModal()" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">+ Yeni Talep Oluştur</button>
+      <div class="section-actions"><button class="btn-primary" onclick="showNewRequestForm()" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">+ Yeni Talep Oluştur</button>
       </div>
      </div>
      <div class="requests-table-container">
       <table class="requests-table">
        <thead>
         <tr>
-         <th data-tr="SOF No" data-en="SOF No" data-ru="SOF No">SOF No</th>
-         <th data-tr="Talep Tarihi" data-en="Request Date" data-ru="Дата запроса">Talep Tarihi</th>
-         <th data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</th>
+         <th data-tr="Talep No" data-en="Request No" data-ru="Номер запроса">Talep No</th>
+         <th data-tr="Malzeme Adı" data-en="Material Name" data-ru="Название материала">Malzeme Adı</th>
+         <th data-tr="Tür" data-en="Type" data-ru="Тип">Tür</th>
+         <th data-tr="Birim" data-en="Unit" data-ru="Единица">Birim</th>
          <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
+         <th data-tr="Termin" data-en="Deadline" data-ru="Срок">Termin</th>
          <th data-tr="Durum" data-en="Status" data-ru="Статус">Durum</th>
-         <th data-tr="İlerleme" data-en="Progress" data-ru="Прогресс">İlerleme</th>
-         <th data-tr="İşlemler" data-en="Actions" data-ru="Действия">İşlemler</th>
         </tr>
        </thead>
        <tbody id="my-requests-table-body"><!-- My requests will be loaded here -->
@@ -2230,6 +2426,29 @@
        </div>
       </div>
      </div>
+    </div><!-- Pending Approvals Section -->
+    <div id="pending-approvals-section" class="section hidden">
+     <div class="section-header">
+      <h2 class="section-title" data-tr="Onay Bekleyen Talepler" data-en="Pending Approval Requests" data-ru="Запросы, ожидающие одобрения">Onay Bekleyen Talepler</h2>
+      <p class="section-subtitle" data-tr="Onayınızı bekleyen talepler" data-en="Requests awaiting your approval" data-ru="Запросы, ожидающие вашего одобрения">Onayınızı bekleyen talepler</p>
+     </div>
+     <div class="requests-table-container">
+      <table class="requests-table">
+       <thead>
+        <tr>
+         <th data-tr="Talep No" data-en="Request No" data-ru="Номер запроса">Talep No</th>
+         <th data-tr="Talep Eden" data-en="Requester" data-ru="Заявитель">Talep Eden</th>
+         <th data-tr="Malzeme Adı" data-en="Material Name" data-ru="Название материала">Malzeme Adı</th>
+         <th data-tr="Tür" data-en="Type" data-ru="Тип">Tür</th>
+         <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
+         <th data-tr="Termin" data-en="Deadline" data-ru="Срок">Termin</th>
+         <th data-tr="İşlemler" data-en="Actions" data-ru="Действия">İşlemler</th>
+        </tr>
+       </thead>
+       <tbody id="pending-approvals-table-body"><!-- Pending approvals will be loaded here -->
+       </tbody>
+      </table>
+     </div>
     </div><!-- Pending Payments Section -->
     <div id="pending-payments-section" class="section hidden">
      <div class="section-header">
@@ -2249,7 +2468,7 @@
     </div><!-- Activity Log Section -->
     <div id="activity-log-section" class="section hidden">
      <div class="section-header">
-      <h2 class="section-title" data-tr="Aktivite Geçmişi (Log)" data-en="Activity Log" data-ru="Журнал активности">Aktivite Geçmişi (Log)</h2>
+      <h2 class="section-title" data-tr="Ana Log – Sistem Aktiviteleri" data-en="Main Log – System Activities" data-ru="Основной журнал – Системные активности">Ana Log – Sistem Aktiviteleri</h2>
       <div class="section-actions"><button class="btn-export" onclick="refreshLog()" data-tr="Yenile" data-en="Refresh" data-ru="Обновить">🔄 Yenile</button> <button class="btn-export" onclick="exportLogToPDF()" data-tr="PDF İndir" data-en="Download PDF" data-ru="Скачать PDF">📄 PDF İndir</button>
       </div>
      </div>
@@ -2303,17 +2522,64 @@
      </div>
      <div class="log-pagination" id="log-pagination"><!-- Pagination will be generated here -->
      </div>
-    </div><!-- Google Drive Section -->
-    <div id="google-drive-section" class="section hidden">
-     <div class="drive-section">
-      <div class="drive-icon">
-       <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-       </svg>
+    </div><!-- New Request Form Section -->
+    <div id="new-request-section" class="section hidden">
+     <div class="new-request-container">
+      <div class="new-request-header">
+       <h2 class="new-request-title" data-tr="Yeni Talep Oluştur (AI Entegre)" data-en="Create New Request (AI Integrated)" data-ru="Создать новый запрос (AI интегрированный)">Yeni Talep Oluştur (AI Entegre)</h2>
       </div>
-      <h2 class="drive-title" data-tr="Google Drive Senkronizasyonu" data-en="Google Drive Synchronization" data-ru="Синхронизация Google Drive">Google Drive Senkronizasyonu</h2>
-      <div class="drive-buttons"><button class="btn-drive" onclick="connectDrive()" data-tr="Bağlan" data-en="Connect" data-ru="Подключить">Bağlan</button> <button class="btn-drive" onclick="backupToDrive()" data-tr="Yedekle" data-en="Backup" data-ru="Резервное копирование">Yedekle</button> <button class="btn-drive" onclick="restoreFromDrive()" data-tr="Geri Yükle" data-en="Restore" data-ru="Восстановить">Geri Yükle</button>
-      </div>
-      <p class="drive-note" data-tr="Drive bağlantısı kurulmadan işlem yapılamaz." data-en="Operations cannot be performed without establishing a Drive connection." data-ru="Операции не могут быть выполнены без установления соединения с Drive.">Drive bağlantısı kurulmadan işlem yapılamaz.</p>
+      <form id="new-request-form" class="new-request-form">
+       <div class="form-columns">
+        <div class="form-column">
+         <div class="form-group"><label class="form-label" data-tr="Birim" data-en="Unit" data-ru="Единица">Birim</label> <select class="form-input" id="request-unit" required> <option value="">Seçiniz</option> <option value="IT">IT</option> <option value="HR">HR</option> <option value="Finance">Finance</option> <option value="Operations">Operations</option> </select>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Malzeme Adı" data-en="Material Name" data-ru="Название материала">Malzeme Adı</label> <input type="text" class="form-input" id="request-material-name" required>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</label> <select class="form-input" id="request-material-type" required> <option value="">Seçiniz</option> <option value="Kırtasiye">Kırtasiye</option> <option value="Elektronik">Elektronik</option> <option value="Mobilya">Mobilya</option> <option value="Yazılım">Yazılım</option> <option value="Diğer">Diğer</option> </select>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Birim" data-en="Unit" data-ru="Единица">Birim</label> <select class="form-input" id="request-unit-type" required> <option value="">Seçiniz</option> <option value="Adet">Adet</option> <option value="Kg">Kg</option> <option value="Litre">Litre</option> <option value="Metre">Metre</option> <option value="Paket">Paket</option> </select>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Detay" data-en="Details" data-ru="Детали">Detay</label> <textarea class="form-input" id="request-details" rows="3"></textarea>
+         </div>
+        </div>
+        <div class="form-column">
+         <div class="form-group"><label class="form-label" data-tr="Adı Soyadı" data-en="Full Name" data-ru="Полное имя">Adı Soyadı</label> <input type="text" class="form-input" id="request-requester" required>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Malzeme Türü" data-en="Material Category" data-ru="Категория материала">Malzeme Türü</label> <select class="form-input" id="request-category" required> <option value="">Seçiniz</option> <option value="Tüketim">Tüketim</option> <option value="Yatırım">Yatırım</option> <option value="Bakım">Bakım</option> <option value="Acil">Acil</option> </select>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Termin" data-en="Deadline" data-ru="Срок">Termin</label> <input type="date" class="form-input" id="request-deadline" required>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</label> <input type="number" class="form-input" id="request-quantity" min="1" required>
+         </div>
+         <div class="form-group"><label class="form-label" data-tr="Link" data-en="Link" data-ru="Ссылка">Link</label> <input type="url" class="form-input" id="request-link">
+         </div>
+        </div>
+       </div>
+       <div class="request-table-section">
+        <h3 class="table-title" data-tr="Talep Özeti" data-en="Request Summary" data-ru="Сводка запроса">Talep Özeti</h3>
+        <div class="request-table-container">
+         <table class="request-preview-table">
+          <thead>
+           <tr>
+            <th data-tr="Malzeme" data-en="Material" data-ru="Материал">Malzeme</th>
+            <th data-tr="Birim" data-en="Unit" data-ru="Единица">Birim</th>
+            <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
+            <th data-tr="Detay" data-en="Details" data-ru="Детали">Detay</th>
+            <th data-tr="Link" data-en="Link" data-ru="Ссылка">Link</th>
+            <th data-tr="Termin" data-en="Deadline" data-ru="Срок">Termin</th>
+           </tr>
+          </thead>
+          <tbody id="request-preview-body">
+           <tr>
+            <td colspan="6" class="empty-preview" data-tr="Form dolduruldukça önizleme burada görünecek" data-en="Preview will appear here as you fill the form" data-ru="Предварительный просмотр появится здесь при заполнении формы">Form dolduruldukça önizleme burada görünecek</td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+       </div>
+       <div class="form-actions"><button type="button" class="btn-add-row" onclick="addRequestRow()" data-tr="+ Satır Ekle" data-en="+ Add Row" data-ru="+ Добавить строку">+ Satır Ekle</button> <button type="button" class="btn-remove-row" onclick="removeRequestRow()" data-tr="– Satır Sil" data-en="– Remove Row" data-ru="– Удалить строку">– Satır Sil</button> <button type="submit" class="btn-save-request" data-tr="Talebi Kaydet" data-en="Save Request" data-ru="Сохранить запрос">Talebi Kaydet</button> <button type="button" class="btn-close-form" onclick="closeNewRequestForm()" data-tr="Kapat" data-en="Close" data-ru="Закрыть">Kapat</button>
+       </div>
+      </form>
      </div>
     </div><!-- Settings Section -->
     <div id="settings-section" class="section hidden">
@@ -2490,57 +2756,61 @@
                 id: '1',
                 sofNo: 'SOF-2024-001',
                 requestDate: '2024-01-15',
+                materialName: 'A4 Kağıt',
                 materialType: 'Kırtasiye',
-                unit: 'IT',
+                unit: 'Paket',
                 quantity: 50,
                 deliveryDate: '2024-01-25',
                 status: 'approved',
-                requester: 'Oğuzhan Kaya',
-                createdAt: new Date().toISOString(),
-                progress: 100,
-                currentStep: 'completed'
+                requester: 'Oğuzhan Karslı',
+                details: 'Ofis kullanımı için beyaz A4 kağıt',
+                link: '',
+                createdAt: new Date().toISOString()
             },
             {
                 id: '2',
                 sofNo: 'SOF-2024-002',
                 requestDate: '2024-01-16',
+                materialName: 'Laptop',
                 materialType: 'Elektronik',
-                unit: 'HR',
+                unit: 'Adet',
                 quantity: 2,
                 deliveryDate: '2024-02-01',
                 status: 'pending_approval',
                 requester: 'Ayşe Demir',
-                createdAt: new Date().toISOString(),
-                progress: 20,
-                currentStep: 'approval'
+                details: 'Yeni çalışanlar için laptop',
+                link: 'https://example.com/laptop',
+                createdAt: new Date().toISOString()
             },
             {
                 id: '3',
                 sofNo: 'SOF-2024-003',
                 requestDate: '2024-01-17',
+                materialName: 'Ofis Masası',
                 materialType: 'Mobilya',
-                unit: 'Finance',
+                unit: 'Adet',
                 quantity: 1,
                 deliveryDate: '2024-02-15',
                 status: 'purchasing',
                 requester: 'Mehmet Yılmaz',
-                createdAt: new Date().toISOString(),
-                progress: 60,
-                currentStep: 'purchasing'
+                details: 'Yönetici odası için ahşap masa',
+                link: '',
+                createdAt: new Date().toISOString()
             },
             {
                 id: '4',
                 sofNo: 'SOF-2024-004',
                 requestDate: '2024-01-18',
+                materialName: 'Kalem Seti',
                 materialType: 'Kırtasiye',
-                unit: 'IT',
+                unit: 'Adet',
                 quantity: 25,
                 deliveryDate: '2024-02-05',
                 status: 'pending_payment',
-                requester: 'Oğuzhan Kaya',
-                createdAt: new Date().toISOString(),
-                progress: 80,
-                currentStep: 'payment'
+                requester: 'Oğuzhan Karslı',
+                details: 'Tükenmez kalem ve kurşun kalem seti',
+                link: '',
+                createdAt: new Date().toISOString()
             }
         ];
 
@@ -3008,8 +3278,9 @@
                 'my-requests': getTranslation('Taleplerim', 'My Requests', 'Мои запросы'),
                 'purchasing': getTranslation('Satın Alma Yönetimi', 'Purchasing Management', 'Управление закупками'),
                 'pending-payments': getTranslation('Ödeme Bekleyen Talepler', 'Pending Payment Requests', 'Запросы, ожидающие оплаты'),
-                'activity-log': getTranslation('Aktivite Geçmişi (Log)', 'Activity Log', 'Журнал активности'),
-                'google-drive': getTranslation('Google Drive', 'Google Drive', 'Google Drive'),
+                'pending-approvals': getTranslation('Onay Bekleyen Talepler', 'Pending Approval Requests', 'Запросы, ожидающие одобрения'),
+                'activity-log': getTranslation('Ana Log – Sistem Aktiviteleri', 'Main Log – System Activities', 'Основной журнал – Системные активности'),
+                'new-request': getTranslation('Yeni Talep Oluştur', 'Create New Request', 'Создать новый запрос'),
                 'settings': getTranslation('Ayarlar', 'Settings', 'Настройки')
             };
             
@@ -3039,6 +3310,10 @@
             } else if (sectionName === 'pending-payments') {
                 setTimeout(() => {
                     updatePendingPaymentsSection();
+                }, 400);
+            } else if (sectionName === 'pending-approvals') {
+                setTimeout(() => {
+                    updatePendingApprovalsTable();
                 }, 400);
             } else if (sectionName === 'activity-log') {
                 setTimeout(() => {
@@ -4015,22 +4290,53 @@
             tbody.innerHTML = myRequests.map(request => `
                 <tr>
                     <td><strong>${request.sofNo}</strong></td>
-                    <td>${formatDate(request.requestDate)}</td>
+                    <td>${request.materialName || request.materialType}</td>
                     <td>${request.materialType}</td>
+                    <td>${request.unit}</td>
                     <td>${request.quantity}</td>
+                    <td>${formatDate(request.deliveryDate)}</td>
                     <td>
                         <span class="status-badge status-${request.status}">
                             ${getStatusText(request.status)}
                         </span>
                     </td>
+                </tr>
+            `).join('');
+            
+            updateTranslations();
+        }
+        
+        function updatePendingApprovalsTable() {
+            const pendingApprovals = allRecords.filter(r => r.status === 'pending_approval');
+            const tbody = document.getElementById('pending-approvals-table-body');
+            
+            if (pendingApprovals.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">✅</div>
+                                <div class="empty-state-title" data-tr="Onay bekleyen talep yok" data-en="No pending approvals" data-ru="Нет ожидающих одобрения">Onay bekleyen talep yok</div>
+                                <div class="empty-state-description" data-tr="Tüm talepler işlenmiş durumda" data-en="All requests have been processed" data-ru="Все запросы обработаны">Tüm talepler işlenmiş durumda</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            tbody.innerHTML = pendingApprovals.map(request => `
+                <tr>
+                    <td><strong>${request.sofNo}</strong></td>
+                    <td>${request.requester}</td>
+                    <td>${request.materialName || request.materialType}</td>
+                    <td>${request.materialType}</td>
+                    <td>${request.quantity}</td>
+                    <td>${formatDate(request.deliveryDate)}</td>
                     <td>
-                        <div class="progress-bar-small">
-                            <div class="progress-fill-small" style="width: ${request.progress}%"></div>
-                        </div>
-                        <small style="color: var(--text-gray); margin-top: 4px; display: block;">${request.progress}% Tamamlandı</small>
-                    </td>
-                    <td>
-                        <button class="action-btn" onclick="viewRequestDetails('${request.id}')" data-tr="Detay" data-en="Details" data-ru="Детали">Detay</button>
+                        <button class="btn-approve" onclick="approveRequest('${request.id}')" data-tr="Onayla" data-en="Approve" data-ru="Одобрить">Onayla</button>
+                        <button class="btn-reject" onclick="showRejectModal('${request.id}')" data-tr="Reddet" data-en="Reject" data-ru="Отклонить">Reddet</button>
                     </td>
                 </tr>
             `).join('');
@@ -4295,9 +4601,125 @@
             showNotification(getTranslation('Log PDF dışa aktarma özelliği yakında eklenecek', 'Log PDF export feature coming soon', 'Функция экспорта журнала в PDF скоро появится'), 'success');
         }
 
-        // New action functions
-        function showNewRequestModal() {
-            showNotification(getTranslation('Yeni talep formu yakında eklenecek', 'New request form coming soon', 'Форма нового запроса скоро появится'), 'success');
+        // New Request Form Functions
+        function showNewRequestForm() {
+            showSection('new-request');
+            
+            // Pre-fill requester name
+            document.getElementById('request-requester').value = currentUser.name;
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('request-deadline').min = today;
+            
+            // Clear form
+            document.getElementById('new-request-form').reset();
+            document.getElementById('request-requester').value = currentUser.name;
+            
+            // Clear preview
+            updateRequestPreview();
+        }
+        
+        function closeNewRequestForm() {
+            showSection('my-requests');
+        }
+        
+        function updateRequestPreview() {
+            const materialName = document.getElementById('request-material-name').value;
+            const unitType = document.getElementById('request-unit-type').value;
+            const quantity = document.getElementById('request-quantity').value;
+            const details = document.getElementById('request-details').value;
+            const link = document.getElementById('request-link').value;
+            const deadline = document.getElementById('request-deadline').value;
+            
+            const previewBody = document.getElementById('request-preview-body');
+            
+            if (!materialName && !unitType && !quantity && !details && !link && !deadline) {
+                previewBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-preview" data-tr="Form dolduruldukça önizleme burada görünecek" data-en="Preview will appear here as you fill the form" data-ru="Предварительный просмотр появится здесь при заполнении формы">Form dolduruldukça önizleme burada görünecek</td>
+                    </tr>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            previewBody.innerHTML = `
+                <tr>
+                    <td>${materialName || '-'}</td>
+                    <td>${unitType || '-'}</td>
+                    <td>${quantity || '-'}</td>
+                    <td>${details || '-'}</td>
+                    <td>${link ? `<a href="${link}" target="_blank" style="color: #00bcd4;">Link</a>` : '-'}</td>
+                    <td>${deadline ? formatDate(deadline) : '-'}</td>
+                </tr>
+            `;
+        }
+        
+        function addRequestRow() {
+            showNotification(getTranslation('Çoklu satır özelliği yakında eklenecek', 'Multi-row feature coming soon', 'Функция множественных строк скоро появится'), 'success');
+        }
+        
+        function removeRequestRow() {
+            showNotification(getTranslation('Satır silme özelliği yakında eklenecek', 'Row removal feature coming soon', 'Функция удаления строк скоро появится'), 'success');
+        }
+        
+        async function handleNewRequestSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                id: Date.now().toString(),
+                sofNo: `SOF-${new Date().getFullYear()}-${String(allRecords.length + 1).padStart(3, '0')}`,
+                requestDate: new Date().toISOString().split('T')[0],
+                materialName: document.getElementById('request-material-name').value,
+                materialType: document.getElementById('request-material-type').value,
+                unit: document.getElementById('request-unit-type').value,
+                quantity: parseInt(document.getElementById('request-quantity').value),
+                deliveryDate: document.getElementById('request-deadline').value,
+                status: 'pending_approval',
+                requester: document.getElementById('request-requester').value,
+                details: document.getElementById('request-details').value,
+                link: document.getElementById('request-link').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Show loading state
+            const saveButton = document.querySelector('.btn-save-request');
+            const originalText = saveButton.textContent;
+            saveButton.textContent = getTranslation('Kaydediliyor...', 'Saving...', 'Сохранение...');
+            saveButton.disabled = true;
+            
+            try {
+                if (allRecords.length >= 999) {
+                    showNotification(getTranslation('Maksimum 999 talep sınırına ulaşıldı. Lütfen önce bazı talepleri silin.', 'Maximum limit of 999 requests reached. Please delete some requests first.', 'Достигнут максимальный лимит в 999 запросов. Пожалуйста, сначала удалите некоторые запросы.'), 'error');
+                    return;
+                }
+                
+                const result = await window.dataSdk.create(formData);
+                
+                if (result.isOk) {
+                    showNotification(getTranslation('Talep başarıyla oluşturuldu', 'Request created successfully', 'Запрос успешно создан'), 'success');
+                    
+                    // Clear form
+                    document.getElementById('new-request-form').reset();
+                    document.getElementById('request-requester').value = currentUser.name;
+                    updateRequestPreview();
+                    
+                    // Go back to my requests
+                    setTimeout(() => {
+                        showSection('my-requests');
+                    }, 1000);
+                } else {
+                    showNotification(getTranslation('Talep oluşturulurken hata oluştu', 'Error creating request', 'Ошибка создания запроса'), 'error');
+                }
+            } catch (error) {
+                console.error('Create request error:', error);
+                showNotification(getTranslation('Talep oluşturulurken hata oluştu', 'Error creating request', 'Ошибка создания запроса'), 'error');
+            } finally {
+                // Reset button state
+                saveButton.textContent = originalText;
+                saveButton.disabled = false;
+            }
         }
         
         function viewRequestDetails(requestId) {
@@ -4387,7 +4809,25 @@
             setLanguage(detectedLang);
             
             // Set up form handlers
-            document.getElementById('new-request-form').addEventListener('submit', createNewRequest);
+            document.getElementById('new-request-form').addEventListener('submit', handleNewRequestSubmit);
+            
+            // Add event listeners for form preview updates
+            const formInputs = [
+                'request-material-name',
+                'request-unit-type', 
+                'request-quantity',
+                'request-details',
+                'request-link',
+                'request-deadline'
+            ];
+            
+            formInputs.forEach(inputId => {
+                const element = document.getElementById(inputId);
+                if (element) {
+                    element.addEventListener('input', updateRequestPreview);
+                    element.addEventListener('change', updateRequestPreview);
+                }
+            });
             
             // Set up responsive sidebar
             window.addEventListener('resize', function() {
@@ -4439,5 +4879,5 @@
             window.elementSdk.init(element);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a77d5f2f3e116',t:'MTc2MTQ4NzEwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a8a8902d3e116',t:'MTc2MTQ4Nzg2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
