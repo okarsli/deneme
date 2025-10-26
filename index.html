@@ -361,26 +361,313 @@
             padding: 32px;
         }
         
-        /* Status Cards */
-        .status-cards {
+        /* Summary Cards */
+        .summary-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 32px;
         }
         
-        .status-card {
+        .summary-card {
             background: var(--bg-white);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 12px;
+            padding: 32px 24px;
             border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .status-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px var(--shadow-light);
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #1e40af);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(36, 89, 160, 0.15);
+        }
+        
+        .summary-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .summary-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-color), #1e40af);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .summary-card:hover .summary-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(36, 89, 160, 0.3);
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .summary-subtitle {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        
+        .dashboard-section-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-section-card:hover {
+            box-shadow: 0 8px 32px rgba(36, 89, 160, 0.1);
+        }
+        
+        .section-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        
+        .section-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .notification-badge {
+            background: var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .section-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+        
+        .view-all-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-all-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Request Lists */
+        .request-list, .approval-list, .payment-list, .purchasing-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .request-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+        
+        .request-item:hover {
+            background: rgba(36, 89, 160, 0.02);
+        }
+        
+        .request-item:last-child {
+            border-bottom: none;
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .request-id {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+        
+        .request-date {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .request-description {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 12px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #1e40af);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-gray);
+        }
+        
+        .progress-step {
+            font-weight: 500;
+        }
+        
+        .progress-step.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .btn-approve {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, var(--accent-color), #b91c1c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(207, 46, 38, 0.3);
+        }
+        
+        .btn-payment {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-payment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-invoice {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-invoice:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
         }
         
         .card-header {
@@ -777,14 +1064,184 @@
             box-shadow: 0 8px 24px rgba(36, 89, 160, 0.3);
         }
         
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-container {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-overlay.show .modal-container {
+            transform: scale(1) translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .modal-content {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .reject-form {
+            margin-top: 16px;
+        }
+        
+        .reject-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .reject-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(36, 89, 160, 0.1);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+        
+        .btn-modal-primary {
+            background: linear-gradient(135deg, var(--primary-color), #1e40af);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(36, 89, 160, 0.3);
+        }
+        
+        .btn-modal-secondary {
+            background: transparent;
+            color: var(--text-gray);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-modal-secondary:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-gray);
+        }
+        
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--text-gray);
+        }
+        
+        .empty-state-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .empty-state-description {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .system-overview {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
             
-            .status-cards {
-                grid-template-columns: repeat(2, 1fr);
+            .summary-cards {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1068,9 +1525,9 @@
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
      </svg><span class="nav-text">Ana Sayfa</span> </button> <button class="nav-item" onclick="showSection('new-request')" data-tr="Yeni Talep" data-en="New Request" data-ru="Новый запрос">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-     </svg><span class="nav-text">Yeni Talep</span> </button> <button class="nav-item" onclick="showSection('records')" data-tr="Kayıtlar" data-en="Records" data-ru="Записи">
+     </svg><span class="nav-text">Yeni Talep</span> </button> <button class="nav-item" onclick="showSection('records')" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-     </svg><span class="nav-text">Kayıtlar</span> </button> <button class="nav-item" onclick="showSection('material-records')" data-tr="Malzeme Kayıtları" data-en="Material Records" data-ru="Записи материалов">
+     </svg><span class="nav-text">Taleplerim</span> </button> <button class="nav-item" onclick="showSection('material-records')" data-tr="Malzeme Kayıtları" data-en="Material Records" data-ru="Записи материалов">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
      </svg><span class="nav-text">Malzeme Kayıtları</span> </button> <button class="nav-item" onclick="showSection('google-drive')" data-tr="Google Drive" data-en="Google Drive" data-ru="Google Drive">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
@@ -1111,131 +1568,81 @@
     </div>
    </header><!-- Content Area -->
    <div class="content-area"><!-- Dashboard Section -->
-    <div id="dashboard-section" class="section active"><!-- Status Cards -->
-     <div class="status-cards">
-      <div class="status-card">
-       <div class="card-icon total">
-        📦
+    <div id="dashboard-section" class="section active"><!-- Summary Cards -->
+     <div class="summary-cards">
+      <div class="summary-card" onclick="showSummaryModal()">
+       <div class="summary-icon">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
        </div>
-       <div class="card-title" data-tr="Toplam Talepler" data-en="Total Requests" data-ru="Всего запросов">
-        Toplam Talepler
+       <div class="summary-title" data-tr="Özet" data-en="Summary" data-ru="Сводка">
+        Özet
        </div>
-       <div class="card-value" id="total-requests">
-        0
-       </div>
-      </div>
-      <div class="status-card">
-       <div class="card-icon approved">
-        ✅
-       </div>
-       <div class="card-title" data-tr="Onaylanan" data-en="Approved" data-ru="Одобрено">
-        Onaylanan
-       </div>
-       <div class="card-value" id="approved-requests">
-        0
+       <div class="summary-subtitle" data-tr="Genel durum görünümü" data-en="General status overview" data-ru="Общий обзор статуса">
+        Genel durum görünümü
        </div>
       </div>
-      <div class="status-card">
-       <div class="card-icon pending">
-        ⏳
+      <div class="summary-card" onclick="showTrackingModal()">
+       <div class="summary-icon">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
        </div>
-       <div class="card-title" data-tr="Bekleyen" data-en="Pending" data-ru="В ожидании">
-        Bekleyen
+       <div class="summary-title" data-tr="Takip Logu" data-en="Tracking Log" data-ru="Журнал отслеживания">
+        Takip Logu
        </div>
-       <div class="card-value" id="pending-requests">
-        0
-       </div>
-      </div>
-      <div class="status-card">
-       <div class="card-icon rejected">
-        ❌
-       </div>
-       <div class="card-title" data-tr="Reddedilen" data-en="Rejected" data-ru="Отклонено">
-        Reddedilen
-       </div>
-       <div class="card-value" id="rejected-requests">
-        0
+       <div class="summary-subtitle" data-tr="Talep süreç takibi" data-en="Request process tracking" data-ru="Отслеживание процесса запроса">
+        Talep süreç takibi
        </div>
       </div>
-     </div><!-- System Overview -->
-     <div class="system-overview">
-      <div class="overview-cards">
-       <h2 class="overview-title" data-tr="SİSTEM ÖZETİ" data-en="SYSTEM OVERVIEW" data-ru="ОБЗОР СИСТЕМЫ">SİSTEM ÖZETİ</h2>
-       <div class="mini-cards">
-        <div class="mini-card">
-         <div class="mini-card-title" data-tr="Kayıt Sayısı" data-en="Record Count" data-ru="Количество записей">
-          Kayıt Sayısı
-         </div>
-         <div class="mini-card-value" id="record-count">
-          0
-         </div>
-        </div>
-        <div class="mini-card">
-         <div class="mini-card-title" data-tr="Onaylanan" data-en="Approved" data-ru="Одобрено">
-          Onaylanan
-         </div>
-         <div class="mini-card-value" id="mini-approved">
-          0
-         </div>
-        </div>
-        <div class="mini-card">
-         <div class="mini-card-title" data-tr="Bekleyen" data-en="Pending" data-ru="В ожидании">
-          Bekleyen
-         </div>
-         <div class="mini-card-value" id="mini-pending">
-          0
-         </div>
-        </div>
-        <div class="mini-card">
-         <div class="mini-card-title" data-tr="Reddedilen" data-en="Rejected" data-ru="Отклонено">
-          Reddedilen
-         </div>
-         <div class="mini-card-value" id="mini-rejected">
-          0
-         </div>
-        </div>
+      <div class="summary-card" onclick="showSection('new-request')">
+       <div class="summary-icon">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+       </div>
+       <div class="summary-title" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">
+        Yeni Talep Oluştur
+       </div>
+       <div class="summary-subtitle" data-tr="Malzeme talebi başlat" data-en="Start material request" data-ru="Начать запрос материала">
+        Malzeme talebi başlat
        </div>
       </div>
-      <div class="chart-container">
-       <h3 class="overview-title" data-tr="Durum Dağılımı" data-en="Status Distribution" data-ru="Распределение статусов">Durum Dağılımı</h3>
-       <canvas id="statusChart" width="300" height="300"></canvas>
-      </div>
-     </div><!-- Material Records Table -->
-     <div class="table-section">
-      <div class="table-header">
-       <h2 class="table-title" data-tr="Malzeme Kayıtları" data-en="Material Records" data-ru="Записи материалов">Malzeme Kayıtları</h2>
-       <div class="export-buttons"><button class="btn-export" onclick="exportToPDF()" data-tr="PDF olarak indir" data-en="Download as PDF" data-ru="Скачать как PDF">PDF olarak indir</button> <button class="btn-export" onclick="exportToCSV()" data-tr="Excel (CSV) olarak indir" data-en="Download as Excel (CSV)" data-ru="Скачать как Excel (CSV)">Excel (CSV) olarak indir</button>
+     </div><!-- Main Dashboard Grid -->
+     <div class="dashboard-grid"><!-- My Requests Section -->
+      <div class="dashboard-section-card">
+       <div class="section-header">
+        <h3 class="section-title" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">Taleplerim</h3><span class="section-badge" id="my-requests-count">0</span>
        </div>
-      </div>
-      <div class="filters">
-       <div class="filter-group"><label class="filter-label" data-tr="Birim" data-en="Unit" data-ru="Подразделение">Birim</label> <select class="filter-select" id="unit-filter"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="IT" data-tr="Bilgi İşlem" data-en="IT" data-ru="ИТ">Bilgi İşlem</option> <option value="HR" data-tr="İnsan Kaynakları" data-en="Human Resources" data-ru="Кадры">İnsan Kaynakları</option> <option value="Finance" data-tr="Finans" data-en="Finance" data-ru="Финансы">Finans</option> </select>
+       <div class="request-list" id="my-requests-list"><!-- My requests will be loaded here -->
        </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Ana Tip" data-en="Main Type" data-ru="Основной тип">Ana Tip</label> <select class="filter-select" id="type-filter"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="Kırtasiye" data-tr="Kırtasiye" data-en="Stationery" data-ru="Канцелярия">Kırtasiye</option> <option value="Elektronik" data-tr="Elektronik" data-en="Electronics" data-ru="Электроника">Elektronik</option> <option value="Mobilya" data-tr="Mobilya" data-en="Furniture" data-ru="Мебель">Mobilya</option> </select>
+       <div class="section-footer"><button class="view-all-btn" onclick="showAllMyRequests()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
        </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Durum" data-en="Status" data-ru="Статус">Durum</label> <select class="filter-select" id="status-filter"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="approved" data-tr="Onaylandı" data-en="Approved" data-ru="Одобрено">Onaylandı</option> <option value="pending" data-tr="Bekliyor" data-en="Pending" data-ru="В ожидании">Bekliyor</option> <option value="rejected" data-tr="Reddedildi" data-en="Rejected" data-ru="Отклонено">Reddedildi</option> </select>
+      </div><!-- Pending Approval Section -->
+      <div class="dashboard-section-card">
+       <div class="section-header">
+        <h3 class="section-title" data-tr="Onay Bekleyen" data-en="Pending Approval" data-ru="Ожидает одобрения">Onay Bekleyen</h3><span class="section-badge notification-badge" id="pending-approval-count">0</span>
        </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Arama" data-en="Search" data-ru="Поиск">Arama</label> <input type="text" class="filter-input" id="search-input" data-tr-placeholder="SOF No veya malzeme ara..." data-en-placeholder="Search SOF No or material..." data-ru-placeholder="Поиск SOF No или материала...">
+       <div class="approval-list" id="pending-approval-list"><!-- Pending approvals will be loaded here -->
        </div>
-      </div>
-      <div style="overflow-x: auto;">
-       <table class="data-table">
-        <thead>
-         <tr>
-          <th data-tr="SOF No" data-en="SOF No" data-ru="SOF No">SOF No</th>
-          <th data-tr="Talep Tarihi" data-en="Request Date" data-ru="Дата запроса">Talep Tarihi</th>
-          <th data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</th>
-          <th data-tr="Birim" data-en="Unit" data-ru="Подразделение">Birim</th>
-          <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
-          <th data-tr="Teslim Tarihi" data-en="Delivery Date" data-ru="Дата доставки">Teslim Tarihi</th>
-          <th data-tr="Durum" data-en="Status" data-ru="Статус">Durum</th>
-          <th data-tr="İşlemler" data-en="Actions" data-ru="Действия">İşlemler</th>
-         </tr>
-        </thead>
-        <tbody id="records-table-body"><!-- Records will be loaded here -->
-        </tbody>
-       </table>
-      </div>
-      <div class="pagination" id="pagination"><!-- Pagination will be generated here -->
+       <div class="section-footer"><button class="view-all-btn" onclick="showAllPendingApprovals()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+       </div>
+      </div><!-- Pending Payment Section -->
+      <div class="dashboard-section-card">
+       <div class="section-header">
+        <h3 class="section-title" data-tr="Ödeme Bekleyen" data-en="Pending Payment" data-ru="Ожидает оплаты">Ödeme Bekleyen</h3><span class="section-badge" id="pending-payment-count">0</span>
+       </div>
+       <div class="payment-list" id="pending-payment-list"><!-- Pending payments will be loaded here -->
+       </div>
+       <div class="section-footer"><button class="view-all-btn" onclick="showAllPendingPayments()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+       </div>
+      </div><!-- Purchasing Section -->
+      <div class="dashboard-section-card">
+       <div class="section-header">
+        <h3 class="section-title" data-tr="Satın Alma" data-en="Purchasing" data-ru="Закупки">Satın Alma</h3><span class="section-badge" id="purchasing-count">0</span>
+       </div>
+       <div class="purchasing-list" id="purchasing-list"><!-- Purchasing items will be loaded here -->
+       </div>
+       <div class="section-footer"><button class="view-all-btn" onclick="showAllPurchasing()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+       </div>
       </div>
      </div>
     </div><!-- New Request Section -->
@@ -1376,6 +1783,93 @@
      </div>
     </form>
    </div>
+  </div><!-- Summary Modal -->
+  <div id="summary-modal" class="modal-overlay">
+   <div class="modal-container">
+    <div class="modal-header">
+     <h2 class="modal-title" data-tr="Sistem Özeti" data-en="System Summary" data-ru="Сводка системы">Sistem Özeti</h2><button class="modal-close" onclick="closeSummaryModal()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+    </div>
+    <div class="modal-content">
+     <div class="mini-cards">
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Toplam Talepler" data-en="Total Requests" data-ru="Всего запросов">
+        Toplam Talepler
+       </div>
+       <div class="mini-card-value" id="modal-total-requests">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Onaylanan" data-en="Approved" data-ru="Одобрено">
+        Onaylanan
+       </div>
+       <div class="mini-card-value" id="modal-approved-requests">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Bekleyen" data-en="Pending" data-ru="В ожидании">
+        Bekleyen
+       </div>
+       <div class="mini-card-value" id="modal-pending-requests">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="İşlemde" data-en="In Process" data-ru="В процессе">
+        İşlemde
+       </div>
+       <div class="mini-card-value" id="modal-processing-requests">
+        0
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Tracking Modal -->
+  <div id="tracking-modal" class="modal-overlay">
+   <div class="modal-container">
+    <div class="modal-header">
+     <h2 class="modal-title" data-tr="Takip Logu" data-en="Tracking Log" data-ru="Журнал отслеживания">Takip Logu</h2><button class="modal-close" onclick="closeTrackingModal()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+    </div>
+    <div class="modal-content">
+     <div id="tracking-log-content"><!-- Tracking log will be loaded here -->
+     </div>
+    </div>
+   </div>
+  </div><!-- Reject Modal -->
+  <div id="reject-modal" class="modal-overlay">
+   <div class="modal-container">
+    <div class="modal-header">
+     <h2 class="modal-title" data-tr="Talep Reddi" data-en="Request Rejection" data-ru="Отклонение запроса">Talep Reddi</h2><button class="modal-close" onclick="closeRejectModal()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+    </div>
+    <div class="modal-content">
+     <p data-tr="Bu talebi reddetmek istediğinizden emin misiniz?" data-en="Are you sure you want to reject this request?" data-ru="Вы уверены, что хотите отклонить этот запрос?">Bu talebi reddetmek istediğinizden emin misiniz?</p>
+     <div class="reject-form"><label class="form-label" data-tr="Red sebebi (isteğe bağlı)" data-en="Rejection reason (optional)" data-ru="Причина отклонения (необязательно)">Red sebebi (isteğe bağlı)</label> <textarea id="reject-reason" class="reject-textarea" data-tr-placeholder="Red sebebinizi yazın..." data-en-placeholder="Write your rejection reason..." data-ru-placeholder="Напишите причину отклонения..."></textarea>
+     </div>
+     <div class="modal-buttons"><button class="btn-modal-secondary" onclick="closeRejectModal()" data-tr="İptal" data-en="Cancel" data-ru="Отмена">İptal</button> <button class="btn-modal-primary" onclick="confirmReject()" data-tr="Reddet" data-en="Reject" data-ru="Отклонить">Reddet</button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Invoice Modal -->
+  <div id="invoice-modal" class="modal-overlay">
+   <div class="modal-container">
+    <div class="modal-header">
+     <h2 class="modal-title" data-tr="Ön Fatura Görünümü" data-en="Invoice Preview" data-ru="Предварительный просмотр счета">Ön Fatura Görünümü</h2><button class="modal-close" onclick="closeInvoiceModal()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+    </div>
+    <div class="modal-content">
+     <div id="invoice-content"><!-- Invoice content will be loaded here -->
+     </div>
+    </div>
+   </div>
   </div>
   <script>
         // Configuration
@@ -1412,7 +1906,9 @@
                 deliveryDate: '2024-01-25',
                 status: 'approved',
                 requester: 'Oğuzhan Kaya',
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                progress: 100,
+                currentStep: 'completed'
             },
             {
                 id: '2',
@@ -1422,9 +1918,11 @@
                 unit: 'HR',
                 quantity: 2,
                 deliveryDate: '2024-02-01',
-                status: 'pending',
+                status: 'pending_approval',
                 requester: 'Ayşe Demir',
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                progress: 20,
+                currentStep: 'approval'
             },
             {
                 id: '3',
@@ -1434,19 +1932,38 @@
                 unit: 'Finance',
                 quantity: 1,
                 deliveryDate: '2024-02-15',
-                status: 'rejected',
+                status: 'purchasing',
                 requester: 'Mehmet Yılmaz',
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                progress: 60,
+                currentStep: 'purchasing'
+            },
+            {
+                id: '4',
+                sofNo: 'SOF-2024-004',
+                requestDate: '2024-01-18',
+                materialType: 'Kırtasiye',
+                unit: 'IT',
+                quantity: 25,
+                deliveryDate: '2024-02-05',
+                status: 'pending_payment',
+                requester: 'Oğuzhan Kaya',
+                createdAt: new Date().toISOString(),
+                progress: 80,
+                currentStep: 'payment'
             }
         ];
+
+        // Global variables for modals
+        let currentRejectId = null;
 
         // Data SDK handler
         const dataHandler = {
             onDataChanged(data) {
                 allRecords = data.length > 0 ? data : sampleRecords;
                 updateDashboardStats();
+                updateDashboardSections();
                 updateRecordsTable();
-                updateChart();
             }
         };
 
@@ -1804,18 +2321,197 @@
         function updateDashboardStats() {
             const total = allRecords.length;
             const approved = allRecords.filter(r => r.status === 'approved').length;
-            const pending = allRecords.filter(r => r.status === 'pending').length;
-            const rejected = allRecords.filter(r => r.status === 'rejected').length;
+            const pending = allRecords.filter(r => r.status === 'pending_approval').length;
+            const processing = allRecords.filter(r => ['purchasing', 'pending_payment'].includes(r.status)).length;
             
-            document.getElementById('total-requests').textContent = total;
-            document.getElementById('approved-requests').textContent = approved;
-            document.getElementById('pending-requests').textContent = pending;
-            document.getElementById('rejected-requests').textContent = rejected;
+            // Update modal stats
+            const modalTotal = document.getElementById('modal-total-requests');
+            const modalApproved = document.getElementById('modal-approved-requests');
+            const modalPending = document.getElementById('modal-pending-requests');
+            const modalProcessing = document.getElementById('modal-processing-requests');
             
-            document.getElementById('record-count').textContent = total;
-            document.getElementById('mini-approved').textContent = approved;
-            document.getElementById('mini-pending').textContent = pending;
-            document.getElementById('mini-rejected').textContent = rejected;
+            if (modalTotal) modalTotal.textContent = total;
+            if (modalApproved) modalApproved.textContent = approved;
+            if (modalPending) modalPending.textContent = pending;
+            if (modalProcessing) modalProcessing.textContent = processing;
+        }
+
+        // Update dashboard sections
+        function updateDashboardSections() {
+            updateMyRequests();
+            updatePendingApprovals();
+            updatePendingPayments();
+            updatePurchasing();
+        }
+
+        // Update my requests section
+        function updateMyRequests() {
+            const myRequests = allRecords.filter(r => r.requester === currentUser.name).slice(0, 5);
+            const container = document.getElementById('my-requests-list');
+            const countBadge = document.getElementById('my-requests-count');
+            
+            countBadge.textContent = allRecords.filter(r => r.requester === currentUser.name).length;
+            
+            if (myRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title" data-tr="Henüz talep yok" data-en="No requests yet" data-ru="Пока нет запросов">Henüz talep yok</div>
+                        <div class="empty-state-description" data-tr="İlk talebinizi oluşturmak için yukarıdaki butonu kullanın" data-en="Use the button above to create your first request" data-ru="Используйте кнопку выше, чтобы создать свой первый запрос">İlk talebinizi oluşturmak için yukarıdaki butonu kullanın</div>
+                    </div>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            container.innerHTML = myRequests.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet</div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${request.progress}%"></div>
+                        </div>
+                        <div class="progress-steps">
+                            <span class="progress-step ${request.progress >= 20 ? 'active' : ''}" data-tr="Talep Edildi" data-en="Requested" data-ru="Запрошено">Talep Edildi</span>
+                            <span class="progress-step ${request.progress >= 40 ? 'active' : ''}" data-tr="Onay Bekliyor" data-en="Pending Approval" data-ru="Ожидает одобрения">Onay Bekliyor</span>
+                            <span class="progress-step ${request.progress >= 60 ? 'active' : ''}" data-tr="Satın Alma" data-en="Purchasing" data-ru="Закупка">Satın Alma</span>
+                            <span class="progress-step ${request.progress >= 80 ? 'active' : ''}" data-tr="Ödeme Bekliyor" data-en="Pending Payment" data-ru="Ожидает оплаты">Ödeme Bekliyor</span>
+                            <span class="progress-step ${request.progress >= 100 ? 'active' : ''}" data-tr="Tamamlandı" data-en="Completed" data-ru="Завершено">Tamamlandı</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+
+        // Update pending approvals section
+        function updatePendingApprovals() {
+            const pendingApprovals = allRecords.filter(r => r.status === 'pending_approval').slice(0, 3);
+            const container = document.getElementById('pending-approval-list');
+            const countBadge = document.getElementById('pending-approval-count');
+            
+            countBadge.textContent = allRecords.filter(r => r.status === 'pending_approval').length;
+            
+            if (pendingApprovals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title" data-tr="Onay bekleyen talep yok" data-en="No pending approvals" data-ru="Нет ожидающих одобрения">Onay bekleyen talep yok</div>
+                        <div class="empty-state-description" data-tr="Tüm talepler işlenmiş durumda" data-en="All requests have been processed" data-ru="Все запросы обработаны">Tüm talepler işlenmiş durumda</div>
+                    </div>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            container.innerHTML = pendingApprovals.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet (${request.requester})</div>
+                    <div class="action-buttons">
+                        <button class="btn-approve" onclick="approveRequest('${request.id}')" data-tr="Onayla" data-en="Approve" data-ru="Одобрить">Onayla</button>
+                        <button class="btn-reject" onclick="showRejectModal('${request.id}')" data-tr="Reddet" data-en="Reject" data-ru="Отклонить">Reddet</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+
+        // Update pending payments section
+        function updatePendingPayments() {
+            const pendingPayments = allRecords.filter(r => r.status === 'pending_payment').slice(0, 3);
+            const container = document.getElementById('pending-payment-list');
+            const countBadge = document.getElementById('pending-payment-count');
+            
+            countBadge.textContent = allRecords.filter(r => r.status === 'pending_payment').length;
+            
+            if (pendingPayments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title" data-tr="Ödeme bekleyen talep yok" data-en="No pending payments" data-ru="Нет ожидающих оплаты">Ödeme bekleyen talep yok</div>
+                        <div class="empty-state-description" data-tr="Tüm ödemeler tamamlanmış" data-en="All payments completed" data-ru="Все платежи завершены">Tüm ödemeler tamamlanmış</div>
+                    </div>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            container.innerHTML = pendingPayments.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet (${request.requester})</div>
+                    <div class="action-buttons">
+                        <button class="btn-payment" onclick="markPaymentComplete('${request.id}')" data-tr="Ödeme Yapıldı" data-en="Payment Made" data-ru="Платеж выполнен">Ödeme Yapıldı</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+
+        // Update purchasing section
+        function updatePurchasing() {
+            const purchasing = allRecords.filter(r => r.status === 'purchasing').slice(0, 3);
+            const container = document.getElementById('purchasing-list');
+            const countBadge = document.getElementById('purchasing-count');
+            
+            countBadge.textContent = allRecords.filter(r => r.status === 'purchasing').length;
+            
+            if (purchasing.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <div class="empty-state-title" data-tr="Satın alma bekleyen talep yok" data-en="No purchasing requests" data-ru="Нет запросов на закупку">Satın alma bekleyen talep yok</div>
+                        <div class="empty-state-description" data-tr="Tüm satın alma işlemleri tamamlanmış" data-en="All purchasing completed" data-ru="Все закупки завершены">Tüm satın alma işlemleri tamamlanmış</div>
+                    </div>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            container.innerHTML = purchasing.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet (${request.requester})</div>
+                    <div class="action-buttons">
+                        <button class="btn-invoice" onclick="showInvoiceModal('${request.id}')" data-tr="Ön Fatura Görüntüle" data-en="View Invoice" data-ru="Просмотр счета">Ön Fatura Görüntüle</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
         }
 
         // Chart functions
@@ -1954,9 +2650,11 @@
                 unit: document.getElementById('unit').value,
                 quantity: parseInt(document.getElementById('quantity').value),
                 deliveryDate: document.getElementById('delivery-date').value,
-                status: 'pending',
+                status: 'pending_approval',
                 requester: currentUser.name,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                progress: 20,
+                currentStep: 'approval'
             };
             
             try {
@@ -2177,6 +2875,195 @@
             }
         }
 
+        // Modal functions
+        function showSummaryModal() {
+            updateDashboardStats();
+            document.getElementById('summary-modal').classList.add('show');
+        }
+
+        function closeSummaryModal() {
+            document.getElementById('summary-modal').classList.remove('show');
+        }
+
+        function showTrackingModal() {
+            const trackingContent = document.getElementById('tracking-log-content');
+            trackingContent.innerHTML = `
+                <div class="request-list">
+                    ${allRecords.map(request => `
+                        <div class="request-item">
+                            <div class="request-header">
+                                <div class="request-id">${request.sofNo}</div>
+                                <div class="request-date">${formatDate(request.requestDate)}</div>
+                            </div>
+                            <div class="request-description">${request.materialType} - ${request.quantity} adet (${request.requester})</div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${request.progress}%"></div>
+                                </div>
+                                <div class="progress-steps">
+                                    <span class="progress-step ${request.progress >= 20 ? 'active' : ''}" data-tr="Talep Edildi" data-en="Requested" data-ru="Запрошено">Talep Edildi</span>
+                                    <span class="progress-step ${request.progress >= 40 ? 'active' : ''}" data-tr="Onay Bekliyor" data-en="Pending Approval" data-ru="Ожидает одобрения">Onay Bekliyor</span>
+                                    <span class="progress-step ${request.progress >= 60 ? 'active' : ''}" data-tr="Satın Alma" data-en="Purchasing" data-ru="Закупка">Satın Alma</span>
+                                    <span class="progress-step ${request.progress >= 80 ? 'active' : ''}" data-tr="Ödeme Bekliyor" data-en="Pending Payment" data-ru="Ожидает оплаты">Ödeme Bekliyor</span>
+                                    <span class="progress-step ${request.progress >= 100 ? 'active' : ''}" data-tr="Tamamlandı" data-en="Completed" data-ru="Завершено">Tamamlandı</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            updateTranslations();
+            document.getElementById('tracking-modal').classList.add('show');
+        }
+
+        function closeTrackingModal() {
+            document.getElementById('tracking-modal').classList.remove('show');
+        }
+
+        function showRejectModal(requestId) {
+            currentRejectId = requestId;
+            document.getElementById('reject-reason').value = '';
+            document.getElementById('reject-modal').classList.add('show');
+        }
+
+        function closeRejectModal() {
+            currentRejectId = null;
+            document.getElementById('reject-modal').classList.remove('show');
+        }
+
+        function showInvoiceModal(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            const invoiceContent = document.getElementById('invoice-content');
+            
+            invoiceContent.innerHTML = `
+                <div style="border: 1px solid var(--border-light); border-radius: 8px; padding: 24px; background: var(--bg-light);">
+                    <h3 style="margin: 0 0 16px 0; color: var(--text-dark);">Ön Fatura Detayları</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div><strong>SOF No:</strong> ${request.sofNo}</div>
+                        <div><strong>Tarih:</strong> ${formatDate(request.requestDate)}</div>
+                        <div><strong>Malzeme:</strong> ${request.materialType}</div>
+                        <div><strong>Adet:</strong> ${request.quantity}</div>
+                        <div><strong>Talep Eden:</strong> ${request.requester}</div>
+                        <div><strong>Birim:</strong> ${request.unit}</div>
+                    </div>
+                    <div style="border-top: 1px solid var(--border-light); padding-top: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span><strong>Tahmini Tutar:</strong></span>
+                            <span style="font-size: 18px; font-weight: 700; color: var(--primary-color);">₺${(Math.random() * 1000 + 100).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('invoice-modal').classList.add('show');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoice-modal').classList.remove('show');
+        }
+
+        // Action functions
+        async function approveRequest(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'purchasing';
+                request.progress = 60;
+                request.currentStep = 'purchasing';
+                
+                try {
+                    const result = await window.dataSdk.update(request);
+                    if (result.isOk) {
+                        showNotification(getTranslation(`${request.sofNo} talebi onaylandı`, `Request ${request.sofNo} approved`, `Запрос ${request.sofNo} одобрен`), 'success');
+                        updateDashboardSections();
+                    } else {
+                        showNotification(getTranslation('Onaylama işlemi başarısız', 'Approval failed', 'Ошибка одобрения'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Approve request error:', error);
+                    showNotification(getTranslation('Onaylama işlemi başarısız', 'Approval failed', 'Ошибка одобрения'), 'error');
+                }
+            }
+        }
+
+        async function confirmReject() {
+            if (currentRejectId) {
+                const request = allRecords.find(r => r.id === currentRejectId);
+                const reason = document.getElementById('reject-reason').value;
+                
+                if (request) {
+                    // Remove the request from records instead of marking as rejected
+                    const index = allRecords.findIndex(r => r.id === currentRejectId);
+                    if (index > -1) {
+                        allRecords.splice(index, 1);
+                    }
+                    
+                    try {
+                        const result = await window.dataSdk.delete(request);
+                        if (result.isOk) {
+                            showNotification(getTranslation(`${request.sofNo} talebi reddedildi${reason ? ': ' + reason : ''}`, `Request ${request.sofNo} rejected${reason ? ': ' + reason : ''}`, `Запрос ${request.sofNo} отклонен${reason ? ': ' + reason : ''}`), 'success');
+                            updateDashboardSections();
+                        } else {
+                            showNotification(getTranslation('Reddetme işlemi başarısız', 'Rejection failed', 'Ошибка отклонения'), 'error');
+                        }
+                    } catch (error) {
+                        console.error('Reject request error:', error);
+                        showNotification(getTranslation('Reddetme işlemi başarısız', 'Rejection failed', 'Ошибка отклонения'), 'error');
+                    }
+                }
+                
+                closeRejectModal();
+            }
+        }
+
+        async function markPaymentComplete(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'approved';
+                request.progress = 100;
+                request.currentStep = 'completed';
+                
+                try {
+                    const result = await window.dataSdk.update(request);
+                    if (result.isOk) {
+                        showNotification(getTranslation(`${request.sofNo} ödemesi tamamlandı. Talep sahibine bildirim gönderildi.`, `Payment for ${request.sofNo} completed. Notification sent to requester.`, `Платеж по ${request.sofNo} завершен. Уведомление отправлено заявителю.`), 'success');
+                        updateDashboardSections();
+                    } else {
+                        showNotification(getTranslation('Ödeme işlemi başarısız', 'Payment processing failed', 'Ошибка обработки платежа'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Payment complete error:', error);
+                    showNotification(getTranslation('Ödeme işlemi başarısız', 'Payment processing failed', 'Ошибка обработки платежа'), 'error');
+                }
+            }
+        }
+
+        // View all functions
+        function showAllMyRequests() {
+            showNotification(getTranslation('Tüm taleplerim sayfası yakında eklenecek', 'All my requests page coming soon', 'Страница всех моих запросов скоро появится'), 'success');
+        }
+
+        function showAllPendingApprovals() {
+            showNotification(getTranslation('Tüm onay bekleyen talepler sayfası yakında eklenecek', 'All pending approvals page coming soon', 'Страница всех ожидающих одобрения скоро появится'), 'success');
+        }
+
+        function showAllPendingPayments() {
+            showNotification(getTranslation('Tüm ödeme bekleyen talepler sayfası yakında eklenecek', 'All pending payments page coming soon', 'Страница всех ожидающих оплаты скоро появится'), 'success');
+        }
+
+        function showAllPurchasing() {
+            showNotification(getTranslation('Tüm satın alma talepleri sayfası yakında eklenecek', 'All purchasing requests page coming soon', 'Страница всех запросов на закупку скоро появится'), 'success');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                if (event.target.id === 'summary-modal') closeSummaryModal();
+                if (event.target.id === 'tracking-modal') closeTrackingModal();
+                if (event.target.id === 'reject-modal') closeRejectModal();
+                if (event.target.id === 'invoice-modal') closeInvoiceModal();
+            }
+        });
+
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async function() {
             // Check login state first
@@ -2256,5 +3143,5 @@
             window.elementSdk.init(element);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a15fcf185e34c',t:'MTc2MTQ4MzA5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a2f0461e0e116',t:'MTc2MTQ4NDEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
