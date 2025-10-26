@@ -62,8 +62,20 @@
             left: 0;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
+            opacity: 1;
+        }
+        
+        .sidebar.inactive {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .sidebar.activate {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
         }
         
         .sidebar.collapsed {
@@ -121,23 +133,63 @@
             padding: 16px 24px;
             color: var(--text-gray);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: none;
-            background: none;
+            background: #f0f0f0;
             width: 100%;
             text-align: left;
+            margin: 4px 8px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0 2px 2px 0;
         }
         
         .nav-item:hover {
-            background: rgba(36, 89, 160, 0.05);
+            background: rgba(36, 89, 160, 0.08);
             color: var(--primary-color);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(36, 89, 160, 0.15);
+        }
+        
+        .nav-item:hover::before {
+            transform: scaleY(1);
         }
         
         .nav-item.active {
-            background: linear-gradient(90deg, rgba(36, 89, 160, 0.1), transparent);
-            color: var(--primary-color);
-            border-right: 3px solid var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), rgba(36, 89, 160, 0.9));
+            color: white;
+            font-weight: 600;
+            transform: translateX(0);
+            box-shadow: 0 6px 20px rgba(36, 89, 160, 0.3);
+        }
+        
+        .nav-item.active::before {
+            transform: scaleY(1);
+            background: rgba(255, 255, 255, 0.3);
+            width: 100%;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .nav-item.active .nav-text {
+            color: white;
         }
         
         .nav-icon {
@@ -212,6 +264,18 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+        
+        .header.inactive {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .header.activate {
+            opacity: 1;
+            pointer-events: auto;
         }
         
         .header-left {
@@ -239,6 +303,7 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--text-dark);
+            transition: opacity 0.3s ease;
         }
         
         .header-right {
@@ -361,27 +426,61 @@
             padding: 32px;
         }
         
-        /* Summary Cards */
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+        /* Section Headers */
+        .summary-header, .section-header {
             margin-bottom: 32px;
         }
         
-        .summary-card {
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 8px 0;
+        }
+        
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        /* Status Cards */
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .status-card {
             background: var(--bg-white);
-            border-radius: 12px;
-            padding: 32px 24px;
+            border-radius: 16px;
+            padding: 24px;
             border: 1px solid var(--border-light);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         
-        .summary-card::before {
+        .status-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -393,44 +492,237 @@
             transition: transform 0.3s ease;
         }
         
-        .summary-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(36, 89, 160, 0.15);
+        .status-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(36, 89, 160, 0.15);
         }
         
-        .summary-card:hover::before {
+        .status-card:hover::before {
             transform: scaleX(1);
         }
         
-        .summary-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--primary-color), #1e40af);
-            border-radius: 16px;
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 16px;
-            color: white;
-            transition: all 0.3s ease;
+            font-size: 24px;
+            flex-shrink: 0;
         }
         
-        .summary-card:hover .summary-icon {
-            transform: scale(1.1);
-            box-shadow: 0 8px 24px rgba(36, 89, 160, 0.3);
+        .card-icon.total {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
         }
         
-        .summary-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
+        .card-icon.approved {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .card-icon.pending {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .card-icon.processing {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        
+        .card-content {
+            flex: 1;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
             margin-bottom: 8px;
         }
         
-        .summary-subtitle {
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        
+        /* Recent Activities */
+        .recent-activities {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* Requests Table */
+        .requests-table-container {
+            background: var(--bg-white);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .requests-table th {
+            background: var(--bg-light);
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border-light);
             font-size: 14px;
-            color: var(--text-gray);
-            line-height: 1.4;
+        }
+        
+        .requests-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .requests-table tr:hover {
+            background: rgba(36, 89, 160, 0.02);
+        }
+        
+        .requests-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Progress Bar in Table */
+        .progress-bar-small {
+            width: 100px;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill-small {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #1e40af);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Purchasing Grid */
+        .purchasing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+        
+        .purchasing-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        
+        .card-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .purchasing-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* Payments Container */
+        .payments-container {
+            background: var(--bg-white);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        
+        .payments-filters {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .payments-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* Log Stats */
+        .log-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .log-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .log-container {
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            max-height: 600px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+        
+        .log-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
         }
         
         /* Dashboard Grid */
@@ -1248,14 +1540,41 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
+                z-index: 2000;
             }
             
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
             
+            .sidebar.mobile-collapsed {
+                width: 70px;
+                transform: translateX(0);
+            }
+            
+            .sidebar.mobile-collapsed .nav-text {
+                display: none;
+            }
+            
+            .sidebar.mobile-collapsed .nav-icon {
+                margin-right: 0;
+                justify-self: center;
+            }
+            
+            .sidebar.mobile-collapsed .logo-text {
+                display: none;
+            }
+            
+            .sidebar.mobile-collapsed .language-selector {
+                display: none;
+            }
+            
             .main-content {
                 margin-left: 0;
+            }
+            
+            .main-content.mobile-collapsed {
+                margin-left: 70px;
             }
             
             .content-area {
@@ -1276,6 +1595,53 @@
             
             .user-details {
                 display: none;
+            }
+            
+            .nav-item {
+                margin: 2px 4px;
+                padding: 12px 16px;
+            }
+            
+            .nav-item.mobile-collapsed {
+                padding: 12px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+            }
+            
+            .sidebar.mobile-open {
+                position: fixed;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+            }
+            
+            .sidebar-header {
+                background: var(--bg-white);
+                margin: 20px;
+                border-radius: 16px;
+            }
+            
+            .nav-menu {
+                background: var(--bg-white);
+                margin: 0 20px 20px 20px;
+                border-radius: 16px;
+                padding: 16px 0;
+            }
+            
+            .language-selector {
+                background: var(--bg-white);
+                margin: 0 20px 20px 20px;
+                border-radius: 16px;
+                padding: 16px;
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
             }
         }
         
@@ -1309,21 +1675,183 @@
             display: none !important;
         }
         
+        /* Log Entry Styles */
+        .log-entries {
+            padding: 0;
+        }
+        
+        .log-entry {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .log-entry:hover {
+            background: rgba(36, 89, 160, 0.02);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+        
+        .log-icon.login {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .log-icon.request {
+            background: linear-gradient(135deg, var(--primary-color), #1e40af);
+            color: white;
+        }
+        
+        .log-icon.approval {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .log-icon.payment {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+        
+        .log-icon.system {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+        
+        .log-icon.error {
+            background: linear-gradient(135deg, var(--accent-color), #b91c1c);
+            color: white;
+        }
+        
+        .log-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .log-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .log-time {
+            font-size: 12px;
+            color: var(--text-gray);
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+        
+        .log-description {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .log-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+        
+        .log-user {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .log-status {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 11px;
+        }
+        
+        .log-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+        
+        .log-status.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        
+        .log-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+        
+        .log-status.info {
+            background: rgba(36, 89, 160, 0.1);
+            color: var(--primary-color);
+        }
+        
+        /* Log Animation Styles */
+        .log-fade-transition {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .log-fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        .log-fade-in {
+            opacity: 1;
+            transform: translateY(0);
+            display: block !important;
+        }
+        
         /* Section Transitions */
         .section {
-            opacity: 0;
-            transform: translateY(20px);
+            opacity: 1;
+            transform: translateY(0);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .section.hidden {
+            display: none;
         }
         
         .section.active {
             opacity: 1;
             transform: translateY(0);
+            display: block;
         }
         
         .section.fade-out {
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateY(-10px);
+        }
+        
+        .section.fade-in {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* Menu Active States */
@@ -1372,12 +1900,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.4s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .login-overlay.slide-up {
+            transform: translateY(-100%);
+            opacity: 0;
         }
         
         .login-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+            transform: translateY(-100%);
         }
         
         .login-container {
@@ -1495,10 +2031,22 @@
         }
         
         /* Dashboard blur effect when not logged in */
+        .dashboard-container {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
         .dashboard-container.blurred {
             filter: blur(5px);
             pointer-events: none;
             user-select: none;
+            opacity: 0.7;
+        }
+        
+        .dashboard-container.unblur {
+            filter: blur(0px);
+            pointer-events: auto;
+            user-select: auto;
+            opacity: 1;
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -1521,15 +2069,17 @@
      </div>
     </div>
    </div>
-   <nav class="nav-menu"><button class="nav-item active" onclick="showSection('dashboard')" data-tr="Ana Sayfa" data-en="Dashboard" data-ru="Главная">
-     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
-     </svg><span class="nav-text">Ana Sayfa</span> </button> <button class="nav-item" onclick="showSection('new-request')" data-tr="Yeni Talep" data-en="New Request" data-ru="Новый запрос">
-     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-     </svg><span class="nav-text">Yeni Talep</span> </button> <button class="nav-item" onclick="showSection('records')" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">
+   <nav class="nav-menu"><button class="nav-item active" onclick="showSection('summary')" data-tr="Özet" data-en="Summary" data-ru="Сводка">
+     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+     </svg><span class="nav-text">Özet</span> </button> <button class="nav-item" onclick="showSection('my-requests')" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-     </svg><span class="nav-text">Taleplerim</span> </button> <button class="nav-item" onclick="showSection('material-records')" data-tr="Malzeme Kayıtları" data-en="Material Records" data-ru="Записи материалов">
-     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-     </svg><span class="nav-text">Malzeme Kayıtları</span> </button> <button class="nav-item" onclick="showSection('google-drive')" data-tr="Google Drive" data-en="Google Drive" data-ru="Google Drive">
+     </svg><span class="nav-text">Taleplerim</span> </button> <button class="nav-item" onclick="showSection('purchasing')" data-tr="Satın Alma" data-en="Purchasing" data-ru="Закупки">
+     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+     </svg><span class="nav-text">Satın Alma</span> </button> <button class="nav-item" onclick="showSection('pending-payments')" data-tr="Ödeme Bekleyen" data-en="Pending Payments" data-ru="Ожидающие оплаты">
+     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+     </svg><span class="nav-text">Ödeme Bekleyen</span> </button> <button class="nav-item" onclick="showSection('activity-log')" data-tr="Log (Aktivite Geçmişi)" data-en="Activity Log" data-ru="Журнал активности">
+     <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+     </svg><span class="nav-text">Log (Aktivite Geçmişi)</span> </button> <button class="nav-item" onclick="showSection('google-drive')" data-tr="Google Drive" data-en="Google Drive" data-ru="Google Drive">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
      </svg><span class="nav-text">Google Drive</span> </button> <button class="nav-item" onclick="showSection('settings')" data-tr="Ayarlar" data-en="Settings" data-ru="Настройки">
      <svg class="nav-icon" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -1567,108 +2117,191 @@
       </svg></button> <button id="logout-btn" class="logout-btn" onclick="logout()" title="Çıkış Yap"> 🔒 </button>
     </div>
    </header><!-- Content Area -->
-   <div class="content-area"><!-- Dashboard Section -->
-    <div id="dashboard-section" class="section active"><!-- Summary Cards -->
-     <div class="summary-cards">
-      <div class="summary-card" onclick="showSummaryModal()">
-       <div class="summary-icon">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
+   <div class="content-area"><!-- Summary Section -->
+    <div id="summary-section" class="section active">
+     <div class="summary-header">
+      <h2 class="section-title" data-tr="Sistem Özeti" data-en="System Summary" data-ru="Сводка системы">Sistem Özeti</h2>
+      <p class="section-subtitle" data-tr="Genel durum kartları ve son aktiviteler" data-en="General status cards and recent activities" data-ru="Общие карты статуса и последние активности">Genel durum kartları ve son aktiviteler</p>
+     </div><!-- Status Cards -->
+     <div class="status-cards">
+      <div class="status-card total">
+       <div class="card-icon total">
+        📊
        </div>
-       <div class="summary-title" data-tr="Özet" data-en="Summary" data-ru="Сводка">
-        Özet
-       </div>
-       <div class="summary-subtitle" data-tr="Genel durum görünümü" data-en="General status overview" data-ru="Общий обзор статуса">
-        Genel durum görünümü
-       </div>
-      </div>
-      <div class="summary-card" onclick="showTrackingModal()">
-       <div class="summary-icon">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-       </div>
-       <div class="summary-title" data-tr="Takip Logu" data-en="Tracking Log" data-ru="Журнал отслеживания">
-        Takip Logu
-       </div>
-       <div class="summary-subtitle" data-tr="Talep süreç takibi" data-en="Request process tracking" data-ru="Отслеживание процесса запроса">
-        Talep süreç takibi
+       <div class="card-content">
+        <div class="card-title" data-tr="Toplam Talepler" data-en="Total Requests" data-ru="Всего запросов">
+         Toplam Talepler
+        </div>
+        <div class="card-value" id="total-requests">
+         0
+        </div>
        </div>
       </div>
-      <div class="summary-card" onclick="showSection('new-request')">
-       <div class="summary-icon">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
+      <div class="status-card approved">
+       <div class="card-icon approved">
+        ✅
        </div>
-       <div class="summary-title" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">
-        Yeni Talep Oluştur
-       </div>
-       <div class="summary-subtitle" data-tr="Malzeme talebi başlat" data-en="Start material request" data-ru="Начать запрос материала">
-        Malzeme talebi başlat
+       <div class="card-content">
+        <div class="card-title" data-tr="Onaylanan" data-en="Approved" data-ru="Одобрено">
+         Onaylanan
+        </div>
+        <div class="card-value" id="approved-requests">
+         0
+        </div>
        </div>
       </div>
-     </div><!-- Main Dashboard Grid -->
-     <div class="dashboard-grid"><!-- My Requests Section -->
-      <div class="dashboard-section-card">
-       <div class="section-header">
-        <h3 class="section-title" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">Taleplerim</h3><span class="section-badge" id="my-requests-count">0</span>
+      <div class="status-card pending">
+       <div class="card-icon pending">
+        ⏳
        </div>
-       <div class="request-list" id="my-requests-list"><!-- My requests will be loaded here -->
+       <div class="card-content">
+        <div class="card-title" data-tr="Bekleyen" data-en="Pending" data-ru="В ожидании">
+         Bekleyen
+        </div>
+        <div class="card-value" id="pending-requests">
+         0
+        </div>
        </div>
-       <div class="section-footer"><button class="view-all-btn" onclick="showAllMyRequests()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+      </div>
+      <div class="status-card processing">
+       <div class="card-icon processing">
+        🔄
        </div>
-      </div><!-- Pending Approval Section -->
-      <div class="dashboard-section-card">
-       <div class="section-header">
-        <h3 class="section-title" data-tr="Onay Bekleyen" data-en="Pending Approval" data-ru="Ожидает одобрения">Onay Bekleyen</h3><span class="section-badge notification-badge" id="pending-approval-count">0</span>
+       <div class="card-content">
+        <div class="card-title" data-tr="İşlemde" data-en="Processing" data-ru="В процессе">
+         İşlemde
+        </div>
+        <div class="card-value" id="processing-requests">
+         0
+        </div>
        </div>
-       <div class="approval-list" id="pending-approval-list"><!-- Pending approvals will be loaded here -->
+      </div>
+     </div><!-- Recent Activities -->
+     <div class="recent-activities">
+      <div class="activity-header">
+       <h3 class="activity-title" data-tr="Son 3 Aktivite" data-en="Last 3 Activities" data-ru="Последние 3 активности">Son 3 Aktivite</h3><button class="view-all-btn" onclick="showSection('activity-log')" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+      </div>
+      <div id="recent-activities-list" class="activity-list"><!-- Recent activities will be loaded here -->
+      </div>
+     </div>
+    </div><!-- My Requests Section -->
+    <div id="my-requests-section" class="section hidden">
+     <div class="section-header">
+      <h2 class="section-title" data-tr="Taleplerim" data-en="My Requests" data-ru="Мои запросы">Taleplerim</h2>
+      <div class="section-actions"><button class="btn-primary" onclick="showNewRequestModal()" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">+ Yeni Talep Oluştur</button>
+      </div>
+     </div>
+     <div class="requests-table-container">
+      <table class="requests-table">
+       <thead>
+        <tr>
+         <th data-tr="SOF No" data-en="SOF No" data-ru="SOF No">SOF No</th>
+         <th data-tr="Talep Tarihi" data-en="Request Date" data-ru="Дата запроса">Talep Tarihi</th>
+         <th data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</th>
+         <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
+         <th data-tr="Durum" data-en="Status" data-ru="Статус">Durum</th>
+         <th data-tr="İlerleme" data-en="Progress" data-ru="Прогресс">İlerleme</th>
+         <th data-tr="İşlemler" data-en="Actions" data-ru="Действия">İşlemler</th>
+        </tr>
+       </thead>
+       <tbody id="my-requests-table-body"><!-- My requests will be loaded here -->
+       </tbody>
+      </table>
+     </div>
+    </div><!-- Purchasing Section -->
+    <div id="purchasing-section" class="section hidden">
+     <div class="section-header">
+      <h2 class="section-title" data-tr="Satın Alma Yönetimi" data-en="Purchasing Management" data-ru="Управление закупками">Satın Alma Yönetimi</h2>
+      <p class="section-subtitle" data-tr="Teklif giriş ve ön fatura işlemleri" data-en="Quote entry and invoice operations" data-ru="Ввод предложений и операции с счетами">Teklif giriş ve ön fatura işlemleri</p>
+     </div>
+     <div class="purchasing-grid">
+      <div class="purchasing-card">
+       <div class="card-header">
+        <h3 class="card-title" data-tr="Teklif Bekleyen Talepler" data-en="Requests Awaiting Quote" data-ru="Запросы, ожидающие предложения">Teklif Bekleyen Talepler</h3><span class="card-badge" id="quote-pending-count">0</span>
        </div>
-       <div class="section-footer"><button class="view-all-btn" onclick="showAllPendingApprovals()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+       <div id="quote-pending-list" class="purchasing-list"><!-- Quote pending items will be loaded here -->
        </div>
-      </div><!-- Pending Payment Section -->
-      <div class="dashboard-section-card">
-       <div class="section-header">
-        <h3 class="section-title" data-tr="Ödeme Bekleyen" data-en="Pending Payment" data-ru="Ожидает оплаты">Ödeme Bekleyen</h3><span class="section-badge" id="pending-payment-count">0</span>
+      </div>
+      <div class="purchasing-card">
+       <div class="card-header">
+        <h3 class="card-title" data-tr="Ön Fatura Hazır" data-en="Invoice Ready" data-ru="Счет готов">Ön Fatura Hazır</h3><span class="card-badge" id="invoice-ready-count">0</span>
        </div>
-       <div class="payment-list" id="pending-payment-list"><!-- Pending payments will be loaded here -->
-       </div>
-       <div class="section-footer"><button class="view-all-btn" onclick="showAllPendingPayments()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
-       </div>
-      </div><!-- Purchasing Section -->
-      <div class="dashboard-section-card">
-       <div class="section-header">
-        <h3 class="section-title" data-tr="Satın Alma" data-en="Purchasing" data-ru="Закупки">Satın Alma</h3><span class="section-badge" id="purchasing-count">0</span>
-       </div>
-       <div class="purchasing-list" id="purchasing-list"><!-- Purchasing items will be loaded here -->
-       </div>
-       <div class="section-footer"><button class="view-all-btn" onclick="showAllPurchasing()" data-tr="Tümünü Görüntüle" data-en="View All" data-ru="Просмотреть все">Tümünü Görüntüle</button>
+       <div id="invoice-ready-list" class="purchasing-list"><!-- Invoice ready items will be loaded here -->
        </div>
       </div>
      </div>
-    </div><!-- New Request Section -->
-    <div id="new-request-section" class="section hidden">
-     <div class="table-section">
-      <h2 class="table-title" data-tr="Yeni Talep Oluştur" data-en="Create New Request" data-ru="Создать новый запрос">Yeni Talep Oluştur</h2>
-      <form id="new-request-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px;">
-       <div class="form-group"><label class="form-label" data-tr="SOF No" data-en="SOF No" data-ru="SOF No">SOF No</label> <input type="text" class="form-input" id="sof-no" required data-tr-placeholder="Örn: SOF-2024-001" data-en-placeholder="e.g: SOF-2024-001" data-ru-placeholder="напр: SOF-2024-001">
-       </div>
-       <div class="form-group"><label class="form-label" data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</label> <select class="form-input" id="material-type" required> <option value="" data-tr="Seçiniz" data-en="Select" data-ru="Выберите">Seçiniz</option> <option value="Kırtasiye" data-tr="Kırtasiye" data-en="Stationery" data-ru="Канцелярия">Kırtasiye</option> <option value="Elektronik" data-tr="Elektronik" data-en="Electronics" data-ru="Электроника">Elektronik</option> <option value="Mobilya" data-tr="Mobilya" data-en="Furniture" data-ru="Мебель">Mobilya</option> </select>
-       </div>
-       <div class="form-group"><label class="form-label" data-tr="Birim" data-en="Unit" data-ru="Подразделение">Birim</label> <select class="form-input" id="unit" required> <option value="" data-tr="Seçiniz" data-en="Select" data-ru="Выберите">Seçiniz</option> <option value="IT" data-tr="Bilgi İşlem" data-en="IT" data-ru="ИТ">Bilgi İşlem</option> <option value="HR" data-tr="İnsan Kaynakları" data-en="Human Resources" data-ru="Кадры">İnsan Kaynakları</option> <option value="Finance" data-tr="Finans" data-en="Finance" data-ru="Финансы">Finans</option> </select>
-       </div>
-       <div class="form-group"><label class="form-label" data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</label> <input type="number" class="form-input" id="quantity" required min="1" data-tr-placeholder="Adet girin" data-en-placeholder="Enter quantity" data-ru-placeholder="Введите количество">
-       </div>
-       <div class="form-group"><label class="form-label" data-tr="Teslim Tarihi" data-en="Delivery Date" data-ru="Дата доставки">Teslim Tarihi</label> <input type="date" class="form-input" id="delivery-date" required>
-       </div>
-       <div class="form-group" style="grid-column: 1 / -1;"><button type="submit" class="btn-primary" style="width: auto; padding: 16px 32px;"> <span data-tr="Talep Oluştur" data-en="Create Request" data-ru="Создать запрос">Talep Oluştur</span> </button>
-       </div>
-      </form>
+    </div><!-- Pending Payments Section -->
+    <div id="pending-payments-section" class="section hidden">
+     <div class="section-header">
+      <h2 class="section-title" data-tr="Ödeme Bekleyen Talepler" data-en="Pending Payment Requests" data-ru="Запросы, ожидающие оплаты">Ödeme Bekleyen Talepler</h2>
+      <p class="section-subtitle" data-tr="Muhasebe onay ekranı ve ödeme işlemleri" data-en="Accounting approval screen and payment operations" data-ru="Экран одобрения бухгалтерии и операции оплаты">Muhasebe onay ekranı ve ödeme işlemleri</p>
      </div>
-    </div><!-- Records Section -->
-    <div id="records-section" class="section hidden">
-     <div class="table-section">
-      <h2 class="table-title" data-tr="Tüm Kayıtlar" data-en="All Records" data-ru="Все записи">Tüm Kayıtlar</h2>
-      <p style="color: var(--text-gray); margin-top: 16px;" data-tr="Bu bölümde tüm malzeme kayıtlarını görüntüleyebilir ve yönetebilirsiniz." data-en="You can view and manage all material records in this section." data-ru="В этом разделе вы можете просматривать и управлять всеми записями материалов.">Bu bölümde tüm malzeme kayıtlarını görüntüleyebilir ve yönetebilirsiniz.</p>
+     <div class="payments-container">
+      <div class="payments-filters">
+       <div class="filter-group"><label class="filter-label" data-tr="Tutar Aralığı" data-en="Amount Range" data-ru="Диапазон суммы">Tutar Aralığı</label> <select class="filter-select" id="amount-filter"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="0-1000" data-tr="0 - 1.000 ₺" data-en="0 - 1,000 ₺" data-ru="0 - 1,000 ₺">0 - 1.000 ₺</option> <option value="1000-5000" data-tr="1.000 - 5.000 ₺" data-en="1,000 - 5,000 ₺" data-ru="1,000 - 5,000 ₺">1.000 - 5.000 ₺</option> <option value="5000+" data-tr="5.000 ₺ +" data-en="5,000 ₺ +" data-ru="5,000 ₺ +">5.000 ₺ +</option> </select>
+       </div>
+       <div class="filter-group"><label class="filter-label" data-tr="Öncelik" data-en="Priority" data-ru="Приоритет">Öncelik</label> <select class="filter-select" id="priority-filter"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="high" data-tr="Yüksek" data-en="High" data-ru="Высокий">Yüksek</option> <option value="medium" data-tr="Orta" data-en="Medium" data-ru="Средний">Orta</option> <option value="low" data-tr="Düşük" data-en="Low" data-ru="Низкий">Düşük</option> </select>
+       </div>
+      </div>
+      <div id="pending-payments-list" class="payments-list"><!-- Pending payments will be loaded here -->
+      </div>
+     </div>
+    </div><!-- Activity Log Section -->
+    <div id="activity-log-section" class="section hidden">
+     <div class="section-header">
+      <h2 class="section-title" data-tr="Aktivite Geçmişi (Log)" data-en="Activity Log" data-ru="Журнал активности">Aktivite Geçmişi (Log)</h2>
+      <div class="section-actions"><button class="btn-export" onclick="refreshLog()" data-tr="Yenile" data-en="Refresh" data-ru="Обновить">🔄 Yenile</button> <button class="btn-export" onclick="exportLogToPDF()" data-tr="PDF İndir" data-en="Download PDF" data-ru="Скачать PDF">📄 PDF İndir</button>
+      </div>
+     </div>
+     <div class="log-stats">
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Toplam Aktivite" data-en="Total Activities" data-ru="Всего активностей">
+        Toplam Aktivite
+       </div>
+       <div class="mini-card-value" id="total-activities">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Bugün" data-en="Today" data-ru="Сегодня">
+        Bugün
+       </div>
+       <div class="mini-card-value" id="today-activities">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Başarılı" data-en="Successful" data-ru="Успешно">
+        Başarılı
+       </div>
+       <div class="mini-card-value" id="successful-activities">
+        0
+       </div>
+      </div>
+      <div class="mini-card">
+       <div class="mini-card-title" data-tr="Hata" data-en="Errors" data-ru="Ошибки">
+        Hata
+       </div>
+       <div class="mini-card-value" id="error-activities">
+        0
+       </div>
+      </div>
+     </div>
+     <div class="log-filters">
+      <div class="filter-group"><label class="filter-label" data-tr="Aktivite Tipi" data-en="Activity Type" data-ru="Тип активности">Aktivite Tipi</label> <select class="filter-select" id="log-type-filter" onchange="applyLogFilters()"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="login" data-tr="Giriş" data-en="Login" data-ru="Вход">Giriş</option> <option value="request" data-tr="Talep" data-en="Request" data-ru="Запрос">Talep</option> <option value="approval" data-tr="Onay" data-en="Approval" data-ru="Одобрение">Onay</option> <option value="payment" data-tr="Ödeme" data-en="Payment" data-ru="Платеж">Ödeme</option> <option value="system" data-tr="Sistem" data-en="System" data-ru="Система">Sistem</option> </select>
+      </div>
+      <div class="filter-group"><label class="filter-label" data-tr="Kullanıcı" data-en="User" data-ru="Пользователь">Kullanıcı</label> <select class="filter-select" id="log-user-filter" onchange="applyLogFilters()"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="Oğuzhan Karslı" data-tr="Oğuzhan Karslı" data-en="Oğuzhan Karslı" data-ru="Oğuzhan Karslı">Oğuzhan Karslı</option> <option value="Ayşe Demir" data-tr="Ayşe Demir" data-en="Ayşe Demir" data-ru="Ayşe Demir">Ayşe Demir</option> <option value="Mehmet Yılmaz" data-tr="Mehmet Yılmaz" data-en="Mehmet Yılmaz" data-ru="Mehmet Yılmaz">Mehmet Yılmaz</option> </select>
+      </div>
+      <div class="filter-group"><label class="filter-label" data-tr="Tarih Aralığı" data-en="Date Range" data-ru="Диапазон дат">Tarih Aralığı</label> <input type="date" class="filter-input" id="log-date-from" onchange="applyLogFilters()">
+      </div>
+      <div class="filter-group"><label class="filter-label" data-tr="Bitiş Tarihi" data-en="End Date" data-ru="Дата окончания">Bitiş Tarihi</label> <input type="date" class="filter-input" id="log-date-to" onchange="applyLogFilters()">
+      </div>
+     </div>
+     <div class="log-container">
+      <div id="log-entries" class="log-entries"><!-- Log entries will be loaded here -->
+      </div>
+     </div>
+     <div class="log-pagination" id="log-pagination"><!-- Pagination will be generated here -->
      </div>
     </div><!-- Google Drive Section -->
     <div id="google-drive-section" class="section hidden">
@@ -1681,49 +2314,6 @@
       <div class="drive-buttons"><button class="btn-drive" onclick="connectDrive()" data-tr="Bağlan" data-en="Connect" data-ru="Подключить">Bağlan</button> <button class="btn-drive" onclick="backupToDrive()" data-tr="Yedekle" data-en="Backup" data-ru="Резервное копирование">Yedekle</button> <button class="btn-drive" onclick="restoreFromDrive()" data-tr="Geri Yükle" data-en="Restore" data-ru="Восстановить">Geri Yükle</button>
       </div>
       <p class="drive-note" data-tr="Drive bağlantısı kurulmadan işlem yapılamaz." data-en="Operations cannot be performed without establishing a Drive connection." data-ru="Операции не могут быть выполнены без установления соединения с Drive.">Drive bağlantısı kurulmadan işlem yapılamaz.</p>
-     </div>
-    </div><!-- Material Records Section -->
-    <div id="material-records-section" class="section hidden">
-     <div class="table-section">
-      <div class="table-header">
-       <h2 class="table-title" data-tr="Malzeme Kayıtları Yönetimi" data-en="Material Records Management" data-ru="Управление записями материалов">Malzeme Kayıtları Yönetimi</h2>
-       <div class="export-buttons"><button class="btn-export" onclick="exportToPDF()" data-tr="PDF olarak indir" data-en="Download as PDF" data-ru="Скачать как PDF">PDF olarak indir</button> <button class="btn-export" onclick="exportToCSV()" data-tr="Excel (CSV) olarak indir" data-en="Download as Excel (CSV)" data-ru="Скачать как Excel (CSV)">Excel (CSV) olarak indir</button>
-       </div>
-      </div>
-      <div class="filters">
-       <div class="filter-group"><label class="filter-label" data-tr="Birim" data-en="Unit" data-ru="Подразделение">Birim</label> <select class="filter-select" id="material-unit-filter" onchange="applyFilters()"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="IT" data-tr="Bilgi İşlem" data-en="IT" data-ru="ИТ">Bilgi İşlem</option> <option value="HR" data-tr="İnsan Kaynakları" data-en="Human Resources" data-ru="Кадры">İnsan Kaynakları</option> <option value="Finance" data-tr="Finans" data-en="Finance" data-ru="Финансы">Finans</option> </select>
-       </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Ana Tip" data-en="Main Type" data-ru="Основной тип">Ana Tip</label> <select class="filter-select" id="material-type-filter" onchange="applyFilters()"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="Kırtasiye" data-tr="Kırtasiye" data-en="Stationery" data-ru="Канцелярия">Kırtasiye</option> <option value="Elektronik" data-tr="Elektronik" data-en="Electronics" data-ru="Электроника">Elektronik</option> <option value="Mobilya" data-tr="Mobilya" data-en="Furniture" data-ru="Мебель">Mobilya</option> </select>
-       </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Durum" data-en="Status" data-ru="Статус">Durum</label> <select class="filter-select" id="material-status-filter" onchange="applyFilters()"> <option value="" data-tr="Tümü" data-en="All" data-ru="Все">Tümü</option> <option value="approved" data-tr="Onaylandı" data-en="Approved" data-ru="Одобрено">Onaylandı</option> <option value="pending" data-tr="Bekliyor" data-en="Pending" data-ru="В ожидании">Bekliyor</option> <option value="rejected" data-tr="Reddedildi" data-en="Rejected" data-ru="Отклонено">Reddedildi</option> </select>
-       </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Tarih Aralığı" data-en="Date Range" data-ru="Диапазон дат">Tarih Aralığı</label> <input type="date" class="filter-input" id="material-date-from" onchange="applyFilters()" data-tr-placeholder="Başlangıç tarihi" data-en-placeholder="Start date" data-ru-placeholder="Дата начала">
-       </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Bitiş Tarihi" data-en="End Date" data-ru="Дата окончания">Bitiş Tarihi</label> <input type="date" class="filter-input" id="material-date-to" onchange="applyFilters()" data-tr-placeholder="Bitiş tarihi" data-en-placeholder="End date" data-ru-placeholder="Дата окончания">
-       </div>
-       <div class="filter-group"><label class="filter-label" data-tr="Arama" data-en="Search" data-ru="Поиск">Arama</label> <input type="text" class="filter-input" id="material-search-input" oninput="applyFilters()" data-tr-placeholder="SOF No veya malzeme ara..." data-en-placeholder="Search SOF No or material..." data-ru-placeholder="Поиск SOF No или материала...">
-       </div>
-      </div>
-      <div style="overflow-x: auto;">
-       <table class="data-table">
-        <thead>
-         <tr>
-          <th data-tr="SOF No" data-en="SOF No" data-ru="SOF No">SOF No</th>
-          <th data-tr="Talep Tarihi" data-en="Request Date" data-ru="Дата запроса">Talep Tarihi</th>
-          <th data-tr="Malzeme Tipi" data-en="Material Type" data-ru="Тип материала">Malzeme Tipi</th>
-          <th data-tr="Birim" data-en="Unit" data-ru="Подразделение">Birim</th>
-          <th data-tr="Adet" data-en="Quantity" data-ru="Количество">Adet</th>
-          <th data-tr="Teslim Tarihi" data-en="Delivery Date" data-ru="Дата доставки">Teslim Tarihi</th>
-          <th data-tr="Durum" data-en="Status" data-ru="Статус">Durum</th>
-          <th data-tr="İşlemler" data-en="Actions" data-ru="Действия">İşlemler</th>
-         </tr>
-        </thead>
-        <tbody id="material-records-table-body"><!-- Material records will be loaded here -->
-        </tbody>
-       </table>
-      </div>
-      <div class="pagination" id="material-pagination"><!-- Pagination will be generated here -->
-      </div>
      </div>
     </div><!-- Settings Section -->
     <div id="settings-section" class="section hidden">
@@ -1956,6 +2546,97 @@
 
         // Global variables for modals
         let currentRejectId = null;
+        
+        // Log system variables
+        let allLogEntries = [];
+        let filteredLogEntries = [];
+        let logCurrentPage = 1;
+        let logEntriesPerPage = 20;
+        
+        // Sample log data
+        const sampleLogEntries = [
+            {
+                id: '1',
+                type: 'login',
+                title: 'Kullanıcı Girişi',
+                description: 'Sistem girişi başarıyla gerçekleştirildi',
+                user: 'Oğuzhan Karslı',
+                timestamp: new Date().toISOString(),
+                status: 'success',
+                ip: '192.168.1.100',
+                details: 'Web arayüzü üzerinden giriş'
+            },
+            {
+                id: '2',
+                type: 'request',
+                title: 'Yeni Talep Oluşturuldu',
+                description: 'SOF-2024-001 numaralı talep oluşturuldu',
+                user: 'Oğuzhan Karslı',
+                timestamp: new Date(Date.now() - 300000).toISOString(),
+                status: 'info',
+                details: 'Kırtasiye malzemesi talebi - 50 adet'
+            },
+            {
+                id: '3',
+                type: 'approval',
+                title: 'Talep Onaylandı',
+                description: 'SOF-2024-002 numaralı talep onaylandı',
+                user: 'Ayşe Demir',
+                timestamp: new Date(Date.now() - 600000).toISOString(),
+                status: 'success',
+                details: 'Elektronik malzeme talebi onaylandı'
+            },
+            {
+                id: '4',
+                type: 'payment',
+                title: 'Ödeme İşlemi',
+                description: 'SOF-2024-003 için ödeme tamamlandı',
+                user: 'Mehmet Yılmaz',
+                timestamp: new Date(Date.now() - 900000).toISOString(),
+                status: 'success',
+                details: 'Mobilya satın alma ödemesi - ₺2,450.00'
+            },
+            {
+                id: '5',
+                type: 'system',
+                title: 'Sistem Yedeklemesi',
+                description: 'Otomatik sistem yedeklemesi tamamlandı',
+                user: 'Sistem',
+                timestamp: new Date(Date.now() - 1200000).toISOString(),
+                status: 'success',
+                details: 'Günlük yedekleme işlemi başarılı'
+            },
+            {
+                id: '6',
+                type: 'request',
+                title: 'Talep Reddedildi',
+                description: 'SOF-2024-005 numaralı talep reddedildi',
+                user: 'Oğuzhan Karslı',
+                timestamp: new Date(Date.now() - 1500000).toISOString(),
+                status: 'warning',
+                details: 'Bütçe yetersizliği nedeniyle reddedildi'
+            },
+            {
+                id: '7',
+                type: 'system',
+                title: 'Bağlantı Hatası',
+                description: 'Veritabanı bağlantı hatası tespit edildi',
+                user: 'Sistem',
+                timestamp: new Date(Date.now() - 1800000).toISOString(),
+                status: 'error',
+                details: 'Geçici bağlantı sorunu - 30 saniye içinde çözüldü'
+            },
+            {
+                id: '8',
+                type: 'login',
+                title: 'Kullanıcı Çıkışı',
+                description: 'Oturum sonlandırıldı',
+                user: 'Ayşe Demir',
+                timestamp: new Date(Date.now() - 2100000).toISOString(),
+                status: 'info',
+                details: 'Normal oturum sonlandırma'
+            }
+        ];
 
         // Data SDK handler
         const dataHandler = {
@@ -2058,14 +2739,42 @@
         // Sidebar functions
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            isSidebarCollapsed = !isSidebarCollapsed;
+            const mainContent = document.querySelector('.main-content');
             
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 480) {
+                // Full mobile - overlay sidebar
                 sidebar.classList.toggle('mobile-open');
+            } else if (window.innerWidth <= 768) {
+                // Tablet - collapsed sidebar
+                const isCollapsed = sidebar.classList.contains('mobile-collapsed');
+                if (isCollapsed) {
+                    sidebar.classList.remove('mobile-collapsed');
+                    mainContent.classList.remove('mobile-collapsed');
+                    sidebar.classList.add('mobile-open');
+                } else {
+                    sidebar.classList.remove('mobile-open');
+                    sidebar.classList.add('mobile-collapsed');
+                    mainContent.classList.add('mobile-collapsed');
+                }
             } else {
+                // Desktop - normal collapse
+                isSidebarCollapsed = !isSidebarCollapsed;
                 sidebar.classList.toggle('collapsed');
             }
         }
+        
+        // Close mobile sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                sidebar.classList.contains('mobile-open') && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target)) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
 
         // Session management functions
         function showSessionElements() {
@@ -2133,14 +2842,8 @@
                 localStorage.setItem('somtech_logged_in', 'true');
                 localStorage.setItem('somtech_user', JSON.stringify(currentUser));
                 
-                // Hide login overlay
-                document.getElementById('login-overlay').classList.add('hidden');
-                
-                // Remove blur from dashboard
-                document.querySelector('.dashboard-container').classList.remove('blurred');
-                
-                // Show session elements with animation
-                showSessionElements();
+                // Start login transition animation
+                performLoginTransition();
                 
                 showNotification(getTranslation('Başarıyla giriş yapıldı', 'Successfully logged in', 'Успешный вход в систему'), 'success');
             } else if (username && password) {
@@ -2150,68 +2853,197 @@
                 showNotification(getTranslation('Geçersiz kullanıcı adı veya şifre', 'Invalid username or password', 'Неверное имя пользователя или пароль'), 'error');
             }
         }
+        
+        // Smooth login transition animation
+        function performLoginTransition() {
+            const loginOverlay = document.getElementById('login-overlay');
+            const loginContainer = document.querySelector('.login-container');
+            const summarySection = document.getElementById('summary-section');
+            
+            // Add transition class to login container
+            loginContainer.classList.add('log-fade-transition');
+            
+            // Phase 1: Fade out login form (immediate)
+            loginContainer.classList.add('log-fade-out');
+            
+            // Phase 2: Show summary section with fade in (600ms delay)
+            setTimeout(() => {
+                // Hide login overlay completely
+                loginOverlay.style.display = 'none';
+                
+                // Show summary section
+                summarySection.style.display = 'block';
+                summarySection.classList.remove('hidden');
+                summarySection.classList.add('active');
+                
+                // Trigger fade in animation
+                setTimeout(() => {
+                    summarySection.classList.add('log-fade-in');
+                    summarySection.style.opacity = '1';
+                    
+                    // Load summary data
+                    updateSummarySection();
+                    
+                    // Update page title
+                    document.getElementById('page-title').textContent = getTranslation('Sistem Özeti', 'System Summary', 'Сводка системы');
+                    
+                    // Show session elements
+                    showSessionElements();
+                }, 50);
+            }, 600);
+        }
 
         function showRegister() {
             showNotification(getTranslation('Kayıt özelliği yakında eklenecek', 'Registration feature coming soon', 'Функция регистрации скоро появится'), 'success');
         }
 
         // Navigation functions
-        function showSection(sectionName) {
-            if (!isLoggedIn) {
+        function showSection(sectionName, clickedElement = null) {
+            if (!isLoggedIn && sectionName !== 'summary') {
                 showNotification(getTranslation('Lütfen önce giriş yapın', 'Please login first', 'Пожалуйста, сначала войдите в систему'), 'error');
                 return;
             }
             
-            // Update active nav item
+            // Update active nav item with smooth transition
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
+                item.style.background = '#f0f0f0';
+                item.style.color = 'var(--text-gray)';
             });
             
             // Find and activate the clicked nav item
-            const clickedItem = event.target.closest('.nav-item');
-            if (clickedItem) {
-                clickedItem.classList.add('active');
+            let activeNavItem = clickedElement;
+            if (!activeNavItem && event && event.target) {
+                activeNavItem = event.target.closest('.nav-item');
+            }
+            
+            // If no specific element provided, find by section name
+            if (!activeNavItem) {
+                const sectionToNavMap = {
+                    'summary': 'summary',
+                    'my-requests': 'my-requests',
+                    'purchasing': 'purchasing',
+                    'pending-payments': 'pending-payments',
+                    'activity-log': 'activity-log',
+                    'google-drive': 'google-drive',
+                    'settings': 'settings'
+                };
+                
+                const navSelector = sectionToNavMap[sectionName];
+                if (navSelector) {
+                    activeNavItem = document.querySelector(`[onclick*="${navSelector}"]`);
+                }
+            }
+            
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+                // Apply active styling with corporate blue
+                activeNavItem.style.background = 'linear-gradient(135deg, #2459a0, rgba(36, 89, 160, 0.9))';
+                activeNavItem.style.color = 'white';
+                activeNavItem.style.fontWeight = '600';
+                activeNavItem.style.transform = 'translateX(0)';
+                activeNavItem.style.boxShadow = '0 6px 20px rgba(36, 89, 160, 0.3)';
+            }
+            
+            // Smooth section transition with fade-in effect
+            const currentSection = document.querySelector('.section.active, .section:not(.hidden)');
+            const targetSection = document.getElementById(sectionName + '-section');
+            
+            if (!targetSection) {
+                console.error(`Section not found: ${sectionName}-section`);
+                return;
+            }
+            
+            // If same section, do nothing
+            if (currentSection === targetSection && targetSection.classList.contains('active')) {
+                return;
             }
             
             // Fade out current section
-            const currentSection = document.querySelector('.section.active');
-            if (currentSection) {
-                currentSection.classList.add('fade-out');
+            if (currentSection && currentSection !== targetSection) {
+                currentSection.style.opacity = '0';
+                currentSection.style.transform = 'translateY(-10px)';
                 
                 setTimeout(() => {
-                    // Hide all sections
-                    document.querySelectorAll('.section').forEach(section => {
-                        section.classList.add('hidden');
-                        section.classList.remove('active', 'fade-out');
-                    });
-                    
-                    // Show and activate selected section
-                    const targetSection = document.getElementById(sectionName + '-section');
-                    targetSection.classList.remove('hidden');
-                    
-                    setTimeout(() => {
-                        targetSection.classList.add('active');
-                    }, 50);
-                }, 200);
+                    currentSection.classList.add('hidden');
+                    currentSection.classList.remove('active');
+                    currentSection.style.opacity = '';
+                    currentSection.style.transform = '';
+                }, 400);
             }
             
-            // Update page title
+            // Fade in target section
+            setTimeout(() => {
+                // Hide all sections first
+                document.querySelectorAll('.section').forEach(section => {
+                    if (section !== targetSection) {
+                        section.classList.add('hidden');
+                        section.classList.remove('active');
+                    }
+                });
+                
+                // Show target section
+                targetSection.classList.remove('hidden');
+                targetSection.style.opacity = '0';
+                targetSection.style.transform = 'translateY(10px)';
+                
+                // Trigger reflow
+                targetSection.offsetHeight;
+                
+                // Animate in with fade effect
+                targetSection.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                targetSection.style.opacity = '1';
+                targetSection.style.transform = 'translateY(0)';
+                targetSection.classList.add('active');
+                
+                // Clean up transition
+                setTimeout(() => {
+                    targetSection.style.transition = '';
+                }, 400);
+            }, currentSection && currentSection !== targetSection ? 200 : 0);
+            
+            // Update page title with animation
             const titles = {
-                'dashboard': getTranslation('Ana Sayfa', 'Dashboard', 'Панель управления'),
-                'new-request': getTranslation('Yeni Talep', 'New Request', 'Новый запрос'),
-                'records': getTranslation('Kayıtlar', 'Records', 'Записи'),
-                'material-records': getTranslation('Malzeme Kayıtları', 'Material Records', 'Записи материалов'),
+                'summary': getTranslation('Sistem Özeti', 'System Summary', 'Сводка системы'),
+                'my-requests': getTranslation('Taleplerim', 'My Requests', 'Мои запросы'),
+                'purchasing': getTranslation('Satın Alma Yönetimi', 'Purchasing Management', 'Управление закупками'),
+                'pending-payments': getTranslation('Ödeme Bekleyen Talepler', 'Pending Payment Requests', 'Запросы, ожидающие оплаты'),
+                'activity-log': getTranslation('Aktivite Geçmişi (Log)', 'Activity Log', 'Журнал активности'),
                 'google-drive': getTranslation('Google Drive', 'Google Drive', 'Google Drive'),
                 'settings': getTranslation('Ayarlar', 'Settings', 'Настройки')
             };
             
-            document.getElementById('page-title').textContent = titles[sectionName] || titles['dashboard'];
+            const pageTitle = document.getElementById('page-title');
+            const newTitle = titles[sectionName] || titles['summary'];
+            
+            // Animate title change
+            pageTitle.style.opacity = '0';
+            setTimeout(() => {
+                pageTitle.textContent = newTitle;
+                pageTitle.style.opacity = '1';
+            }, 200);
             
             // Load section-specific data
-            if (sectionName === 'material-records') {
+            if (sectionName === 'summary') {
                 setTimeout(() => {
-                    updateMaterialRecordsTable();
-                }, 300);
+                    updateSummarySection();
+                }, 400);
+            } else if (sectionName === 'my-requests') {
+                setTimeout(() => {
+                    updateMyRequestsTable();
+                }, 400);
+            } else if (sectionName === 'purchasing') {
+                setTimeout(() => {
+                    updatePurchasingSection();
+                }, 400);
+            } else if (sectionName === 'pending-payments') {
+                setTimeout(() => {
+                    updatePendingPaymentsSection();
+                }, 400);
+            } else if (sectionName === 'activity-log') {
+                setTimeout(() => {
+                    loadActivityLogData();
+                }, 400);
             }
         }
 
@@ -2801,38 +3633,100 @@
         function logout() {
             isLoggedIn = false;
             
-            // Hide session elements first
-            hideSessionElements();
+            // Start logout transition animation
+            performLogoutTransition();
             
             setTimeout(() => {
                 // Clear localStorage
                 localStorage.removeItem('somtech_logged_in');
                 localStorage.removeItem('somtech_user');
                 
-                // Show login overlay
-                document.getElementById('login-overlay').classList.remove('hidden');
-                
-                // Blur dashboard
-                document.querySelector('.dashboard-container').classList.add('blurred');
-                
                 // Clear login form
                 document.getElementById('login-form').reset();
                 
-                // Reset to dashboard section
-                resetToDefaultSection();
+                // Reset to login screen
+                resetToLoginScreen();
                 
                 showNotification(getTranslation('Başarıyla çıkış yapıldı', 'Successfully logged out', 'Успешный выход из системы'), 'success');
-            }, 500);
+            }, 1000);
+        }
+        
+        // Smooth logout transition animation (reverse of login)
+        function performLogoutTransition() {
+            const loginOverlay = document.getElementById('login-overlay');
+            const loginContainer = document.querySelector('.login-container');
+            const summarySection = document.getElementById('summary-section');
+            
+            // Hide session elements first
+            hideSessionElements();
+            
+            // Phase 1: Fade out summary section
+            summarySection.classList.add('log-fade-transition');
+            summarySection.classList.add('log-fade-out');
+            summarySection.style.opacity = '0';
+            
+            // Phase 2: Show login overlay and fade in login form (600ms delay)
+            setTimeout(() => {
+                // Hide summary section
+                summarySection.style.display = 'none';
+                summarySection.classList.add('hidden');
+                summarySection.classList.remove('active');
+                
+                // Show login overlay
+                loginOverlay.style.display = 'flex';
+                loginOverlay.classList.remove('hidden', 'slide-up');
+                
+                // Reset login container classes
+                loginContainer.classList.remove('log-fade-out');
+                loginContainer.classList.add('log-fade-transition');
+                
+                // Trigger fade in animation for login form
+                setTimeout(() => {
+                    loginContainer.style.opacity = '1';
+                    loginContainer.style.transform = 'scale(1)';
+                }, 50);
+            }, 600);
+        }
+        
+        function resetToLoginScreen() {
+            const summarySection = document.getElementById('summary-section');
+            const loginOverlay = document.getElementById('login-overlay');
+            const loginContainer = document.querySelector('.login-container');
+            
+            // Reset summary section
+            summarySection.classList.remove('log-fade-in', 'log-fade-out', 'log-fade-transition');
+            summarySection.style.opacity = '0';
+            summarySection.style.display = 'none';
+            summarySection.classList.add('hidden');
+            summarySection.classList.remove('active');
+            
+            // Reset login overlay and container
+            loginOverlay.style.display = 'flex';
+            loginOverlay.classList.remove('hidden', 'slide-up');
+            loginContainer.classList.remove('log-fade-out', 'log-fade-transition');
+            loginContainer.style.opacity = '1';
+            loginContainer.style.transform = 'scale(1)';
+            
+            // Reset page title
+            document.getElementById('page-title').textContent = getTranslation('Giriş', 'Login', 'Вход');
         }
         
         function resetToDefaultSection() {
             // Remove active from all nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
+                item.style.background = '#f0f0f0';
+                item.style.color = 'var(--text-gray)';
             });
             
-            // Activate dashboard nav item
-            document.querySelector('.nav-item[onclick*="dashboard"]').classList.add('active');
+            // Activate summary nav item
+            const summaryNavItem = document.querySelector('.nav-item[onclick*="summary"]');
+            if (summaryNavItem) {
+                summaryNavItem.classList.add('active');
+                summaryNavItem.style.background = 'linear-gradient(135deg, #2459a0, rgba(36, 89, 160, 0.9))';
+                summaryNavItem.style.color = 'white';
+                summaryNavItem.style.fontWeight = '600';
+            }
             
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
@@ -2840,13 +3734,13 @@
                 section.classList.remove('active', 'fade-out');
             });
             
-            // Show dashboard section
-            const dashboardSection = document.getElementById('dashboard-section');
-            dashboardSection.classList.remove('hidden');
-            dashboardSection.classList.add('active');
+            // Show summary section
+            const summarySection = document.getElementById('summary-section');
+            summarySection.classList.remove('hidden');
+            summarySection.classList.add('active');
             
             // Reset page title
-            document.getElementById('page-title').textContent = getTranslation('Ana Sayfa', 'Dashboard', 'Панель управления');
+            document.getElementById('page-title').textContent = getTranslation('Sistem Özeti', 'System Summary', 'Сводка системы');
         }
 
         // Check login state on page load
@@ -2854,24 +3748,42 @@
             const savedLoginState = localStorage.getItem('somtech_logged_in');
             const savedUser = localStorage.getItem('somtech_user');
             
+            const summarySection = document.getElementById('summary-section');
+            const loginOverlay = document.getElementById('login-overlay');
+            
             if (savedLoginState === 'true' && savedUser) {
                 isLoggedIn = true;
                 currentUser = JSON.parse(savedUser);
                 
-                // Hide login overlay
-                document.getElementById('login-overlay').classList.add('hidden');
+                // Set logged in state - show summary immediately
+                loginOverlay.style.display = 'none';
+                loginOverlay.classList.add('hidden');
                 
-                // Remove blur from dashboard
-                document.querySelector('.dashboard-container').classList.remove('blurred');
+                summarySection.style.display = 'block';
+                summarySection.classList.remove('hidden');
+                summarySection.classList.add('active', 'log-fade-in');
+                summarySection.style.opacity = '1';
                 
-                // Show session elements
+                // Load summary data
                 setTimeout(() => {
+                    updateSummarySection();
                     showSessionElements();
-                }, 500);
+                }, 100);
+                
+                // Update page title
+                document.getElementById('page-title').textContent = getTranslation('Sistem Özeti', 'System Summary', 'Сводка системы');
             } else {
-                // Show login overlay and blur dashboard
-                document.getElementById('login-overlay').classList.remove('hidden');
-                document.querySelector('.dashboard-container').classList.add('blurred');
+                // Set logged out state - show login screen
+                loginOverlay.style.display = 'flex';
+                loginOverlay.classList.remove('hidden');
+                
+                summarySection.style.display = 'none';
+                summarySection.classList.add('hidden');
+                summarySection.classList.remove('active');
+                summarySection.style.opacity = '0';
+                
+                // Update page title
+                document.getElementById('page-title').textContent = getTranslation('Giriş', 'Login', 'Вход');
             }
         }
 
@@ -3037,9 +3949,393 @@
             }
         }
 
+        // Section update functions
+        function updateSummarySection() {
+            // Update status cards
+            const total = allRecords.length;
+            const approved = allRecords.filter(r => r.status === 'approved').length;
+            const pending = allRecords.filter(r => r.status === 'pending_approval').length;
+            const processing = allRecords.filter(r => ['purchasing', 'pending_payment'].includes(r.status)).length;
+            
+            document.getElementById('total-requests').textContent = total;
+            document.getElementById('approved-requests').textContent = approved;
+            document.getElementById('pending-requests').textContent = pending;
+            document.getElementById('processing-requests').textContent = processing;
+            
+            // Update recent activities
+            updateRecentActivities();
+        }
+        
+        function updateRecentActivities() {
+            const recentActivities = sampleLogEntries.slice(0, 3);
+            const container = document.getElementById('recent-activities-list');
+            
+            container.innerHTML = recentActivities.map(activity => `
+                <div class="log-entry">
+                    <div class="log-icon ${activity.type} ${activity.status}">
+                        ${getLogIcon(activity.type)}
+                    </div>
+                    <div class="log-content">
+                        <div class="log-header">
+                            <h4 class="log-title">${activity.title}</h4>
+                            <span class="log-time">${formatLogTime(activity.timestamp)}</span>
+                        </div>
+                        <div class="log-description">${activity.description}</div>
+                        <div class="log-meta">
+                            <span class="log-user">${activity.user}</span>
+                            <span class="log-status ${activity.status}">${getStatusText(activity.status)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+        
+        function updateMyRequestsTable() {
+            const myRequests = allRecords.filter(r => r.requester === currentUser.name);
+            const tbody = document.getElementById('my-requests-table-body');
+            
+            if (myRequests.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <div class="empty-state-title" data-tr="Henüz talep yok" data-en="No requests yet" data-ru="Пока нет запросов">Henüz talep yok</div>
+                                <div class="empty-state-description" data-tr="İlk talebinizi oluşturmak için yukarıdaki butonu kullanın" data-en="Use the button above to create your first request" data-ru="Используйте кнопку выше, чтобы создать свой первый запрос">İlk talebinizi oluşturmak için yukarıdaki butonu kullanın</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            tbody.innerHTML = myRequests.map(request => `
+                <tr>
+                    <td><strong>${request.sofNo}</strong></td>
+                    <td>${formatDate(request.requestDate)}</td>
+                    <td>${request.materialType}</td>
+                    <td>${request.quantity}</td>
+                    <td>
+                        <span class="status-badge status-${request.status}">
+                            ${getStatusText(request.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill-small" style="width: ${request.progress}%"></div>
+                        </div>
+                        <small style="color: var(--text-gray); margin-top: 4px; display: block;">${request.progress}% Tamamlandı</small>
+                    </td>
+                    <td>
+                        <button class="action-btn" onclick="viewRequestDetails('${request.id}')" data-tr="Detay" data-en="Details" data-ru="Детали">Detay</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            updateTranslations();
+        }
+        
+        function updatePurchasingSection() {
+            const quotePending = allRecords.filter(r => r.status === 'purchasing').slice(0, 5);
+            const invoiceReady = allRecords.filter(r => r.status === 'pending_payment').slice(0, 5);
+            
+            document.getElementById('quote-pending-count').textContent = allRecords.filter(r => r.status === 'purchasing').length;
+            document.getElementById('invoice-ready-count').textContent = allRecords.filter(r => r.status === 'pending_payment').length;
+            
+            // Update quote pending list
+            const quotePendingContainer = document.getElementById('quote-pending-list');
+            quotePendingContainer.innerHTML = quotePending.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet</div>
+                    <div class="action-buttons">
+                        <button class="btn-primary" onclick="enterQuote('${request.id}')" data-tr="Teklif Gir" data-en="Enter Quote" data-ru="Ввести предложение">Teklif Gir</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update invoice ready list
+            const invoiceReadyContainer = document.getElementById('invoice-ready-list');
+            invoiceReadyContainer.innerHTML = invoiceReady.map(request => `
+                <div class="request-item">
+                    <div class="request-header">
+                        <div class="request-id">${request.sofNo}</div>
+                        <div class="request-date">${formatDate(request.requestDate)}</div>
+                    </div>
+                    <div class="request-description">${request.materialType} - ${request.quantity} adet</div>
+                    <div class="action-buttons">
+                        <button class="btn-invoice" onclick="showInvoiceModal('${request.id}')" data-tr="Ön Fatura Görüntüle" data-en="View Invoice" data-ru="Просмотр счета">Ön Fatura Görüntüle</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+        
+        function updatePendingPaymentsSection() {
+            const pendingPayments = allRecords.filter(r => r.status === 'pending_payment');
+            const container = document.getElementById('pending-payments-list');
+            
+            if (pendingPayments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 60px 20px;">
+                        <div class="empty-state-icon">💳</div>
+                        <div class="empty-state-title" data-tr="Ödeme bekleyen talep yok" data-en="No pending payments" data-ru="Нет ожидающих оплаты">Ödeme bekleyen talep yok</div>
+                        <div class="empty-state-description" data-tr="Tüm ödemeler tamamlanmış" data-en="All payments completed" data-ru="Все платежи завершены">Tüm ödemeler tamamlanmış</div>
+                    </div>
+                `;
+                updateTranslations();
+                return;
+            }
+            
+            container.innerHTML = pendingPayments.map(request => {
+                const amount = (Math.random() * 5000 + 500).toFixed(2);
+                const priority = Math.random() > 0.7 ? 'high' : Math.random() > 0.4 ? 'medium' : 'low';
+                const priorityText = priority === 'high' ? 'Yüksek' : priority === 'medium' ? 'Orta' : 'Düşük';
+                const priorityColor = priority === 'high' ? '#ef4444' : priority === 'medium' ? '#f59e0b' : '#10b981';
+                
+                return `
+                    <div class="request-item">
+                        <div class="request-header">
+                            <div class="request-id">${request.sofNo}</div>
+                            <div class="request-date">${formatDate(request.requestDate)}</div>
+                        </div>
+                        <div class="request-description">${request.materialType} - ${request.quantity} adet</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 12px 0;">
+                            <div style="font-weight: 600; color: var(--primary-color);">₺${amount}</div>
+                            <span style="background: ${priorityColor}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">${priorityText}</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-approve" onclick="approvePayment('${request.id}')" data-tr="Ödemeyi Onayla" data-en="Approve Payment" data-ru="Одобрить платеж">Ödemeyi Onayla</button>
+                            <button class="btn-reject" onclick="rejectPayment('${request.id}')" data-tr="Reddet" data-en="Reject" data-ru="Отклонить">Reddet</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateTranslations();
+        }
+        
+        function loadActivityLogData() {
+            allLogEntries = sampleLogEntries;
+            filteredLogEntries = [...allLogEntries];
+            updateLogStats();
+            updateLogEntries();
+            updateLogPagination();
+        }
+        
+        function updateLogStats() {
+            const total = allLogEntries.length;
+            const today = allLogEntries.filter(entry => {
+                const entryDate = new Date(entry.timestamp);
+                const todayDate = new Date();
+                return entryDate.toDateString() === todayDate.toDateString();
+            }).length;
+            const successful = allLogEntries.filter(entry => entry.status === 'success').length;
+            const errors = allLogEntries.filter(entry => entry.status === 'error').length;
+            
+            document.getElementById('total-activities').textContent = total;
+            document.getElementById('today-activities').textContent = today;
+            document.getElementById('successful-activities').textContent = successful;
+            document.getElementById('error-activities').textContent = errors;
+        }
+        
+        function updateLogEntries() {
+            const container = document.getElementById('log-entries');
+            const startIndex = (logCurrentPage - 1) * logEntriesPerPage;
+            const endIndex = startIndex + logEntriesPerPage;
+            const pageEntries = filteredLogEntries.slice(startIndex, endIndex);
+            
+            container.innerHTML = pageEntries.map(entry => `
+                <div class="log-entry">
+                    <div class="log-icon ${entry.type} ${entry.status}">
+                        ${getLogIcon(entry.type)}
+                    </div>
+                    <div class="log-content">
+                        <div class="log-header">
+                            <h4 class="log-title">${entry.title}</h4>
+                            <span class="log-time">${formatLogTime(entry.timestamp)}</span>
+                        </div>
+                        <div class="log-description">${entry.description}</div>
+                        <div class="log-meta">
+                            <span class="log-user">${entry.user}</span>
+                            <span class="log-status ${entry.status}">${getStatusText(entry.status)}</span>
+                            ${entry.details ? `<span style="color: var(--text-gray);">${entry.details}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTranslations();
+        }
+        
+        function getLogIcon(type) {
+            const icons = {
+                'login': '🔐',
+                'request': '📝',
+                'approval': '✅',
+                'payment': '💳',
+                'system': '⚙️',
+                'error': '❌'
+            };
+            return icons[type] || '📋';
+        }
+        
+        function formatLogTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return getTranslation('Az önce', 'Just now', 'Только что');
+            if (diffMins < 60) return getTranslation(`${diffMins} dakika önce`, `${diffMins} minutes ago`, `${diffMins} минут назад`);
+            if (diffHours < 24) return getTranslation(`${diffHours} saat önce`, `${diffHours} hours ago`, `${diffHours} часов назад`);
+            if (diffDays < 7) return getTranslation(`${diffDays} gün önce`, `${diffDays} days ago`, `${diffDays} дней назад`);
+            
+            return date.toLocaleDateString('tr-TR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function applyLogFilters() {
+            const typeFilter = document.getElementById('log-type-filter').value;
+            const userFilter = document.getElementById('log-user-filter').value;
+            const dateFromFilter = document.getElementById('log-date-from').value;
+            const dateToFilter = document.getElementById('log-date-to').value;
+            
+            filteredLogEntries = allLogEntries.filter(entry => {
+                // Type filter
+                if (typeFilter && entry.type !== typeFilter) return false;
+                
+                // User filter
+                if (userFilter && entry.user !== userFilter) return false;
+                
+                // Date range filter
+                const entryDate = new Date(entry.timestamp).toISOString().split('T')[0];
+                if (dateFromFilter && entryDate < dateFromFilter) return false;
+                if (dateToFilter && entryDate > dateToFilter) return false;
+                
+                return true;
+            });
+            
+            logCurrentPage = 1;
+            updateLogEntries();
+            updateLogPagination();
+        }
+        
+        function updateLogPagination() {
+            const totalPages = Math.ceil(filteredLogEntries.length / logEntriesPerPage);
+            const pagination = document.getElementById('log-pagination');
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            if (logCurrentPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="changeLogPage(${logCurrentPage - 1})">‹</button>`;
+            }
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === logCurrentPage) {
+                    paginationHTML += `<button class="page-btn active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="page-btn" onclick="changeLogPage(${i})">${i}</button>`;
+                }
+            }
+            
+            // Next button
+            if (logCurrentPage < totalPages) {
+                paginationHTML += `<button class="page-btn" onclick="changeLogPage(${logCurrentPage + 1})">›</button>`;
+            }
+            
+            pagination.innerHTML = paginationHTML;
+        }
+        
+        function changeLogPage(page) {
+            logCurrentPage = page;
+            updateLogEntries();
+            updateLogPagination();
+        }
+        
+        function refreshLog() {
+            // Add a new login entry to simulate real-time updates
+            const newEntry = {
+                id: Date.now().toString(),
+                type: 'system',
+                title: 'Log Yenilendi',
+                description: 'Sistem logları manuel olarak yenilendi',
+                user: currentUser.name,
+                timestamp: new Date().toISOString(),
+                status: 'info',
+                details: 'Manuel yenileme işlemi'
+            };
+            
+            allLogEntries.unshift(newEntry);
+            filteredLogEntries = [...allLogEntries];
+            updateLogStats();
+            updateLogEntries();
+            updateLogPagination();
+            
+            showNotification(getTranslation('Log başarıyla yenilendi', 'Log refreshed successfully', 'Журнал успешно обновлен'), 'success');
+        }
+        
+        function exportLogToPDF() {
+            showNotification(getTranslation('Log PDF dışa aktarma özelliği yakında eklenecek', 'Log PDF export feature coming soon', 'Функция экспорта журнала в PDF скоро появится'), 'success');
+        }
+
+        // New action functions
+        function showNewRequestModal() {
+            showNotification(getTranslation('Yeni talep formu yakında eklenecek', 'New request form coming soon', 'Форма нового запроса скоро появится'), 'success');
+        }
+        
+        function viewRequestDetails(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                showNotification(getTranslation(`${request.sofNo} detayları görüntüleniyor`, `Viewing details for ${request.sofNo}`, `Просмотр деталей ${request.sofNo}`), 'success');
+            }
+        }
+        
+        function enterQuote(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                showNotification(getTranslation(`${request.sofNo} için teklif giriliyor`, `Entering quote for ${request.sofNo}`, `Ввод предложения для ${request.sofNo}`), 'success');
+            }
+        }
+        
+        function approvePayment(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                showNotification(getTranslation(`${request.sofNo} ödemesi onaylandı`, `Payment approved for ${request.sofNo}`, `Платеж одобрен для ${request.sofNo}`), 'success');
+                // Update status to completed
+                request.status = 'approved';
+                request.progress = 100;
+                updatePendingPaymentsSection();
+                updateSummarySection();
+            }
+        }
+        
+        function rejectPayment(requestId) {
+            const request = allRecords.find(r => r.id === requestId);
+            if (request) {
+                showNotification(getTranslation(`${request.sofNo} ödemesi reddedildi`, `Payment rejected for ${request.sofNo}`, `Платеж отклонен для ${request.sofNo}`), 'error');
+            }
+        }
+
         // View all functions
         function showAllMyRequests() {
-            showNotification(getTranslation('Tüm taleplerim sayfası yakında eklenecek', 'All my requests page coming soon', 'Страница всех моих запросов скоро появится'), 'success');
+            showSection('my-requests');
         }
 
         function showAllPendingApprovals() {
@@ -3047,11 +4343,11 @@
         }
 
         function showAllPendingPayments() {
-            showNotification(getTranslation('Tüm ödeme bekleyen talepler sayfası yakında eklenecek', 'All pending payments page coming soon', 'Страница всех ожидающих оплаты скоро появится'), 'success');
+            showSection('pending-payments');
         }
 
         function showAllPurchasing() {
-            showNotification(getTranslation('Tüm satın alma talepleri sayfası yakında eklenecek', 'All purchasing requests page coming soon', 'Страница всех запросов на закупку скоро появится'), 'success');
+            showSection('purchasing');
         }
 
         // Close modals when clicking outside
@@ -3143,5 +4439,5 @@
             window.elementSdk.init(element);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a2f0461e0e116',t:'MTc2MTQ4NDEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994a77d5f2f3e116',t:'MTc2MTQ4NzEwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
